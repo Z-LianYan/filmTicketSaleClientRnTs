@@ -1,78 +1,4 @@
-// import React, {Component} from 'react';
 
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-// import Ionicons from 'react-native-vector-icons/Ionicons';
-
-// import MinePage from '../Mine/index';
-// import LoginPage from '../Login/index';
-// import HomePage from '../Home/index';
-
-// const AppTabNavigator = createBottomTabNavigator(
-//   {
-//     HomePage: {
-//       screen: HomePage,
-//       navigationOptions: () => ({
-//         tabBarLabel: '首页',
-//         headerTitle: '123456789',
-//         tabBarIcon: ({tintColor, focused}) => (
-//           <Ionicons
-//             name={focused ? 'md-home' : 'md-home'}
-//             size={26}
-//             style={focused ? {color: tintColor} : {color: '#ccc'}}
-//           />
-//         ),
-//       }),
-//     },
-
-//     LoginPage: {
-//       screen: LoginPage,
-//       navigationOptions: () => ({
-//         tabBarLabel: '最热',
-//         tabBarIcon: ({tintColor, focused}) => (
-//           <Ionicons
-//             name={focused ? 'md-heart' : 'md-heart'}
-//             size={26}
-//             style={focused ? {color: tintColor} : {color: '#ccc'}}
-//           />
-//         ),
-//       }),
-//     },
-
-//     MinePage: {
-//       screen: MinePage,
-//       navigationOptions: () => ({
-//         tabBarLabel: '我的',
-//         tabBarIcon: ({tintColor, focused}) => (
-//           <Ionicons
-//             name={focused ? 'md-person' : 'md-person'}
-//             size={26}
-//             style={focused ? {color: tintColor} : {color: '#ccc'}}
-//           />
-//         ),
-//       }),
-//     },
-//   },
-//   {
-//     initialRouteName: 'sectonList',
-//     lazy: true,
-//     swipeEnabled: true,
-//     tabBarOptions: {
-//       activeTintColor: 'red',
-//       // style: {
-//       //   backgroundColor: '#ccc'
-//       // },
-//     },
-//   },
-// );
-
-// export default AppTabNavigator;
-
-// import MinePage from '../Mine/index';
-// import LoginPage from '../Login/index';
-// import HomePage from '../Home/index';
-
-// import LoginPage from '../Login/index';
 import HomePage from '../Home/index';
 import CineamPage from '../Cineam/index';
 import MinePage from '../Mine/index';
@@ -119,7 +45,7 @@ const routes=[
   }
 ]
 
-function tabScreen(){
+function tabBarScreen(){
   return routes.map((item,index)=>{
     return <Tab.Screen 
     key={item.name} 
@@ -145,11 +71,8 @@ export default function BottomTabNavigator() {
         }else if (route.name === 'MinePage') {
           iconName = focused ? MINE_ACTIVE_ICON : MINE_ICON;
         }
-
-        // You can return any component that you like here!
-        // return <Ionicons name={iconName} size={size} color={color} />;
         return <Image
-          style={{width:30,height:30}}
+          style={{width:20,height:20}}
           source={iconName}
         />;
       },
@@ -157,7 +80,7 @@ export default function BottomTabNavigator() {
       tabBarInactiveTintColor: '#333',
     })}
     >
-      {tabScreen()}
+      {tabBarScreen()}
     </Tab.Navigator>
   );
 }

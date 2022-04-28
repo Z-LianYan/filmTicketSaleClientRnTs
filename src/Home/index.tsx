@@ -30,7 +30,7 @@ const Home = (props:any) => {
   let navigation:any = useNavigation()
   return (<View>
     <Text style={styles._text} onPress={()=>{
-      navigation.replace('AppNav')
+      props.navigation.replace('AppNav')
       // navigation.navigate('AppNav')
       // props.home.addCount();
       // props.home.setAppName(666);
@@ -40,6 +40,11 @@ const Home = (props:any) => {
     <Ionicons name={'md-home'} size={26} color={'#000'} />
     <AntDesign name={'stepforward'} size={26} color={'#000'} />
     <MaterialCommunityIcons name={'ab-testing'} size={26} color={'#000'} />
+
+
+    <Text style={styles._text} onPress={()=>{
+      props.navigation.push('LoginPage')
+    }}>登录</Text>
   </View>);
 };
 
