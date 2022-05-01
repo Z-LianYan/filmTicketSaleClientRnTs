@@ -20,26 +20,29 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
-  useColorScheme,
-  View,
+  useColorScheme
 } from 'react-native';
+import { View,Text} from '../../component/Themed';
+
+
 
 const Home = (props:any) => {
-  console.log('首页',props)
+  
+  const colorScheme = useColorScheme();
+  console.log('首页',props,colorScheme)
   let navigation:any = useNavigation()
   return (<View>
     <Text style={styles._text} onPress={()=>{
-      props.navigation.replace('AppNav')
+      // props.navigation.replace('AppNav')
       // navigation.navigate('AppNav')
-      // props.home.addCount();
-      // props.home.setAppName(666);
+      props.home.addCount();
+      props.home.setAppName(666);
     }}>首页 count= {props.home.count} num= {props.home.num}</Text>
 
-    <FontAwesome name="gitlab" size={26} color="#999"/>
-    <Ionicons name={'md-home'} size={26} color={'#000'} />
-    <AntDesign name={'stepforward'} size={26} color={'#000'} />
-    <MaterialCommunityIcons name={'ab-testing'} size={26} color={'#000'} />
+    <FontAwesome name="gitlab" size={26} color={colorScheme=='dark'?'#fff':'#999'}/>
+    <Ionicons name={'md-home'} size={26} color={colorScheme=='dark'?'#fff':'#999'} />
+    <AntDesign name={'stepforward'} size={26} color={colorScheme=='dark'?'#fff':'#999'} />
+    <MaterialCommunityIcons name={'ab-testing'} size={26} color={colorScheme=='dark'?'#fff':'#999'} />
 
 
     <Text style={styles._text} onPress={()=>{
@@ -50,7 +53,7 @@ const Home = (props:any) => {
 
 const styles = StyleSheet.create({
   _text:{
-    color:'#000',
+    // color:'#000',
   }
 });
 

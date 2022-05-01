@@ -1,7 +1,7 @@
 
-import HomePage from '../Home/index';
-import CineamPage from '../Cineam/index';
-import MinePage from '../Mine/index';
+import HomePage from '../views/Home/index';
+import CineamPage from '../views/Cineam/index';
+import MinePage from '../views/Mine/index';
 
 import * as React from 'react';
 import {Text, View, Image} from 'react-native';
@@ -76,8 +76,10 @@ export default function BottomTabNavigator() {
           source={iconName}
         />;
       },
-      tabBarActiveTintColor: '#e54847',
-      tabBarInactiveTintColor: '#333',
+      tabBarActiveTintColor: '#e54847',//激活的颜色
+      tabBarInactiveTintColor: '#333',//未必激活的颜色
+
+      headerTitleAlign:'center',//头部标题居中
     })}
     >
       {tabBarScreen()}

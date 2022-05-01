@@ -8,28 +8,33 @@
  * @format
  */
 
- import React from 'react';
- import {
-   SafeAreaView,
-   ScrollView,
-   StatusBar,
-   StyleSheet,
-   Text,
-   useColorScheme,
-   View,
- } from 'react-native';
- 
- import {
-   Colors,
-   DebugInstructions,
-   Header,
-   LearnMoreLinks,
-   ReloadInstructions,
- } from 'react-native/Libraries/NewAppScreen';
- import { Provider } from 'mobx-react';
- import store from './store/index';
- import { NavigationContainer } from '@react-navigation/native';
- import StackNavigators from './navigators/StackNavigators';
+import React from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from 'react-native';
+
+import {
+  Colors,
+  DebugInstructions,
+  Header,
+  LearnMoreLinks,
+  ReloadInstructions,
+} from 'react-native/Libraries/NewAppScreen';
+import { Provider } from 'mobx-react';
+import store from './store/index';
+import { 
+  NavigationContainer,
+  DarkTheme,
+  DefaultTheme, 
+} from '@react-navigation/native';
+import StackNavigators from './navigators/StackNavigators';
+import { observer, inject } from 'mobx-react'
  
  
  // const Section: React.FC<{
@@ -61,16 +66,18 @@
  // };
  
  const App = () => {
-   const isDarkMode = useColorScheme() === 'dark';
+  //  const isDarkMode = useColorScheme() === 'dark';
  
-   const backgroundStyle = {
-     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-   };
- 
+  //  const backgroundStyle = {
+  //    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  //  };
+  const colorScheme = useColorScheme();
    return (
      <Provider {...store}>
          <SafeAreaView style={{flex:1}}>
-           <NavigationContainer>
+           <StatusBar hidden={false}/>
+           <NavigationContainer 
+           theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
              <StackNavigators/>
            </NavigationContainer>
          </SafeAreaView>
