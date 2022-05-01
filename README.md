@@ -1,16 +1,16 @@
-# filmticketsaleclientrnts
+# 售票宝 app
 
 ```bash
   author lend
 ```
 
-## Build Setup
+## 构建设置
 
 ```bash
-# install dependencies
+# 安装依赖
 $ yarn install
 
-# develop
+# 开发
 $ npm run ios （ios端启动命令）
 $ npm run android （android启动命令）
 
