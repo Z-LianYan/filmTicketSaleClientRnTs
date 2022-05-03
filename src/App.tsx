@@ -35,7 +35,7 @@ import {
 } from '@react-navigation/native';
 import StackNavigators from './navigators/StackNavigators';
 import { observer, inject } from 'mobx-react';
-import { navigationRef } from './lib/router';
+// import { navigationRef } from './lib/router';
  
  
  // const Section: React.FC<{
@@ -78,7 +78,6 @@ import { navigationRef } from './lib/router';
          <SafeAreaView style={{flex:1}}>
            <StatusBar hidden={false} translucent={true}/>
            <NavigationContainer 
-           ref={navigationRef}
            theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
              <StackNavigators/>
            </NavigationContainer>
