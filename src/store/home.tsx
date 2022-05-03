@@ -7,7 +7,9 @@ class Home {
   }
 
   num = "werty7u"
-  count = 0
+  count = 0;
+
+  
 
   setAppName(num: string) {
     this.num = num

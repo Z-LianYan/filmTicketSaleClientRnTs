@@ -14,11 +14,12 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   useColorScheme,
-  View,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
+import { View,Text} from '../../component/Themed';
+
+
 const Cineam = () => {
   console.log('影院')
   let navigation = useNavigation()
@@ -31,7 +32,7 @@ const Cineam = () => {
 
 const styles = StyleSheet.create({
   _text:{
-    color:'#000'
+    // color:'#000'
   }
 });
 

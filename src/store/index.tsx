@@ -1,6 +1,8 @@
-import home from './home'
+import home from './home';
+import app from './app';
 
 const mainStore = {
+  app,
   home
 }
 

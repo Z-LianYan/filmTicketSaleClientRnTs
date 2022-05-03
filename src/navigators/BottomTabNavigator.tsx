@@ -1,14 +1,15 @@
 
-import HomePage from '../views/Home/index';
-import CineamPage from '../views/Cineam/index';
-import MinePage from '../views/Mine/index';
+
+
 
 import * as React from 'react';
+import { observer, inject } from 'mobx-react'
 import {Text, View, Image} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import MinePage from '../views/Mine/index';
+import LoginPage from '../views/Login/index';
 import { 
   FIlM_ICON,
   FIlM_ACTIVE_ICON, 
@@ -16,46 +17,26 @@ import {
   CINEMA_ACTIVE_ICON,
   MINE_ICON,
   MINE_ACTIVE_ICON,
-} from '../assets/image/index'
+} from '../assets/image/index';
+
+import router from './router';
 
 const Tab = createBottomTabNavigator();
-const routes=[
-  {
-    component: HomePage, 
-    name: "HomePage", 
-    options: {
-      tabBarBadge:1,
-      title:'电影'
-    } 
-  },
-  { 
-    component: CineamPage, 
-    name:"CineamPage",
-    options:{
-      tabBarBadge:2,
-      title:'影院'
-    }},
-  { 
-    component: MinePage, 
-    name: "MinePage", 
-    options: {
-      tabBarBadge:3,
-      title:'我的'
-    } 
-  }
-]
 
-function tabBarScreen(){
-  return routes.map((item,index)=>{
+function tabBarScreen(props:any){
+  return router.map((item)=>{
     return <Tab.Screen 
     key={item.name} 
     name={item.name}
-    component={item.component} 
-    options={item.options}/>
+    component={item.name=='MinePage'?props.home.count?item.component:LoginPage:item.component} 
+    options={{
+      ...item.options,
+      tabBarBadge:item.name=='HomePage'?props.home.count:props.app.tabBarBadge
+    }}/>
   })
 }
 
-export default function BottomTabNavigator() {
+function BottomTabNavigator(props:any) {
   return (
     <Tab.Navigator
     screenOptions={({ route }) => ({
@@ -82,7 +63,8 @@ export default function BottomTabNavigator() {
       headerTitleAlign:'center',//头部标题居中
     })}
     >
-      {tabBarScreen()}
+      {tabBarScreen(props)}
     </Tab.Navigator>
   );
 }
+export default inject('app','home')(observer(BottomTabNavigator));

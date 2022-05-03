@@ -22,11 +22,11 @@ import { View,Text} from '../../component/Themed';
 const Login = ({ navigation, route }:{ navigation:any, route:any }) => {
   // 在页面显示之前设(重)置 options 值，相当于在 componentDidMount 阶段执行
   // useLayoutEffect 是阻塞同步的，即执行完此处之后，才会继续向下执行
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      title:'登录'
-    });
-  });
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     title:'登录'
+  //   });
+  // });
 
   useEffect(()=>{
 

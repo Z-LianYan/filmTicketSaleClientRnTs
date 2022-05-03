@@ -14,10 +14,13 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   useColorScheme,
-  View,
 } from 'react-native';
+import { View,Text} from '../../component/Themed';
+
+
+
+
 const Cineam = () => {
 
   return (<View>
