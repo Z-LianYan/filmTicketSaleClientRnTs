@@ -35,53 +35,29 @@ import {
 } from '@react-navigation/native';
 import StackNavigators from './navigators/StackNavigators';
 import { observer, inject } from 'mobx-react';
-// import { navigationRef } from './lib/router';
- 
- 
- // const Section: React.FC<{
- //   title: string;
- // }> = ({children, title}) => {
- //   const isDarkMode = useColorScheme() === 'dark';
- //   return (
- //     <View style={styles.sectionContainer}>
- //       <Text
- //         style={[
- //           styles.sectionTitle,
- //           {
- //             color: isDarkMode ? Colors.white : Colors.black,
- //           },
- //         ]}>
- //         {title}
- //       </Text>
- //       <Text
- //         style={[
- //           styles.sectionDescription,
- //           {
- //             color: isDarkMode ? Colors.light : Colors.dark,
- //           },
- //         ]}>
- //         {children}
- //       </Text>
- //     </View>
- //   );
- // };
+import { ThemeProvider, Button, createTheme } from '@rneui/themed';
  
  const App = () => {
-  //  const isDarkMode = useColorScheme() === 'dark';
- 
-  //  const backgroundStyle = {
-  //    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  //  };
-  const colorScheme = useColorScheme();
+    const colorScheme = useColorScheme();
+    const theme = createTheme({
+      lightColors: {
+        primary: '#e54847',
+      },
+      darkColors: {
+        primary: '#e54847',
+      },
+    });
    return (
      <Provider {...store}>
-         <SafeAreaView style={{flex:1}}>
-           <StatusBar hidden={false} translucent={true}/>
-           <NavigationContainer 
-           theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-             <StackNavigators/>
-           </NavigationContainer>
+        <StatusBar hidden={false} translucent={true}/>
+        <ThemeProvider theme={theme}>
+          <SafeAreaView style={{flex:1}}>
+            <NavigationContainer //给react navigation 设置夜间模式和白天模式
+            theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+              <StackNavigators/>
+            </NavigationContainer>
          </SafeAreaView>
+        </ThemeProvider>
     </Provider>
    );
  };

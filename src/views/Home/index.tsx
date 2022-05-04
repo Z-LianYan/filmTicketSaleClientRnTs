@@ -8,7 +8,7 @@
  * @format
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/core';
 import { observer, inject } from 'mobx-react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -24,13 +24,16 @@ import {
 } from 'react-native';
 import { View,Text} from '../../component/Themed';
 
+import { Button, ButtonGroup, withTheme,CheckBox } from '@rneui/themed';
 
 
 const Home = (props:any) => {
-  
+  const [check1, setCheck1] = useState(false);
   const colorScheme = useColorScheme();
   console.log('首页',props,colorScheme)
-  let navigation:any = useNavigation()
+  let navigation:any = useNavigation();
+  const [groupValues, setGroupValues] = useState(['0']);
+
   return (<View>
     <Text style={styles._text} onPress={()=>{
       // props.navigation.replace('AppNav')
@@ -48,6 +51,33 @@ const Home = (props:any) => {
     <Text style={styles._text} onPress={()=>{
       props.navigation.push('LoginPage')
     }}>登录</Text>
+
+    <Button
+      title={'React Native Elements'}
+      containerStyle={{
+        // marginHorizontal: 50,
+        marginVertical: 10,
+      }}
+      onPress={()=>{
+        console.log(1234)
+      }}
+    />
+
+    <CheckBox
+      center
+      title="Click Here"
+      checked={check1}
+      onPress={() => setCheck1(!check1)}
+      containerStyle={{
+        width:120
+      }}
+      wrapperStyle={{
+        width:120,
+        borderWidth:1,
+        borderColor: 'red'
+      }}
+    />
+    
   </View>);
 };
 

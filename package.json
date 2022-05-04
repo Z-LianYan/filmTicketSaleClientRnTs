@@ -13,6 +13,8 @@
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/stack": "^6.2.1",
+    "@rneui/base": "^4.0.0-rc.2",
+    "@rneui/themed": "^4.0.0-rc.2",
     "@types/react-native-vector-icons": "^6.4.10",
     "mobx": "^6.5.0",
     "mobx-react": "^7.3.0",
