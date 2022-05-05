@@ -20,12 +20,23 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  useColorScheme
+  useColorScheme,
+  Platform
 } from 'react-native';
-import { View,Text} from '../../component/Themed';
+import { 
+  View,
+  Text 
+} from '../../component/Themed';
 
-import { Button, ButtonGroup, withTheme,CheckBox } from '@rneui/themed';
+import { 
+  Button, 
+  ButtonGroup, 
+  withTheme,
+  CheckBox,
+  Dialog
+} from '@rneui/themed';
 
+import { get_film_hot } from '../../api/film';
 
 const Home = (props:any) => {
   const [check1, setCheck1] = useState(false);
@@ -53,13 +64,18 @@ const Home = (props:any) => {
     }}>登录</Text>
 
     <Button
-      title={'React Native Elements'}
+      title={'获取数据'}
       containerStyle={{
         // marginHorizontal: 50,
         marginVertical: 10,
       }}
-      onPress={()=>{
-        console.log(1234)
+      onPress={async ()=>{
+        let result = await get_film_hot({
+          page: 1,
+          limit: 6,
+          city_id: '440100'
+        });
+        console.log('result---',result);
       }}
     />
 
