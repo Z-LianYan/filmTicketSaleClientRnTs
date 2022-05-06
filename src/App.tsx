@@ -36,7 +36,6 @@ import {
 import StackNavigators from './navigators/StackNavigators';
 import { observer, inject } from 'mobx-react';
 import { ThemeProvider, Button, createTheme } from '@rneui/themed';
- 
  const App = () => {
     const colorScheme = useColorScheme();
     const theme = createTheme({

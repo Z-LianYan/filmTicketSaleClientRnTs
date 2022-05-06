@@ -3,26 +3,13 @@
 
 import axios from "axios";
 import {
-  Platform
+  Platform,
+  ActivityIndicator,
+  ToastAndroid
 } from 'react-native';
-
-import {
-  Dialog
-} from '@rneui/themed';
 import { useState } from 'react';
 
-function Loading(){
-  let [visible,setVisible] = useState(false)
-  return <Dialog 
-  isVisible={visible} 
-  onBackdropPress={()=>setVisible(!visible)}>
-    <Dialog.Loading />
-  </Dialog>
-}
-
-
-
-
+let host = process.env.NODE_ENV=='development'?'http://192.168.0.102:7002':'http://film.imgresource.com.cn/'
 
 axios.defaults.withCredentials = true;
 const service = axios.create({
@@ -59,24 +46,26 @@ service.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 export function post(url:string, data:object, text:string) {
   return new Promise((resolve, reject) => {
     if (text)
+
+    
+
       // Toast.show({
       //   icon: "loading",
       //   duration: 2000,
       //   content: text,
       // });
     service({
-      url: url,
+      url: host+url,
       method: "POST",
       data: data,
       headers: {},
     })
       .then((res) => {
         resolve(res.data);
-        // if (text) Toast.clear();
+        // if (text) Toast.hide(toast);
       })
       .catch((err) => {
         reject(err);
@@ -91,21 +80,20 @@ export function post(url:string, data:object, text:string) {
 
 export function get(url:string, params?:object, text?:string) {
   return new Promise((resolve, reject) => {
-    if (text)
-      // Toast.show({
-      //   icon: "loading",
-      //   duration: 2000,
-      //   content: text,
-      // });
+    // if (text)
+
+
+    // ToastAndroid.show("A pikachu appeared nearby !", ToastAndroid.SHORT);
+    
     service({
-      url: 'http://192.168.0.102:7002'+url,
+      url: host+url,
       method: "GET",
       params: params,
       headers: {},
     })
       .then((res) => {
         resolve(res.data);
-        // if (text) Toast.clear();
+        // if (text) Toast.hide(toast);
       })
       .catch((err) => {
         reject(err);

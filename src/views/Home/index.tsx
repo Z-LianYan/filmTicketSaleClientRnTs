@@ -21,7 +21,8 @@ import {
   StatusBar,
   StyleSheet,
   useColorScheme,
-  Platform
+  Platform,
+  ActivityIndicator
 } from 'react-native';
 import { 
   View,
@@ -37,6 +38,8 @@ import {
 } from '@rneui/themed';
 
 import { get_film_hot } from '../../api/film';
+
+
 
 const Home = (props:any) => {
   const [check1, setCheck1] = useState(false);
@@ -62,7 +65,8 @@ const Home = (props:any) => {
     <Text style={styles._text} onPress={()=>{
       props.navigation.push('LoginPage')
     }}>登录</Text>
-
+    <ActivityIndicator/>
+    {/* <Toast message='1234'/> */}
     <Button
       title={'获取数据'}
       containerStyle={{
@@ -70,6 +74,8 @@ const Home = (props:any) => {
         marginVertical: 10,
       }}
       onPress={async ()=>{
+        // console.log('-----',process.env.NODE_ENV);
+        // return;
         let result = await get_film_hot({
           page: 1,
           limit: 6,
