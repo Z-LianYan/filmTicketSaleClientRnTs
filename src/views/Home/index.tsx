@@ -22,7 +22,8 @@ import {
   StyleSheet,
   useColorScheme,
   Platform,
-  ActivityIndicator
+  ActivityIndicator,
+  Image
 } from 'react-native';
 import { 
   View,
@@ -30,14 +31,20 @@ import {
 } from '../../component/Themed';
 
 import { 
-  Button, 
-  ButtonGroup, 
-  withTheme,
-  CheckBox,
-  Dialog
-} from '@rneui/themed';
+  Button,
+  Carousel
+} from '../../component/teaset/index';
+
+// import { 
+//   Button, 
+//   ButtonGroup, 
+//   withTheme,
+//   CheckBox,
+//   Dialog
+// } from '@rneui/themed';
 
 import { get_film_hot } from '../../api/film';
+// import { Button } from '@rneui/base';
 
 
 
@@ -66,14 +73,7 @@ const Home = (props:any) => {
       props.navigation.push('LoginPage')
     }}>登录</Text>
     <ActivityIndicator/>
-    {/* <Toast message='1234'/> */}
-    <Button
-      title={'获取数据'}
-      containerStyle={{
-        // marginHorizontal: 50,
-        marginVertical: 10,
-      }}
-      onPress={async ()=>{
+    <Button type="primary" title={'2345'} onPress={async ()=>{
         // console.log('-----',process.env.NODE_ENV);
         // return;
         let result = await get_film_hot({
@@ -82,23 +82,23 @@ const Home = (props:any) => {
           city_id: '440100'
         });
         console.log('result---',result);
-      }}
-    />
-
-    <CheckBox
-      center
-      title="Click Here"
-      checked={check1}
-      onPress={() => setCheck1(!check1)}
-      containerStyle={{
-        width:120
-      }}
-      wrapperStyle={{
-        width:120,
-        borderWidth:1,
-        borderColor: 'red'
-      }}
-    />
+      }}></Button>
+    {/* <Toast message='1234'/> */}
+    
+    <Carousel style={{height: 238}}>
+      <Image 
+      style={{width: "100%", height: 238}} 
+      resizeMode='cover' 
+      source={{uri: 'https://static.maizuo.com/v5/upload/6f5e10201aaea65b311d7ab562ba097c.jpg'}} />
+      <Image 
+      style={{width: "100%", height: 238}} 
+      resizeMode='cover' 
+      source={{uri: 'https://static.maizuo.com/v5/upload/67f9eb733fd33f6148ae740e130d5612.jpg'}} />
+      <Image 
+      style={{width: "100%", height: 238}} 
+      resizeMode='cover' 
+      source={{uri: 'https://static.maizuo.com/v5/upload/fae22ffcaa41eced5e3dc7a0f2873690.jpg'}} />
+    </Carousel>
     
   </View>);
 };

@@ -9,8 +9,9 @@ import {
 } from 'react-native';
 import { useState } from 'react';
 
-let host = process.env.NODE_ENV=='development'?'http://192.168.0.102:7002':'http://film.imgresource.com.cn/'
-
+let host = process.env.NODE_ENV=='development'?'http://192.168.0.102:7002':'http://film.imgresource.com.cn'
+// let host = process.env.NODE_ENV=='development'?'http://film.imgresource.com.cn':'http://film.imgresource.com.cn'
+import { TopView, Toast } from '../component/teaset/index';
 axios.defaults.withCredentials = true;
 const service = axios.create({
   baseURL: process.env.BASE_API, // api的base_url
@@ -81,8 +82,9 @@ export function post(url:string, data:object, text:string) {
 export function get(url:string, params?:object, text?:string) {
   return new Promise((resolve, reject) => {
     // if (text)
-
-
+    Toast.success('Toast success');
+    // Toast.smile('Toast smile');
+    // Toast.stop('Toast stop');
     // ToastAndroid.show("A pikachu appeared nearby !", ToastAndroid.SHORT);
     
     service({
