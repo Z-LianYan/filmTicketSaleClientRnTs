@@ -38,7 +38,7 @@ import { observer, inject } from 'mobx-react';
 import { TopView, Toast,Theme } from './component/teaset/index';//使用 ./component/teaset/index ui库需要安装依赖 prop-types,rebound,immutable,react-timer-mixin,create-react-class,fbjs  
 
 
-// Theme.set(Theme.themes.default);
+// Theme.set(Theme.themes.black);
 Theme.set({
   toastColor: '#e54847',
   primaryColor:'#e54847'
@@ -50,7 +50,7 @@ const App = () => {
   const colorScheme = useColorScheme();
     return (
       <Provider {...store}>
-        <SafeAreaView style={{flex:1}}>
+        {/* <SafeAreaView style={{flex:1}}> */}
           <TopView>
             <StatusBar hidden={false} translucent={true}/>
             <NavigationContainer //给react navigation 设置夜间模式和白天模式
@@ -58,7 +58,7 @@ const App = () => {
               <StackNavigators/>
             </NavigationContainer>
             </TopView>
-        </SafeAreaView>
+        {/* </SafeAreaView> */}
     </Provider>
    );
  };

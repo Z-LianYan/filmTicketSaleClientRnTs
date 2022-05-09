@@ -44,8 +44,7 @@ export default class NavigationBar extends Component {
   };
 
   static defaultProps = {
-    // ...View.defaultProps,
-    ...ViewPropTypes,
+    ...View.defaultProps,
     type: 'ios',
     hidden: false,
     animated: true,
@@ -106,7 +105,7 @@ export default class NavigationBar extends Component {
     style = [
       {
         backgroundColor: Theme.navColor,
-        position: 'absolute',
+        position: 'relative',
         left: 0,
         right: 0,
         height:

@@ -14,7 +14,7 @@ const defaultColor = '#252527';
 const defaultTextColor = '#ccc';
 
 //pixel size
-const pixelSize = (function() {
+const pixelSize = (function () {
   let pixelRatio = PixelRatio.get();
   if (pixelRatio >= 3) return 0.333;
   else if (pixelRatio >= 2) return 0.5;
@@ -23,7 +23,7 @@ const pixelSize = (function() {
 
 export default {
   //General
-  screenColor: '#000',
+  screenColor: '#fff',
   primaryColor: primaryColor,
   secondaryColor: secondaryColor,
   defaultColor: defaultColor,
@@ -186,7 +186,7 @@ export default {
   stepperFontSize: 13,
   stepperBtnTextColor: defaultTextColor,
   stepperBtnFontSize: 13,
-  stepperValueMinWidth: 40,  
+  stepperValueMinWidth: 40,
   stepperValuePaddingHorizontal: 8,
   stepperButtonWidth: 20,
   stepperButtonHeight: 20,
@@ -364,7 +364,7 @@ export default {
   apItemPaddingVertical: 8,
   apItemPaddingHorizontal: 12,
   apSeparatorColor: '#383838',
-  apSeparatorWidth: pixelSize,  
+  apSeparatorWidth: pixelSize,
 
   //PullPicker
   pupColor: '#212121',
@@ -435,4 +435,3 @@ export default {
   //NavigationPage
   backButtonTitle: 'Back',
 };
-

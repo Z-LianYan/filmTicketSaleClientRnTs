@@ -25,14 +25,20 @@ import {
   ActivityIndicator,
   Image
 } from 'react-native';
-import { 
-  View,
-  Text 
-} from '../../component/Themed';
 
 import { 
+  NavigationContainer,
+  DarkTheme,
+  DefaultTheme, 
+} from '@react-navigation/native';
+import { 
+  View,
+  Text
+} from '../../component/Themed';
+import { 
   Button,
-  Carousel
+  Carousel,
+  NavigationBar
 } from '../../component/teaset/index';
 
 // import { 
@@ -56,34 +62,53 @@ const Home = (props:any) => {
   const [groupValues, setGroupValues] = useState(['0']);
 
   return (<View>
-    <Text style={styles._text} onPress={()=>{
+    
+    <NavigationBar 
+    statusBarInsets={true} 
+    title={<Text>title</Text>}
+    style={{backgroundColor:colorScheme === 'dark' ? '#000' : '#fff',}}
+    leftView={<View style={{flexDirection:'row',alignItems:'center'}}>
+      <Ionicons 
+      name={'md-chevron-back-sharp'} 
+      size={30} 
+      color={colorScheme === 'dark' ? '#fff' : '#000'} 
+      onPress={()=>{
+          navigation.goBack()
+      }}/>
+      <Text>返回</Text>
+    </View>
+    }
+    type={'ios'}/>
+
+    {/* <View style={{height:600}}></View> */}
+
+
+
+    {/* <Text style={styles._text} onPress={()=>{
       // props.navigation.replace('AppNav')
       // navigation.navigate('AppNav')
       props.home.addCount();
       props.home.setAppName(666);
-    }}>首页 count= {props.home.count} num= {props.home.num}</Text>
+    }}>首页 count= {props.home.count} num= {props.home.num}</Text> */}
 
-    <FontAwesome name="gitlab" size={26} color={colorScheme=='dark'?'#fff':'#999'}/>
+    {/* <FontAwesome name="gitlab" size={26} color={colorScheme=='dark'?'#fff':'#999'}/>
     <Ionicons name={'md-home'} size={26} color={colorScheme=='dark'?'#fff':'#999'} />
     <AntDesign name={'stepforward'} size={26} color={colorScheme=='dark'?'#fff':'#999'} />
-    <MaterialCommunityIcons name={'ab-testing'} size={26} color={colorScheme=='dark'?'#fff':'#999'} />
+    <MaterialCommunityIcons name={'ab-testing'} size={26} color={colorScheme=='dark'?'#fff':'#999'} /> */}
 
 
-    <Text style={styles._text} onPress={()=>{
+    {/* <Text style={styles._text} onPress={()=>{
       props.navigation.push('LoginPage')
     }}>登录</Text>
     <ActivityIndicator/>
     <Button type="primary" title={'2345'} onPress={async ()=>{
-        // console.log('-----',process.env.NODE_ENV);
-        // return;
         let result = await get_film_hot({
           page: 1,
           limit: 6,
           city_id: '440100'
         });
         console.log('result---',result);
-      }}></Button>
-    {/* <Toast message='1234'/> */}
+      }}></Button> */}
     
     <Carousel style={{height: 238}}>
       <Image 

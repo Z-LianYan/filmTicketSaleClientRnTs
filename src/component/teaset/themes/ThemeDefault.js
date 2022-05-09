@@ -5,7 +5,7 @@
 import {PixelRatio} from 'react-native';
 
 //primary color
-const primaryColor = '#337ab7';
+const primaryColor = '#e54847';
 //secondary color
 const secondaryColor = '#5bc0de';
 //default color
@@ -23,7 +23,7 @@ const pixelSize = (function () {
 
 export default {
   //General
-  screenColor: '#444',
+  screenColor: '#fff',
   primaryColor: primaryColor,
   secondaryColor: secondaryColor,
   defaultColor: defaultColor,
@@ -227,9 +227,9 @@ export default {
   navType: 'ios', //'auto', 'ios', 'android'
   navStatusBarStyle: 'light-content', //'default', 'light-content'
   navBarContentHeight: 44,
-  navColor: primaryColor,
+  navColor: '#fff',
   navTintColor: '#fff',
-  navTitleColor: '#fff',
+  navTitleColor: '#000',
   navTitleFontSize: 18,
   navButtonFontSize: 15,
   navSeparatorColor: primaryColor,

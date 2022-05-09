@@ -60,7 +60,7 @@ function Router(){
     let navigation:any = useNavigation()
     return <Stack.Navigator
         screenOptions={{
-            headerShown:true,//是否隐藏头部导航
+            headerShown:false,//是否隐藏头部导航
             // headerLeft:()=>{
             //     return <Ionicons 
             //     name={'md-chevron-back-sharp'} 

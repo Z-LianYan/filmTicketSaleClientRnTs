@@ -40,6 +40,7 @@ function BottomTabNavigator(props:any) {
   return (
     <Tab.Navigator
     screenOptions={({ route }) => ({
+      headerShown:false,//是否隐藏头部导航
       tabBarIcon: ({ focused, color, size }) => {
         let iconName;
 
