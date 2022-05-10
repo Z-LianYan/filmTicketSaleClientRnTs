@@ -18,12 +18,15 @@ import {
 } from 'react-native';
 import { View,Text} from '../../component/Themed';
 
+import NavigationBar from '../../component/NavigationBar';
 
 
 
 const Cineam = () => {
 
   return (<View>
+    <NavigationBar 
+    title={'我的'}/>
     <Text>我的</Text>
   </View>);
 };

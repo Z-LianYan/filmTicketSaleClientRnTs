@@ -225,7 +225,7 @@ export default {
 
   //NavigationBar
   navType: 'ios', //'auto', 'ios', 'android'
-  navStatusBarStyle: 'light-content', //'default', 'light-content'
+  navStatusBarStyle: 'default', //'default', 'light-content'
   navBarContentHeight: 44,
   navColor: '#fff',
   navTintColor: '#fff',

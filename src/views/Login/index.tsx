@@ -18,6 +18,7 @@ import {
   useColorScheme,
 } from 'react-native';
 import { View,Text} from '../../component/Themed';
+import NavigationBar from '../../component/NavigationBar';
 
 const Login = ({ navigation, route }:{ navigation:any, route:any }) => {
   // 在页面显示之前设(重)置 options 值，相当于在 componentDidMount 阶段执行
@@ -32,6 +33,8 @@ const Login = ({ navigation, route }:{ navigation:any, route:any }) => {
 
   }, [navigation])
   return (<View>
+    <NavigationBar 
+    title={'登录'}/>
     <Text>登录212</Text>
   </View>);
 };

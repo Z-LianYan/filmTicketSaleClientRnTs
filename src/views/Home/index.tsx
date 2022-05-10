@@ -37,8 +37,7 @@ import {
 } from '../../component/Themed';
 import { 
   Button,
-  Carousel,
-  NavigationBar
+  Carousel
 } from '../../component/teaset/index';
 
 // import { 
@@ -50,8 +49,8 @@ import {
 // } from '@rneui/themed';
 
 import { get_film_hot } from '../../api/film';
-// import { Button } from '@rneui/base';
 
+import NavigationBar from '../../component/NavigationBar';
 
 
 const Home = (props:any) => {
@@ -64,21 +63,12 @@ const Home = (props:any) => {
   return (<View>
     
     <NavigationBar 
-    statusBarInsets={true} 
-    title={<Text>title</Text>}
-    style={{backgroundColor:colorScheme === 'dark' ? '#000' : '#fff',}}
-    leftView={<View style={{flexDirection:'row',alignItems:'center'}}>
-      <Ionicons 
-      name={'md-chevron-back-sharp'} 
-      size={30} 
-      color={colorScheme === 'dark' ? '#fff' : '#000'} 
-      onPress={()=>{
-          navigation.goBack()
-      }}/>
-      <Text>返回</Text>
-    </View>
-    }
-    type={'ios'}/>
+    style={{
+      zIndex:1000
+    }}
+    backgroundColor='transparent'
+    position='absolute'
+    leftView={'123'}/>
 
     {/* <View style={{height:600}}></View> */}
 
@@ -124,7 +114,6 @@ const Home = (props:any) => {
       resizeMode='cover' 
       source={{uri: 'https://static.maizuo.com/v5/upload/fae22ffcaa41eced5e3dc7a0f2873690.jpg'}} />
     </Carousel>
-    
   </View>);
 };
 

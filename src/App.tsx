@@ -52,7 +52,10 @@ const App = () => {
       <Provider {...store}>
         {/* <SafeAreaView style={{flex:1}}> */}
           <TopView>
-            <StatusBar hidden={false} translucent={true}/>
+            <StatusBar 
+            hidden={false} 
+            backgroundColor={'green'} //状态栏的背景色  
+            barStyle='dark-content'/>
             <NavigationContainer //给react navigation 设置夜间模式和白天模式
             theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
               <StackNavigators/>

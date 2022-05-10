@@ -21,19 +21,19 @@ import { View,Text} from '../../component/Themed';
 
 import { 
   Button,
-  Carousel,
-  NavigationBar
+  Carousel
 } from '../../component/teaset/index';
+
+import NavigationBar from '../../component/NavigationBar';
+
+
+
 const Cineam = () => {
   console.log('影院')
   let navigation = useNavigation()
   return (<View>
     <NavigationBar 
-    title='Teaset' 
-    leftView={<NavigationBar.IconButton icon={require('../../assets/image/cinema-active.png')} />}
-    type={'ios'}/>
-
-    
+    title={'影院'}/>
     <Text style={styles._text} onPress={()=>{
       navigation.goBack()
     }}>影院
