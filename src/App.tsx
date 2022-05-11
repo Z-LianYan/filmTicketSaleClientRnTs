@@ -51,7 +51,7 @@ const App = () => {
     return (
       <Provider {...store}>
         {/* <SafeAreaView style={{flex:1}}> */}
-          <TopView>
+          <TopView style={{flex:1}}>
             <StatusBar 
             hidden={false} 
             backgroundColor={'green'} //状态栏的背景色  
