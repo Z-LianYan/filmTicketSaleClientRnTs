@@ -16,8 +16,8 @@ export default class CarouselControl extends Component {
   };
 
   static defaultProps = {
-    // ...View.defaultProps,
-    ...ViewPropTypes,
+    ...View.defaultProps,
+    // ...ViewPropTypes,
   };
 
   renderDot(dotIndex) {

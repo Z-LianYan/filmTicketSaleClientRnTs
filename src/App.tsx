@@ -39,10 +39,10 @@ import { TopView, Toast,Theme } from './component/teaset/index';//使用 ./compo
 
 
 // Theme.set(Theme.themes.black);
-Theme.set({
-  toastColor: '#e54847',
-  primaryColor:'#e54847'
-});
+// Theme.set({
+//   toastColor: '#e54847',
+//   primaryColor:'#e54847'
+// });
 
 
 const App = () => {

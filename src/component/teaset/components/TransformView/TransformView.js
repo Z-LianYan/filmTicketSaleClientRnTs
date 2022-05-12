@@ -29,8 +29,8 @@ export default class TransformView extends Component {
   };
 
   static defaultProps = {
-    // ...View.defaultProps,
-    ...ViewPropTypes,
+    ...View.defaultProps,
+    // ...ViewPropTypes,
     inertial: true,
     magnetic: true,
     tension: true,

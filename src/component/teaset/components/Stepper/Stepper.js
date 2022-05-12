@@ -27,8 +27,8 @@ export default class Stepper extends Component {
   };
 
   static defaultProps = {
-    // ...View.defaultProps,
-    ...ViewPropTypes,
+    ...View.defaultProps,
+    // ...ViewPropTypes,
     defaultValue: 0,
     step: 1,
     subButton: '－',

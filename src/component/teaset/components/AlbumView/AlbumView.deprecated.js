@@ -31,8 +31,8 @@ export default class AlbumView extends Component {
   };
 
   static defaultProps = {
-    // ...View.defaultProps,
-    ...ViewPropTypes,
+    ...View.defaultProps,
+    // ...ViewPropTypes,
     defaultIndex: 0,
     maxScale: 3,
     space: 20,

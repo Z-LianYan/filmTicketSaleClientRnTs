@@ -29,8 +29,8 @@ export default class SegmentedItem extends Component {
   };
 
   static defaultProps = {
-    // ...View.defaultProps,
-    ...ViewPropTypes,
+    ...View.defaultProps,
+    // ...ViewPropTypes,
     active: false,
   };
 

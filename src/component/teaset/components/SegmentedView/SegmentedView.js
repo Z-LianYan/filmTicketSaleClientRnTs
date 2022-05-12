@@ -32,8 +32,7 @@ export default class SegmentedView extends Component {
   };
 
   static defaultProps = {
-    // ...View.defaultProps,
-    ...ViewPropTypes,
+    ...View.defaultProps,
     type: 'projector',
     barPosition: 'top',
   };

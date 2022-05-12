@@ -18,8 +18,8 @@ export default class Badge extends Component {
   };
 
   static defaultProps = {
-    // ...View.defaultProps,
-    ...ViewPropTypes,
+    ...View.defaultProps,
+    // ...ViewPropTypes,
     type: 'capsule',
     maxCount: 99,
   };

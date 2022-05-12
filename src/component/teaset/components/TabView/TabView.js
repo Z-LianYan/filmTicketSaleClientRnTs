@@ -13,17 +13,17 @@ import Projector from '../Projector/Projector';
 import Carousel from '../Carousel/Carousel';
 
 export default class TabView extends Component {
-  static propTypes = {
-    ...ViewPropTypes,
-    type: PropTypes.oneOf(['projector', 'carousel']),
-    barStyle: ViewPropTypes.style,
-    activeIndex: PropTypes.number,
-    onChange: PropTypes.func, //(index)
-  };
+  // static propTypes = {
+  //   ...ViewPropTypes,
+  //   type: PropTypes.oneOf(['projector', 'carousel']),
+  //   barStyle: ViewPropTypes.style,
+  //   activeIndex: PropTypes.number,
+  //   onChange: PropTypes.func, //(index)
+  // };
 
   static defaultProps = {
     // ...View.defaultProps,
-    ...ViewPropTypes,
+    // ...ViewPropTypes,
     type: 'projector',
   };
 

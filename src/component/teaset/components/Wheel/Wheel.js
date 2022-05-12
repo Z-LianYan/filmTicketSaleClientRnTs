@@ -29,8 +29,8 @@ export default class Wheel extends Component {
   };
 
   static defaultProps = {
-    // ...View.defaultProps,
-    ...ViewPropTypes,
+    ...View.defaultProps,
+    // ...ViewPropTypes,
     pointerEvents: 'box-only',
     defaultIndex: 0,
   };

@@ -20,8 +20,8 @@ export default class BasePage extends Component {
   };
 
   static defaultProps = {
-    // ...View.defaultProps,
-    ...ViewPropTypes,
+    ...View.defaultProps,
+    // ...ViewPropTypes,
     scene: TeaNavigator.SceneConfigs.Replace,
     autoKeyboardInsets: Platform.OS === 'ios',
     keyboardTopInsets: 0,

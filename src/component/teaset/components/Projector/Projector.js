@@ -17,8 +17,8 @@ export default class Projector extends Component {
   };
 
   static defaultProps = {
-    // ...View.defaultProps,
-    ...ViewPropTypes,
+    ...View.defaultProps,
+    // ...ViewPropTypes,
     index: 0,
   };
 
