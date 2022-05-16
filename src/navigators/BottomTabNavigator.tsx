@@ -62,6 +62,11 @@ function BottomTabNavigator(props:any) {
       tabBarInactiveTintColor: '#333',//未必激活的颜色
 
       headerTitleAlign:'center',//头部标题居中
+      tabBarLabelStyle:{
+        marginBottom:5
+      },
+      tabBarStyle:{
+      }
     })}
     >
       {tabBarScreen(props)}

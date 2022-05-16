@@ -18,7 +18,7 @@ export function useThemeColor(props:any, colorName:string) {
   const colorFromProps = props[theme];
 
 
-  console.log('Colors[theme][colorName]=====>>',Colors[theme],Colors[theme][colorName],colorName)
+  // console.log('Colors[theme][colorName]=====>>',Colors[theme],Colors[theme][colorName],colorName)
   if (colorFromProps) {
     return colorFromProps;
   } else {

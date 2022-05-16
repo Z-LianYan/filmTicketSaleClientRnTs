@@ -25,7 +25,10 @@ import {
   ActivityIndicator,
   Image,
   View,
-  Text
+  Text,
+  RefreshControl,
+  Dimensions,
+  FlatList
 } from 'react-native';
 
 import { 
@@ -57,10 +60,12 @@ import { get_film_hot } from '../../api/film';
 import NavigationBar from '../../component/NavigationBar';
 import RenderCityName from './RenderCityName';
 
-const Home = (props:any) => {
-  const [check1, setCheck1] = useState(false);
-  const colorScheme = useColorScheme();
+import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
 
+
+const Home = (props:any) => {
+  const colorScheme = useColorScheme();
+  const [refreshing, setRefreshing] = React.useState(false);
   return (<View style={styles.container}>
     <NavigationBar 
       style={{
@@ -71,7 +76,15 @@ const Home = (props:any) => {
       leftView={<View>
         <RenderCityName/>
       </View>}/>
-    <ScrollView>
+    <ScrollView
+    refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={()=>{
+        setRefreshing(true)
+        setTimeout(() => {
+          setRefreshing(false)
+        }, 2000);
+      }} />
+    }>
       <Carousel style={{height: 238}}>
         <Image 
         style={{width: "100%", height: 238}} 
@@ -88,47 +101,65 @@ const Home = (props:any) => {
       </Carousel>
 
 
-      {/* <TabView style={{flex: 1}} type='projector'>
+      <TabView 
+      barStyle={{backgroundColor:'#ccc'}} 
+      style={{flex: 1}} 
+      type='carousel'>
         <TabView.Sheet
           title='Home'
+          badge={12}
         >
-          <Text>123</Text>
+          <View style={{height:200,backgroundColor:'purple'}}>
+            <Text>123</Text>
+          </View>
         </TabView.Sheet>
         <TabView.Sheet
           title='Me'
           badge={1}
         >
-          <Text>123</Text>
+          <View style={{height:200,backgroundColor:'yellow'}}>
+            <Text>123</Text>
+          </View>
         </TabView.Sheet>
-      </TabView> */}
+        <TabView.Sheet
+          title='Me'
+          badge={1}
+        >
+          <View style={{height:200,backgroundColor:'blue'}}>
+            <Text>123</Text>
+          </View>
+        </TabView.Sheet>
+        
+      </TabView>
 
-      <TransformView
-        style={{
-          backgroundColor: '#fff', 
-          flex: 1, 
-          height:300,
-          alignItems: 'center', 
-          justifyContent: 'center'
-        }}
-        minScale={0.5}
-        maxScale={2}
-      >
-        <Image 
-        style={{width: 875, height: 500}} 
-        resizeMode='cover' source={{uri: 'https://static.maizuo.com/v5/upload/6f5e10201aaea65b311d7ab562ba097c.jpg'}} />
-      </TransformView>
+   
 
 
 
     </ScrollView>
+
+
     
+        
   </View>);
 };
 
+var ScreenWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   container:{
     flex:1
   },
+  lineStyle: {
+    width: ScreenWidth / 4,
+    height: 2,
+    backgroundColor:'red'
+  },
+  textStyle: {
+    flex: 1,
+    fontSize: 20,
+    marginTop: 20,
+    textAlign:'center'
+  }
 });
 
 export default inject("home")(observer(Home));
