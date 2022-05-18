@@ -44,28 +44,24 @@ import {
   Button,
   Carousel,
   TabView,
-  TransformView
+  TransformView,
+  Theme
 } from '../../component/teaset/index';
 
-// import { 
-//   Button, 
-//   ButtonGroup, 
-//   withTheme,
-//   CheckBox,
-//   Dialog
-// } from '@rneui/themed';
 
 import { get_film_hot } from '../../api/film';
 
 import NavigationBar from '../../component/NavigationBar';
 import RenderCityName from './RenderCityName';
+import Swiper from './Swiper';
+import CustomTabView from './CustomTabView';
 
-import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
 
 
 const Home = (props:any) => {
   const colorScheme = useColorScheme();
   const [refreshing, setRefreshing] = React.useState(false);
+  const [activeTabIndex, setActiveTabIndex] = React.useState(0);
   return (<View style={styles.container}>
     <NavigationBar 
       style={{
@@ -85,54 +81,16 @@ const Home = (props:any) => {
         }, 2000);
       }} />
     }>
-      <Carousel style={{height: 238}}>
-        <Image 
-        style={{width: "100%", height: 238}} 
-        resizeMode='cover' 
-        source={{uri: 'https://static.maizuo.com/v5/upload/6f5e10201aaea65b311d7ab562ba097c.jpg'}} />
-        <Image 
-        style={{width: "100%", height: 238}} 
-        resizeMode='cover' 
-        source={{uri: 'https://static.maizuo.com/v5/upload/67f9eb733fd33f6148ae740e130d5612.jpg'}} />
-        <Image 
-        style={{width: "100%", height: 238}} 
-        resizeMode='cover' 
-        source={{uri: 'https://static.maizuo.com/v5/upload/fae22ffcaa41eced5e3dc7a0f2873690.jpg'}} />
-      </Carousel>
+      <Swiper/>
 
+      <CustomTabView onChange={(val)=>{
+        setActiveTabIndex(val);
+      }}/>
 
-      <TabView 
-      barStyle={{backgroundColor:'#ccc'}} 
-      style={{flex: 1}} 
-      type='carousel'>
-        <TabView.Sheet
-          title='Home'
-          badge={12}
-        >
-          <View style={{height:200,backgroundColor:'purple'}}>
-            <Text>123</Text>
-          </View>
-        </TabView.Sheet>
-        <TabView.Sheet
-          title='Me'
-          badge={1}
-        >
-          <View style={{height:200,backgroundColor:'yellow'}}>
-            <Text>123</Text>
-          </View>
-        </TabView.Sheet>
-        <TabView.Sheet
-          title='Me'
-          badge={1}
-        >
-          <View style={{height:200,backgroundColor:'blue'}}>
-            <Text>123</Text>
-          </View>
-        </TabView.Sheet>
-        
-      </TabView>
-
-   
+      {
+        activeTabIndex===0?<Text>正在热映</Text>:<Text>即将上映</Text>
+      }
+      
 
 
 
@@ -159,7 +117,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginTop: 20,
     textAlign:'center'
-  }
+  },
+  
 });
 
 export default inject("home")(observer(Home));
