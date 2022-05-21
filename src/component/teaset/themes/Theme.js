@@ -67,7 +67,7 @@ const Theme = {
   },
 
   set: function (theme) {
-    console.log('themes======>>>this', this);
+    // console.log('themes======>>>this', this);
     Object.assign(this, theme);
 
     // console.log('themes==888====>>>this', this);

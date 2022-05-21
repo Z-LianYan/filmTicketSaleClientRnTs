@@ -1,14 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
-import React, { useState } from 'react';
+import React, { useState,useEffect,useRef } from 'react';
 import { useNavigation } from '@react-navigation/core';
 import { observer, inject } from 'mobx-react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -40,6 +30,7 @@ import {
 //   View,
 //   Text
 // } from '../../component/Themed';
+import { get_banner } from '../../api/film';
 import { 
   Button,
   Carousel,
@@ -56,12 +47,24 @@ import RenderCityName from './RenderCityName';
 import Swiper from './Swiper';
 import CustomTabView from './CustomTabView';
 
+import Hot from './Hot';
+import SoonShow from './SoonShow';
+
 
 
 const Home = (props:any) => {
+  const hotRef:{current:any} = useRef();
+  const soonShowRef:{current:any} = useRef();
   const colorScheme = useColorScheme();
   const [refreshing, setRefreshing] = React.useState(false);
   const [activeTabIndex, setActiveTabIndex] = React.useState(0);
+
+  useEffect(() => {
+    
+    return ()=>{
+    }
+  },[])
+
   return (<View style={styles.container}>
     <NavigationBar 
       style={{
@@ -86,39 +89,26 @@ const Home = (props:any) => {
       <CustomTabView onChange={(val)=>{
         setActiveTabIndex(val);
       }}/>
-
       {
-        activeTabIndex===0?<Text>正在热映</Text>:<Text>即将上映</Text>
+        activeTabIndex===0?<Hot ref={hotRef}/>:<SoonShow ref={soonShowRef}/>
       }
+
       
 
 
-
     </ScrollView>
-
-
-    
-        
   </View>);
 };
+export default inject("home")(observer(Home));
 
-var ScreenWidth = Dimensions.get('window').width;
+
 const styles = StyleSheet.create({
   container:{
-    flex:1
+    flex:1,
+    backgroundColor:'#fff'
   },
-  lineStyle: {
-    width: ScreenWidth / 4,
-    height: 2,
-    backgroundColor:'red'
-  },
-  textStyle: {
-    flex: 1,
-    fontSize: 20,
-    marginTop: 20,
-    textAlign:'center'
-  },
+  
   
 });
 
-export default inject("home")(observer(Home));
+

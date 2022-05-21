@@ -7,7 +7,7 @@ import {PixelRatio} from 'react-native';
 //primary color
 const primaryColor = '#e54847';
 //secondary color
-const secondaryColor = '#d45e5d';
+const secondaryColor = '#cc7272';
 //default color
 const defaultColor = '#fff';
 //default text color
@@ -50,7 +50,7 @@ export default {
   btnColor: defaultColor,
   btnPrimaryColor: primaryColor,
   btnSecondaryColor: secondaryColor,
-  btnDangerColor: '#d9534f',
+  btnDangerColor: '#e6a23c',
   btnLinkColor: 'rgba(0, 0, 0, 0)',
   //Button - title color
   btnTitleColor: primaryColor,
@@ -62,7 +62,7 @@ export default {
   btnBorderColor: primaryColor,
   btnPrimaryBorderColor: primaryColor,
   btnSecondaryBorderColor: secondaryColor,
-  btnDangerBorderColor: '#d9534f',
+  btnDangerBorderColor: '#e6a23c',
   btnLinkBorderColor: 'rgba(0, 0, 0, 0)',
   //Button - border width
   btnBorderWidth: 1,
@@ -288,7 +288,7 @@ export default {
   rowPaddingTitleDetail: 4,
   rowDetailLineHeight: 18,
   rowActionButtonColor: '#c8c7cd',
-  rowActionButtonDangerColor: '#d9534f',
+  rowActionButtonDangerColor: '#e6a23c',
   rowActionButtonTitleColor: '#fff',
   rowActionButtonDangerTitleColor: '#fff',
   rowActionButtonTitleFontSize: 15,

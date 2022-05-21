@@ -82,7 +82,7 @@ export function post(url:string, data:object, text:string) {
 export function get(url:string, params?:object, text?:string) {
   return new Promise((resolve, reject) => {
     // if (text)
-    Toast.success('Toast success');
+    // Toast.success('Toast success');
     // Toast.smile('Toast smile');
     // Toast.stop('Toast stop');
     // ToastAndroid.show("A pikachu appeared nearby !", ToastAndroid.SHORT);

@@ -1,55 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
  import { useNavigation } from '@react-navigation/core';
  import { observer, inject } from 'mobx-react'
- import Ionicons from 'react-native-vector-icons/Ionicons';
  import {
-   SafeAreaView,
-   ScrollView,
-   StatusBar,
    StyleSheet,
-   useColorScheme,
-   Platform,
-   ActivityIndicator,
    Image,
    View,
    Text
  } from 'react-native';
 
  import { 
-  Button,
   Carousel,
-  TabView,
-  TransformView,
   Theme
 } from '../../component/teaset/index';
- 
-//  import { get_film_hot } from '../../api/film';
+import { get_film_hot,get_banner } from '../../api/film';
 
-import { TouchableOpacity } from 'react-native-gesture-handler';
- 
- const Swiper = (props?:any)=>{
-   let navigation:any = useNavigation();
-   return <Carousel style={{height: 238}} control={<Carousel.Control
+type propType = {
+}
+ const SwiperCom = (props?:propType)=>{
+  let navigation:any = useNavigation();
+  let [banner_list,set_banner_list] = useState([])
+  useEffect(() => {
+      getBannerList()
+    return ()=>{
+    }
+  },[])
+  async function getBannerList(){
+    let result = await get_banner();
+    set_banner_list(result.rows);
+  }
+  
+  return <Carousel 
+    style={{height: 238}} 
+    key={banner_list.length}
+    control={<Carousel.Control
     style={{alignItems: 'flex-end'}}
     dot={<View style={styles.dot}></View>}
     activeDot={<View style={styles.activeDot}></View>}
     />}>
-   <Image 
-   style={{width: "100%", height: 238}} 
-   resizeMode='cover' 
-   source={{uri: 'https://static.maizuo.com/v5/upload/6f5e10201aaea65b311d7ab562ba097c.jpg'}} />
-   <Image 
-   style={{width: "100%", height: 238}} 
-   resizeMode='cover' 
-   source={{uri: 'https://static.maizuo.com/v5/upload/67f9eb733fd33f6148ae740e130d5612.jpg'}} />
-   <Image 
-   style={{width: "100%", height: 238}} 
-   resizeMode='cover' 
-   source={{uri: 'https://static.maizuo.com/v5/upload/fae22ffcaa41eced5e3dc7a0f2873690.jpg'}} />
- </Carousel>
+      {
+        banner_list.map((item:{poster_img:any,id:number})=>{
+          return <Image 
+          style={{width: "100%", height: 238}} 
+          resizeMode='cover' 
+          key={item.id}
+          source={{uri: item.poster_img }} />
+        })
+      }
+  </Carousel>
  }
- export default inject('app')(observer(Swiper));
-
+ export default inject('app')(observer(SwiperCom));
 
  const styles = StyleSheet.create({
   dot:{

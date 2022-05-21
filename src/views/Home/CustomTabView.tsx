@@ -27,7 +27,12 @@ import React, { useState } from 'react';
    let navigation:any = useNavigation();
    const [activeTab, setActiveTab] = React.useState(0);
    return <TabView 
-   barStyle={{backgroundColor:'#fff',fontSize:40}} 
+   barStyle={{
+    backgroundColor:'#fff',
+    fontSize:40,
+    borderBottomColor:'#f4f4f4',
+    borderBottomWidth:1
+  }} 
    style={{flex: 1}} 
    type='sheet'//sheet,carousel
    activeIndex={activeTab}
