@@ -49,6 +49,7 @@ import CustomTabView from './CustomTabView';
 
 import Hot from './Hot';
 import SoonShow from './SoonShow';
+var ScreenWidth = Dimensions.get('window').width;
 
 
 
@@ -76,22 +77,51 @@ const Home = (props:any) => {
         <RenderCityName/>
       </View>}/>
     <ScrollView
+    stickyHeaderIndices={[]}
     refreshControl={
       <RefreshControl refreshing={refreshing} onRefresh={()=>{
         setRefreshing(true)
-        setTimeout(() => {
-          setRefreshing(false)
-        }, 2000);
+        activeTabIndex===0 && hotRef.current && hotRef.current.onRefresh(setRefreshing(false));
+        activeTabIndex===1 && soonShowRef.current && soonShowRef.current.onRefresh();
       }} />
-    }>
+    }
+    onMomentumScrollEnd={(event:any)=>{
+      const offSetY = event.nativeEvent.contentOffset.y; // 获取滑动的距离
+      const contentSizeHeight = event.nativeEvent.contentSize.height; // scrollView  contentSize 高度
+      const oriageScrollHeight = event.nativeEvent.layoutMeasurement.height; // scrollView高度
+      console.log('onMomentumScrollEnd',offSetY,oriageScrollHeight,contentSizeHeight)
+      if (offSetY + oriageScrollHeight >= contentSizeHeight - 1) {
+          activeTabIndex===0 && hotRef.current && hotRef.current.onLoadMore();
+          activeTabIndex===1 && soonShowRef.current && soonShowRef.current.onLoadMore();
+      }
+    
+    }}>
       <Swiper/>
 
       <CustomTabView onChange={(val)=>{
         setActiveTabIndex(val);
       }}/>
-      {
-        activeTabIndex===0?<Hot ref={hotRef}/>:<SoonShow ref={soonShowRef}/>
-      }
+      
+        <Hot  
+        hotBoxStyle={{
+          // position:'relative',
+          // left: activeTabIndex===0?0:-ScreenWidth,
+          opacity:activeTabIndex===0?1:0,
+          zIndex:activeTabIndex===0?100:0
+        }}
+        
+        // opacity={activeTabIndex===0?1:0} 
+        ref={hotRef}/>
+        <SoonShow 
+        hotBoxStyle={{
+          position:'relative',
+          top: activeTabIndex===1?0:'-100%',
+          // opacity:activeTabIndex===1?1:0,
+          // zIndex:activeTabIndex===1?100:0
+        }}
+        // opacity={activeTabIndex===1?1:0} 
+        ref={soonShowRef}/>
+      
 
       
 

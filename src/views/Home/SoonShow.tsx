@@ -19,9 +19,13 @@ import FilmListItem from './FilmListItem';
 import { get_film_soon_show } from '../../api/film';
 import dayjs from 'dayjs';
 type propsType = {
-
+  // opacity:number
+  hotBoxStyle:object
 }
-const SoonShow = ({}:propsType,ref:any)=>{
+const SoonShow = ({
+  // opacity,
+  hotBoxStyle
+}:propsType,ref:any)=>{
   let navigation:any = useNavigation();
   let [fetchOptionsHot,setFetchOptionsHot] = useState({
     page: 1,
@@ -29,20 +33,40 @@ const SoonShow = ({}:propsType,ref:any)=>{
     city_id: "440100",
   })
   let [list,setList] = useState([])
-  
+  let [isLoading,setLoading] = useState(false);
+  let [isFinallyPage,setFinallyPage] = useState(false);
   useEffect(()=>{
     getList()
   },[])
   async function getList(){
     let result = await get_film_soon_show(fetchOptionsHot);
-    console.log('即将上映----',result);
-    setList(result.rows);
+    let _list = [];
+    if(fetchOptionsHot.page==1){
+      _list = result.rows;
+    }else{
+      _list = list.concat(result.rows);
+    }
+    setList(_list);
+    if(_list.length>=result.count){
+      setFinallyPage(true);
+    }
+    setLoading(false);
   }
   const onLoadMore = ()=>{
-    console.log('onLoadMore----即将上映')
+    if(isLoading) return;
+    if(isFinallyPage) return;
+    setLoading(true);
+    fetchOptionsHot.page += 1;
+    setFetchOptionsHot(fetchOptionsHot);
+    getList()
   }
   const onRefresh = ()=>{
-    console.log('onRefresh----即将上映')
+    if(isLoading) return;
+    setLoading(false);
+    setFinallyPage(false);
+    fetchOptionsHot.page = 1;
+    setFetchOptionsHot(fetchOptionsHot);
+    getList()
   }
   // 把父组件需要调用的方法暴露出来
   useImperativeHandle(ref, () => ({
@@ -79,7 +103,10 @@ const SoonShow = ({}:propsType,ref:any)=>{
       return dayjs(show_time).format("MM月DD");
     }
   }
-  return <View>
+  return <View 
+      style={{
+        ...hotBoxStyle
+      }}>
       {
         list.map((item:any,index:number)=>{
           return <FilmListItem

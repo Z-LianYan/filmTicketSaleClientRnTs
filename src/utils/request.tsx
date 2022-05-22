@@ -11,7 +11,16 @@ import { useState } from 'react';
 
 let host = process.env.NODE_ENV=='development'?'http://192.168.0.102:7002':'http://film.imgresource.com.cn'
 // let host = process.env.NODE_ENV=='development'?'http://film.imgresource.com.cn':'http://film.imgresource.com.cn'
-import { TopView, Toast } from '../component/teaset/index';
+import { TopView, Toast,ModalIndicator } from '../component/teaset/index';
+function isLoading(text?:string){
+  if(text){
+    ModalIndicator.hide()
+    ModalIndicator.show(text)
+  }
+}
+function hideLoading(){
+  ModalIndicator.hide()
+}
 axios.defaults.withCredentials = true;
 const service = axios.create({
   baseURL: process.env.BASE_API, // api的base_url
@@ -49,7 +58,7 @@ service.interceptors.response.use(
 );
 export function post(url:string, data:object, text:string) {
   return new Promise((resolve, reject) => {
-    if (text)
+    if (text) isLoading(text);
 
     
 
@@ -66,7 +75,7 @@ export function post(url:string, data:object, text:string) {
     })
       .then((res) => {
         resolve(res.data);
-        // if (text) Toast.hide(toast);
+        if (text) hideLoading();
       })
       .catch((err) => {
         reject(err);
@@ -81,7 +90,7 @@ export function post(url:string, data:object, text:string) {
 
 export function get(url:string, params?:object, text?:string) {
   return new Promise((resolve, reject) => {
-    // if (text)
+    if (text) isLoading(text);
     // Toast.success('Toast success');
     // Toast.smile('Toast smile');
     // Toast.stop('Toast stop');
@@ -95,7 +104,7 @@ export function get(url:string, params?:object, text?:string) {
     })
       .then((res) => {
         resolve(res.data);
-        // if (text) Toast.hide(toast);
+        if (text) hideLoading();
       })
       .catch((err) => {
         reject(err);

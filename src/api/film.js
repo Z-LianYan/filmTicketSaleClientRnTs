@@ -1,39 +1,34 @@
 import * as HttpUtils from '../utils/request.tsx';
 import * as Api from './constant';
 // import { Toast } from "antd-mobile";
+import {Theme, Toast} from '../component/teaset/index';
+import {ActivityIndicator, Text} from 'react-native';
 
-export function get_film_hot(params) {
+export function get_film_hot(params, loadTxt = '努力加载中...') {
   return new Promise((resolve, reject) => {
-    HttpUtils.get(Api.GET_FILM_HOT, params, '努力加载中...').then(res => {
+    HttpUtils.get(Api.GET_FILM_HOT, params, loadTxt).then(res => {
       switch (res.error) {
         case 0:
           resolve(res.data);
+          // Toast.success('res.message');
           break;
         default:
-          // Toast.show({
-          //   icon: "fail",
-          //   duration: 2000,
-          //   content: res.message,
-          // });
+          Toast.fail(res.message);
           reject(res.data);
           break;
       }
     });
   });
 }
-export function get_film_soon_show(params) {
+export function get_film_soon_show(params, loadTxt = '努力加载中...') {
   return new Promise((resolve, reject) => {
-    HttpUtils.get(Api.GET_FILM_SOONSHOW, params, '努力加载中...').then(res => {
+    HttpUtils.get(Api.GET_FILM_SOONSHOW, params, loadTxt).then(res => {
       switch (res.error) {
         case 0:
           resolve(res.data);
           break;
         default:
-          // Toast.show({
-          //   icon: "fail",
-          //   duration: 2000,
-          //   content: res.message,
-          // });
+          Toast.fail(res.message);
           reject(res.data);
           break;
       }
@@ -49,11 +44,7 @@ export function get_banner(params) {
           resolve(res.data);
           break;
         default:
-          // Toast.show({
-          //   icon: "fail",
-          //   duration: 2000,
-          //   content: res.message,
-          // });
+          Toast.fail(res.message);
           reject(res.data);
           break;
       }
@@ -69,11 +60,7 @@ export function get_film_detail(params) {
           resolve(res.data.rows);
           break;
         default:
-          // Toast.show({
-          //   icon: "fail",
-          //   duration: 2000,
-          //   content: res.message,
-          // });
+          Toast.fail(res.message);
           reject(res.data);
           break;
       }
@@ -89,11 +76,7 @@ export function add_cancel_want_see(params) {
           resolve(res.data);
           break;
         default:
-          // Toast.show({
-          //   icon: "fail",
-          //   duration: 2000,
-          //   content: res.message,
-          // });
+          Toast.fail(res.message);
           reject(res.data);
           break;
       }

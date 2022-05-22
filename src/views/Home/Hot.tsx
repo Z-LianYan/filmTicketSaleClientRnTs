@@ -7,6 +7,7 @@ import React, { useState,useEffect,forwardRef,useImperativeHandle } from 'react'
    View,
    Text,
    TouchableOpacity,
+   ActivityIndicator,
    Dimensions
  } from 'react-native';
 
@@ -18,33 +19,64 @@ import React, { useState,useEffect,forwardRef,useImperativeHandle } from 'react'
 import FilmListItem from './FilmListItem';
 import { get_film_hot } from '../../api/film';
 import dayjs from 'dayjs';
+import { Left } from '../../component/teaset/react-native-legacy-components/src/NavigatorBreadcrumbNavigationBarStyles.android';
+var ScreenWidth = Dimensions.get('window').width;
 type propsType = {
-  // onLoadMore?:()=> void,
-  // onRefresh?:()=> void,
-  
+  // opacity:number,
+  hotBoxStyle:object
 }
-const Hot = ({}:propsType,ref:any)=>{
+const Hot = ({
+  // opacity,
+  hotBoxStyle
+}:propsType,ref:any)=>{
   let navigation:any = useNavigation();
   let [fetchOptionsHot,setFetchOptionsHot] = useState({
     page: 1,
-    limit: 6,
+    limit: 4,
     city_id: "440100",
   })
   let [list,setList] = useState([])
+  let [isLoading,setLoading] = useState(false);
+  let [isFinallyPage,setFinallyPage] = useState(false);
   useEffect(()=>{
     getList()
   },[])
-  async function getList(){
+  async function getList(onRefreshing?:()=>void){
     let result = await get_film_hot(fetchOptionsHot);
-    console.log('热更新----',result);
-    setList(result.rows);
+    let _list = [];
+    if(fetchOptionsHot.page==1){
+      _list = result.rows;
+      onRefreshing && onRefreshing()
+    }else{
+      _list = list.concat(result.rows);
+    }
+    setList(_list);
+    if(_list.length>=result.count){
+      setFinallyPage(true);
+    }
+    setLoading(false);
   }
 
   const onLoadMore = ()=>{
-    console.log('onLoadMore----正在热映')
+    if(isLoading) return;
+    if(isFinallyPage) return;
+    setLoading(true);
+    fetchOptionsHot.page += 1;
+    setFetchOptionsHot(fetchOptionsHot);
+    getList()
   }
-  const onRefresh = ()=>{
-    console.log('onRefresh----正在热映')
+  /**
+   * 
+   * @param onRefreshing  下拉刷新时，父组件传过来的 onRefreshing，用来关闭刷新状态
+   * @returns void
+   */
+  const onRefresh = (onRefreshing:()=>void)=>{
+    if(isLoading) return;
+    setLoading(false);
+    setFinallyPage(false);
+    fetchOptionsHot.page = 1;
+    setFetchOptionsHot(fetchOptionsHot);
+    getList(onRefreshing)
   }
   // 把父组件需要调用的方法暴露出来
   useImperativeHandle(ref, () => ({
@@ -52,13 +84,16 @@ const Hot = ({}:propsType,ref:any)=>{
     onRefresh: onRefresh
   }));
   
-  return <View>
+  return <View 
+      style={{
+        ...hotBoxStyle
+      }}>
       {
         list.map((item:any,index:number)=>{
           return <FilmListItem
           title={item.film_name}
           playType={item.play_type_name}
-          key={item.film_id}
+          key={item.film_id+Math.random()}
           score={item.grade}
           isShowScore={true}
           actors={item.actors.map((it:any) => it.name).join(",")}
@@ -81,6 +116,15 @@ const Hot = ({}:propsType,ref:any)=>{
           }}/>
         })
       }
+      {isLoading?<ActivityIndicator/>:isFinallyPage?<Text 
+      style={{
+        color:Theme.toastIconTintColor,
+        textAlign:'center'
+      }}>兄弟没有了哦</Text>:<Text 
+      style={{
+        color:Theme.toastIconTintColor,
+        textAlign:'center'
+      }}>--加载更多--</Text>}
   </View>
 }
 
