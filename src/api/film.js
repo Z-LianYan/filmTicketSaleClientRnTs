@@ -4,7 +4,7 @@ import * as Api from './constant';
 import {Theme, Toast} from '../component/teaset/index';
 import {ActivityIndicator, Text} from 'react-native';
 
-export function get_film_hot(params, loadTxt = '努力加载中...') {
+export function get_film_hot(params, loadTxt = '') {
   return new Promise((resolve, reject) => {
     HttpUtils.get(Api.GET_FILM_HOT, params, loadTxt).then(res => {
       switch (res.error) {
@@ -20,7 +20,7 @@ export function get_film_hot(params, loadTxt = '努力加载中...') {
     });
   });
 }
-export function get_film_soon_show(params, loadTxt = '努力加载中...') {
+export function get_film_soon_show(params, loadTxt = '') {
   return new Promise((resolve, reject) => {
     HttpUtils.get(Api.GET_FILM_SOONSHOW, params, loadTxt).then(res => {
       switch (res.error) {

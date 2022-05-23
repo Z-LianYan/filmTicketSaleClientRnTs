@@ -4,8 +4,8 @@ import React, { useState,useEffect } from 'react';
  import {
    StyleSheet,
    Image,
-   View,
-   Text,
+  //  View,
+  //  Text,
    TouchableOpacity,
    Dimensions,
    TouchableHighlight
@@ -17,10 +17,10 @@ import React, { useState,useEffect } from 'react';
   Button
 } from '../../component/teaset/index';
 var ScreenWidth = Dimensions.get('window').width;
-// import { 
-//   View,
-//   Text
-// } from '../../component/Themed';
+import { 
+  View,
+  Text
+} from '../../component/Themed';
 type propsType = {
   imgUrl?:string,
   title?:string,
@@ -51,7 +51,7 @@ const FilmListItem = ({
 }:propsType)=>{ 
   return <TouchableHighlight 
   activeOpacity={1} 
-  underlayColor='#fff'
+  underlayColor=''
   onPress={()=>{
     onPress && onPress()
   }}>
@@ -74,7 +74,7 @@ const FilmListItem = ({
               <Text style={styles.scoreText}>观众评分 <Text style={styles.scoreWrapperValue}>{score}</Text></Text>
             </View>
           ) : null}
-          <Text numberOfLines={1} style={styles.actors}>主演：<Text>{actors}</Text></Text>
+          <Text numberOfLines={1} style={styles.actors}>主演：{actors}</Text>
           
           <Text numberOfLines={1} style={styles.areaText}>{bottomText}</Text>
         </View>
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
   titleSty:{
     lineHeight: 20,
-    color: '#000',
+    // color: '#000',
     fontSize: 16
   },
   titleWrapperTag:{

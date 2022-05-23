@@ -7,7 +7,8 @@ import React, { useState,useEffect,useImperativeHandle,forwardRef } from 'react'
    View,
    Text,
    TouchableOpacity,
-   Dimensions
+   Dimensions,
+   ActivityIndicator
  } from 'react-native';
 
  import { 
@@ -18,12 +19,12 @@ import React, { useState,useEffect,useImperativeHandle,forwardRef } from 'react'
 import FilmListItem from './FilmListItem';
 import { get_film_soon_show } from '../../api/film';
 import dayjs from 'dayjs';
+import BottomLoading from '../../component/BottomLoading';
+
 type propsType = {
-  // opacity:number
   hotBoxStyle:object
 }
 const SoonShow = ({
-  // opacity,
   hotBoxStyle
 }:propsType,ref:any)=>{
   let navigation:any = useNavigation();
@@ -38,11 +39,13 @@ const SoonShow = ({
   useEffect(()=>{
     getList()
   },[])
-  async function getList(){
+  async function getList(onRefreshing?:()=>void){
+    setLoading(true);
     let result = await get_film_soon_show(fetchOptionsHot);
     let _list = [];
     if(fetchOptionsHot.page==1){
       _list = result.rows;
+      onRefreshing && onRefreshing()
     }else{
       _list = list.concat(result.rows);
     }
@@ -50,23 +53,32 @@ const SoonShow = ({
     if(_list.length>=result.count){
       setFinallyPage(true);
     }
+    console.log('_list.length------>>',_list.length)
     setLoading(false);
+    _list = [];
   }
+
+
   const onLoadMore = ()=>{
     if(isLoading) return;
     if(isFinallyPage) return;
-    setLoading(true);
+    
     fetchOptionsHot.page += 1;
     setFetchOptionsHot(fetchOptionsHot);
     getList()
   }
-  const onRefresh = ()=>{
+
+  /**
+   * 
+   * @param onRefreshing  下拉刷新时，父组件传过来的 onRefreshing，用来关闭刷新状态
+   * @returns void
+   */
+  const onRefresh = (onRefreshing:()=>void)=>{
     if(isLoading) return;
-    setLoading(false);
     setFinallyPage(false);
     fetchOptionsHot.page = 1;
     setFetchOptionsHot(fetchOptionsHot);
-    getList()
+    getList(onRefreshing)
   }
   // 把父组件需要调用的方法暴露出来
   useImperativeHandle(ref, () => ({
@@ -141,6 +153,24 @@ const SoonShow = ({
           }}/>
         })
       }
+
+      {/* {isLoading?<ActivityIndicator/>:isFinallyPage?<Text 
+        style={{
+          // color:Theme.toastIconTintColor,
+          color:'red',
+          textAlign:'center'
+        }}>兄弟没有了哦</Text>:<Text 
+        style={{
+          // color:Theme.toastIconTintColor,
+          color:'red',
+          textAlign:'center'
+        }}>加载中...</Text>
+      } */}
+
+      <BottomLoading
+      isLoading={isLoading}
+      isFinallyPage={isFinallyPage}
+      hasContent={list.length?true:false}/>
   </View>
 }
 

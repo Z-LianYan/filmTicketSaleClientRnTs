@@ -14,8 +14,8 @@ import {
   Platform,
   ActivityIndicator,
   Image,
-  View,
-  Text,
+  // View,
+  // Text,
   RefreshControl,
   Dimensions,
   FlatList
@@ -26,10 +26,10 @@ import {
   DarkTheme,
   DefaultTheme, 
 } from '@react-navigation/native';
-// import { 
-//   View,
-//   Text
-// } from '../../component/Themed';
+import { 
+  View,
+  Text
+} from '../../component/Themed';
 import { get_banner } from '../../api/film';
 import { 
   Button,
@@ -59,6 +59,7 @@ const Home = (props:any) => {
   const colorScheme = useColorScheme();
   const [refreshing, setRefreshing] = React.useState(false);
   const [activeTabIndex, setActiveTabIndex] = React.useState(0);
+  const [navigationBarBg, setNavigationBarBg] = React.useState('transparent');
 
   useEffect(() => {
     
@@ -69,9 +70,9 @@ const Home = (props:any) => {
   return (<View style={styles.container}>
     <NavigationBar 
       style={{
-        zIndex:1000
+        zIndex:1
       }}
-      backgroundColor='transparent'
+      backgroundColor={navigationBarBg}
       position='absolute'
       leftView={<View>
         <RenderCityName/>
@@ -82,45 +83,51 @@ const Home = (props:any) => {
       <RefreshControl refreshing={refreshing} onRefresh={()=>{
         setRefreshing(true)
         activeTabIndex===0 && hotRef.current && hotRef.current.onRefresh(setRefreshing(false));
-        activeTabIndex===1 && soonShowRef.current && soonShowRef.current.onRefresh();
+        activeTabIndex===1 && soonShowRef.current && soonShowRef.current.onRefresh(setRefreshing(false));
       }} />
     }
-    onMomentumScrollEnd={(event:any)=>{
+    onScroll={(event)=>{
+      // console.log('onScroll',event.nativeEvent)
       const offSetY = event.nativeEvent.contentOffset.y; // 获取滑动的距离
       const contentSizeHeight = event.nativeEvent.contentSize.height; // scrollView  contentSize 高度
       const oriageScrollHeight = event.nativeEvent.layoutMeasurement.height; // scrollView高度
-      console.log('onMomentumScrollEnd',offSetY,oriageScrollHeight,contentSizeHeight)
-      if (offSetY + oriageScrollHeight >= contentSizeHeight - 1) {
-          activeTabIndex===0 && hotRef.current && hotRef.current.onLoadMore();
-          activeTabIndex===1 && soonShowRef.current && soonShowRef.current.onLoadMore();
+      // console.log('onMomentumScrollEnd',offSetY,oriageScrollHeight,contentSizeHeight)
+      if (offSetY + oriageScrollHeight >= contentSizeHeight - 300) {
+        activeTabIndex===0 && hotRef.current && hotRef.current.onLoadMore();
+        activeTabIndex===1 && soonShowRef.current && soonShowRef.current.onLoadMore();
       }
-    
-    }}>
+      // if(offSetY>=50){
+      //   setNavigationBarBg('#fff');
+      // }else{
+      //   setNavigationBarBg('transparent');
+      // }
+    }}
+    onMomentumScrollEnd={(event:any)=>{}}>
       <Swiper/>
 
       <CustomTabView onChange={(val)=>{
         setActiveTabIndex(val);
       }}/>
       
-        <Hot  
+        {activeTabIndex===0?<Hot  
         hotBoxStyle={{
           // position:'relative',
           // left: activeTabIndex===0?0:-ScreenWidth,
-          opacity:activeTabIndex===0?1:0,
-          zIndex:activeTabIndex===0?100:0
+          // opacity:activeTabIndex===0?1:0,
+          // zIndex:activeTabIndex===0?100:0
         }}
         
         // opacity={activeTabIndex===0?1:0} 
-        ref={hotRef}/>
+        ref={hotRef}/>:
         <SoonShow 
         hotBoxStyle={{
-          position:'relative',
-          top: activeTabIndex===1?0:'-100%',
+          // position:'relative',
+          // top: activeTabIndex===1?0:'-100%',
           // opacity:activeTabIndex===1?1:0,
           // zIndex:activeTabIndex===1?100:0
         }}
         // opacity={activeTabIndex===1?1:0} 
-        ref={soonShowRef}/>
+        ref={soonShowRef}/>}
       
 
       
@@ -135,7 +142,7 @@ export default inject("home")(observer(Home));
 const styles = StyleSheet.create({
   container:{
     flex:1,
-    backgroundColor:'#fff'
+    // backgroundColor:'#fff'
   },
   
   

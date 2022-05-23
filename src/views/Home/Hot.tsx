@@ -19,10 +19,9 @@ import React, { useState,useEffect,forwardRef,useImperativeHandle } from 'react'
 import FilmListItem from './FilmListItem';
 import { get_film_hot } from '../../api/film';
 import dayjs from 'dayjs';
-import { Left } from '../../component/teaset/react-native-legacy-components/src/NavigatorBreadcrumbNavigationBarStyles.android';
+import BottomLoading from '../../component/BottomLoading';
 var ScreenWidth = Dimensions.get('window').width;
 type propsType = {
-  // opacity:number,
   hotBoxStyle:object
 }
 const Hot = ({
@@ -55,6 +54,7 @@ const Hot = ({
       setFinallyPage(true);
     }
     setLoading(false);
+    _list = [];
   }
 
   const onLoadMore = ()=>{
@@ -72,7 +72,7 @@ const Hot = ({
    */
   const onRefresh = (onRefreshing:()=>void)=>{
     if(isLoading) return;
-    setLoading(false);
+    setLoading(true);
     setFinallyPage(false);
     fetchOptionsHot.page = 1;
     setFetchOptionsHot(fetchOptionsHot);
@@ -116,15 +116,12 @@ const Hot = ({
           }}/>
         })
       }
-      {isLoading?<ActivityIndicator/>:isFinallyPage?<Text 
-      style={{
-        color:Theme.toastIconTintColor,
-        textAlign:'center'
-      }}>兄弟没有了哦</Text>:<Text 
-      style={{
-        color:Theme.toastIconTintColor,
-        textAlign:'center'
-      }}>--加载更多--</Text>}
+      
+      <BottomLoading
+      isLoading={isLoading}
+      isFinallyPage={isFinallyPage}
+      hasContent={list.length?true:false}/>
+
   </View>
 }
 

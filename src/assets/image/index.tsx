@@ -6,3 +6,4 @@ export const CINEMA_ICON = require('./cinema.png');
 export const CINEMA_ACTIVE_ICON = require('./cinema-active.png');
 export const MINE_ICON = require('./mine.png');
 export const MINE_ACTIVE_ICON = require('./mine-active.png');
+export const EMPTY_CONTENT = require('./empty.png');
