@@ -27,16 +27,21 @@ const BottomLoading = ({
   isLoading = true,
   isFinallyPage = false,
   hasContent = true,
-  emptyContentText = '暂无内容哦',
+  emptyText = '暂无内容哦',
 }:{
   isLoading:boolean,
   isFinallyPage:boolean,
   hasContent:boolean,
-  emptyContentText?:string
+  emptyText?:string
 })=>{
   const colorScheme = useColorScheme();
   return <View>
-    {isLoading?<ActivityIndicator/>:hasContent?(isFinallyPage?<Text 
+    {isLoading?<View style={{
+      height:50,
+      justifyContent:'center'
+      }}>
+        <ActivityIndicator/>
+      </View>:hasContent?(isFinallyPage?<Text 
       style={{
         color:Theme.toastIconTintColor,
         height:50,
@@ -60,7 +65,7 @@ const BottomLoading = ({
       style={{
         color:'#ccc',
         textAlign:'center'
-      }}>{emptyContentText}</Text>
+      }}>{emptyText}</Text>
     </View>
     }
   </View>

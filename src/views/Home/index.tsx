@@ -49,8 +49,8 @@ import CustomTabView from './CustomTabView';
 
 import Hot from './Hot';
 import SoonShow from './SoonShow';
+import { Right } from '../../component/teaset/react-native-legacy-components/src/NavigatorBreadcrumbNavigationBarStyles.android';
 var ScreenWidth = Dimensions.get('window').width;
-
 
 
 const Home = (props:any) => {
@@ -74,9 +74,7 @@ const Home = (props:any) => {
       }}
       backgroundColor={navigationBarBg}
       position='absolute'
-      leftView={<View>
-        <RenderCityName/>
-      </View>}/>
+      leftView={<RenderCityName/>}/>
     <ScrollView
     stickyHeaderIndices={[]}
     refreshControl={
@@ -108,31 +106,15 @@ const Home = (props:any) => {
       <CustomTabView onChange={(val)=>{
         setActiveTabIndex(val);
       }}/>
-      
-        {activeTabIndex===0?<Hot  
-        hotBoxStyle={{
-          // position:'relative',
-          // left: activeTabIndex===0?0:-ScreenWidth,
-          // opacity:activeTabIndex===0?1:0,
-          // zIndex:activeTabIndex===0?100:0
-        }}
-        
-        // opacity={activeTabIndex===0?1:0} 
-        ref={hotRef}/>:
-        <SoonShow 
-        hotBoxStyle={{
-          // position:'relative',
-          // top: activeTabIndex===1?0:'-100%',
-          // opacity:activeTabIndex===1?1:0,
-          // zIndex:activeTabIndex===1?100:0
-        }}
-        // opacity={activeTabIndex===1?1:0} 
-        ref={soonShowRef}/>}
-      
 
-      
-
-
+          {
+            activeTabIndex===0?<Hot  
+            hotBoxStyle={{}}
+            ref={hotRef}/>:<SoonShow 
+            hotBoxStyle={{}}
+            ref={soonShowRef}/>
+          }
+          
     </ScrollView>
   </View>);
 };

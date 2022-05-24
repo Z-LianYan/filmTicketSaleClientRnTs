@@ -53,7 +53,6 @@ const SoonShow = ({
     if(_list.length>=result.count){
       setFinallyPage(true);
     }
-    console.log('_list.length------>>',_list.length)
     setLoading(false);
     _list = [];
   }

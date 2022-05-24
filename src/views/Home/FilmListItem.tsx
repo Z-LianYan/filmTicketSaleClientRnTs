@@ -8,7 +8,8 @@ import React, { useState,useEffect } from 'react';
   //  Text,
    TouchableOpacity,
    Dimensions,
-   TouchableHighlight
+   TouchableHighlight,
+   useColorScheme
  } from 'react-native';
 
  import { 
@@ -49,6 +50,13 @@ const FilmListItem = ({
   onPress,
   onRightClick
 }:propsType)=>{ 
+  const colorScheme = useColorScheme();
+  const buttonStyle = {
+    backgroundColor:'transparent'
+  }
+  if(btnColor){
+    buttonStyle['borderColor'] = btnColor;
+  }
   return <TouchableHighlight 
   activeOpacity={1} 
   underlayColor=''
@@ -82,9 +90,7 @@ const FilmListItem = ({
           <Button
             title={btnTxt}
             type="default"
-            style={btnColor?{
-              borderColor: btnColor,
-            }:''}
+            style={buttonStyle}
             titleStyle={btnColor?{
               color:btnColor
             }:''}
@@ -94,9 +100,10 @@ const FilmListItem = ({
           />
         ) : null}
       </View>
-      {/* <View> */}
-        {separator ? <View style={styles.separator}></View> : null}
-      {/* </View> */}
+      {separator ? <View style={{
+        ...styles.separator,
+        backgroundColor: colorScheme=='dark'?'#1a1b1c':'#eee',
+      }}></View> : null}
     </View>
   
   </TouchableHighlight>
@@ -161,7 +168,6 @@ const styles = StyleSheet.create({
   },
   separator:{
     height: 1,
-    backgroundColor: '#eee',
     marginLeft: 15,
   }
 });

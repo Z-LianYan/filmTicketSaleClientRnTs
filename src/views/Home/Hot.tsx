@@ -41,6 +41,7 @@ const Hot = ({
     getList()
   },[])
   async function getList(onRefreshing?:()=>void){
+    setLoading(true);
     let result = await get_film_hot(fetchOptionsHot);
     let _list = [];
     if(fetchOptionsHot.page==1){
@@ -72,7 +73,6 @@ const Hot = ({
    */
   const onRefresh = (onRefreshing:()=>void)=>{
     if(isLoading) return;
-    setLoading(true);
     setFinallyPage(false);
     fetchOptionsHot.page = 1;
     setFetchOptionsHot(fetchOptionsHot);
@@ -118,9 +118,11 @@ const Hot = ({
       }
       
       <BottomLoading
+      emptyText='12'
       isLoading={isLoading}
       isFinallyPage={isFinallyPage}
       hasContent={list.length?true:false}/>
+      
 
   </View>
 }
