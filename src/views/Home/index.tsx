@@ -40,7 +40,7 @@ import {
 } from '../../component/teaset/index';
 
 
-import { get_film_hot } from '../../api/film';
+import { get_film_hot,get_film_soon_show } from '../../api/film';
 
 import NavigationBar from '../../component/NavigationBar';
 import RenderCityName from './RenderCityName';
@@ -61,11 +61,99 @@ const Home = (props:any) => {
   const [activeTabIndex, setActiveTabIndex] = React.useState(0);
   const [navigationBarBg, setNavigationBarBg] = React.useState('transparent');
 
+  let [fetchOptionsHot,setFetchOptionsHot] = useState({
+    page: 1,
+    limit: 4,
+    city_id: "440100",
+  })
+  let [hotList,setHotList] = useState([])
+  let [isHotLoading,setHotLoading] = useState(false);
+  let [isHotFinallyPage,setHotFinallyPage] = useState(false);
+
+  let [fetchOptionsSoonShow,setFetchOptionsSoonShow] = useState({
+    page: 1,
+    limit: 6,
+    city_id: "440100",
+  });
+
+  let [SoonShowList,setSoonShowList] = useState([])
+  let [isSoonShowLoading,setSoonShowLoading] = useState(false);
+  let [isSoonShowFinallyPage,setSoonShowFinallyPage] = useState(false);
+
+
+
   useEffect(() => {
-    
+    getHotList();
+    getSoonShowList();
     return ()=>{
     }
   },[])
+
+  async function getHotList(){
+    setHotLoading(true);
+    let result = await get_film_hot(fetchOptionsHot);
+    let _list = [];
+    if(fetchOptionsHot.page==1){
+      _list = result.rows;
+      setRefreshing(false)
+    }else{
+      _list = hotList.concat(result.rows);
+    }
+    setHotList(_list);
+    if(_list.length>=result.count){
+      setHotFinallyPage(true);
+    }
+    setHotLoading(false);
+    _list = [];
+  }
+  async function getSoonShowList(onRefreshing?:()=>void){
+    setSoonShowLoading(true);
+    let result = await get_film_soon_show(fetchOptionsSoonShow);
+    let _list = [];
+    if(fetchOptionsSoonShow.page==1){
+      _list = result.rows;
+      setRefreshing(false)
+    }else{
+      _list = SoonShowList.concat(result.rows);
+    }
+    setSoonShowList(_list);
+    if(_list.length>=result.count){
+      setSoonShowFinallyPage(true);
+    }
+    setSoonShowLoading(false);
+    _list = [];
+  }
+
+  const onLoadMore = ()=>{
+    if(activeTabIndex===0){
+      if(isHotLoading || isHotFinallyPage) return;
+      fetchOptionsHot.page += 1;
+      setFetchOptionsHot(fetchOptionsHot);
+      getHotList()
+    }else{
+      if(isSoonShowLoading || isSoonShowFinallyPage) return;
+      fetchOptionsSoonShow.page += 1;
+      setFetchOptionsSoonShow(fetchOptionsSoonShow);
+      getSoonShowList()
+    }
+    
+  }
+  
+   const onRefresh = ()=>{
+    if(!isHotLoading){
+      setHotFinallyPage(false);
+      fetchOptionsHot.page = 1;
+      setFetchOptionsHot(fetchOptionsHot);
+      getHotList()
+    }
+    if(!isSoonShowLoading) {
+      setSoonShowFinallyPage(false);
+      fetchOptionsSoonShow.page = 1;
+      setFetchOptionsSoonShow(fetchOptionsSoonShow);
+      getSoonShowList()
+    };
+    
+  }
 
   return (<View style={styles.container}>
     <NavigationBar 
@@ -80,8 +168,8 @@ const Home = (props:any) => {
     refreshControl={
       <RefreshControl refreshing={refreshing} onRefresh={()=>{
         setRefreshing(true)
-        activeTabIndex===0 && hotRef.current && hotRef.current.onRefresh(setRefreshing(false));
-        activeTabIndex===1 && soonShowRef.current && soonShowRef.current.onRefresh(setRefreshing(false));
+        activeTabIndex===0 && onRefresh();
+        activeTabIndex===1 && onRefresh();
       }} />
     }
     onScroll={(event)=>{
@@ -91,8 +179,8 @@ const Home = (props:any) => {
       const oriageScrollHeight = event.nativeEvent.layoutMeasurement.height; // scrollView高度
       // console.log('onMomentumScrollEnd',offSetY,oriageScrollHeight,contentSizeHeight)
       if (offSetY + oriageScrollHeight >= contentSizeHeight - 300) {
-        activeTabIndex===0 && hotRef.current && hotRef.current.onLoadMore();
-        activeTabIndex===1 && soonShowRef.current && soonShowRef.current.onLoadMore();
+        activeTabIndex===0 && onLoadMore();
+        activeTabIndex===1 && onLoadMore();
       }
       // if(offSetY>=50){
       //   setNavigationBarBg('#fff');
@@ -109,8 +197,16 @@ const Home = (props:any) => {
 
           {
             activeTabIndex===0?<Hot  
+            isLoading={isHotLoading}
+            isFinallyPage={isHotFinallyPage}
+            fetchOptionsHot={fetchOptionsHot}
+            list={hotList}
             hotBoxStyle={{}}
             ref={hotRef}/>:<SoonShow 
+            isLoading={isSoonShowLoading}
+            isFinallyPage={isSoonShowFinallyPage}
+            fetchOptionsSoonShow={fetchOptionsSoonShow}
+            list={SoonShowList}
             hotBoxStyle={{}}
             ref={soonShowRef}/>
           }

@@ -22,28 +22,67 @@ import dayjs from 'dayjs';
 import BottomLoading from '../../component/BottomLoading';
 
 type propsType = {
-  hotBoxStyle:object,
-  list:any[],
-  fetchOptionsSoonShow:any,
-  isLoading:boolean,
-  isFinallyPage:boolean,
+  hotBoxStyle:object
 }
 const SoonShow = ({
-  hotBoxStyle,
-  list = [],
-  fetchOptionsSoonShow = {},
-  isLoading = false,
-  isFinallyPage = false,
+  hotBoxStyle
 }:propsType,ref:any)=>{
   let navigation:any = useNavigation();
+  let [fetchOptionsSoonShow,setFetchOptionsSoonShow] = useState({
+    page: 1,
+    limit: 6,
+    city_id: "440100",
+  })
+  let [list,setList] = useState([])
+  let [isLoading,setLoading] = useState(false);
+  let [isFinallyPage,setFinallyPage] = useState(false);
   useEffect(()=>{
+    getList()
   },[])
-  
-  
+  async function getList(onRefreshing?:()=>void){
+    setLoading(true);
+    let result = await get_film_soon_show(fetchOptionsSoonShow);
+    let _list = [];
+    if(fetchOptionsSoonShow.page==1){
+      _list = result.rows;
+      onRefreshing && onRefreshing()
+    }else{
+      _list = list.concat(result.rows);
+    }
+    setList(_list);
+    if(_list.length>=result.count){
+      setFinallyPage(true);
+    }
+    setLoading(false);
+    _list = [];
+  }
+
+
+  const onLoadMore = ()=>{
+    if(isLoading) return;
+    if(isFinallyPage) return;
+    
+    fetchOptionsSoonShow.page += 1;
+    setFetchOptionsSoonShow(fetchOptionsSoonShow);
+    getList()
+  }
+
+  /**
+   * 
+   * @param onRefreshing  下拉刷新时，父组件传过来的 onRefreshing，用来关闭刷新状态
+   * @returns void
+   */
+  const onRefresh = (onRefreshing:()=>void)=>{
+    if(isLoading) return;
+    setFinallyPage(false);
+    fetchOptionsSoonShow.page = 1;
+    setFetchOptionsSoonShow(fetchOptionsSoonShow);
+    getList(onRefreshing)
+  }
   // 把父组件需要调用的方法暴露出来
   useImperativeHandle(ref, () => ({
-    // onLoadMore: onLoadMore,
-    // onRefresh: onRefresh
+    onLoadMore: onLoadMore,
+    onRefresh: onRefresh
   }));
   
   function handleWeek(day:number) {

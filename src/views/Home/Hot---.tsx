@@ -22,33 +22,67 @@ import dayjs from 'dayjs';
 import BottomLoading from '../../component/BottomLoading';
 var ScreenWidth = Dimensions.get('window').width;
 type propsType = {
-  hotBoxStyle:object,
-  list:any[],
-  fetchOptionsHot:any,
-  isLoading:boolean,
-  isFinallyPage:boolean,
+  hotBoxStyle:object
 }
 const Hot = ({
   // opacity,
-  hotBoxStyle,
-  list=[],
-  fetchOptionsHot={},
-  isLoading = false,
-  isFinallyPage = false,
+  hotBoxStyle
 }:propsType,ref:any)=>{
   let navigation:any = useNavigation();
-  // let [fetchOptionsHot,setFetchOptionsHot] = useState({
-  //   page: 1,
-  //   limit: 4,
-  //   city_id: "440100",
-  // })
-  // let [list,setList] = useState([])
-  // let [isLoading,setLoading] = useState(false);
-  // let [isFinallyPage,setFinallyPage] = useState(false);
+  let [fetchOptionsHot,setFetchOptionsHot] = useState({
+    page: 1,
+    limit: 4,
+    city_id: "440100",
+  })
+  let [list,setList] = useState([])
+  let [isLoading,setLoading] = useState(false);
+  let [isFinallyPage,setFinallyPage] = useState(false);
   useEffect(()=>{
-    // getList()
+    getList()
   },[])
- 
+  async function getList(onRefreshing?:()=>void){
+    setLoading(true);
+    let result = await get_film_hot(fetchOptionsHot);
+    let _list = [];
+    if(fetchOptionsHot.page==1){
+      _list = result.rows;
+      onRefreshing && onRefreshing()
+    }else{
+      _list = list.concat(result.rows);
+    }
+    setList(_list);
+    if(_list.length>=result.count){
+      setFinallyPage(true);
+    }
+    setLoading(false);
+    _list = [];
+  }
+
+  const onLoadMore = ()=>{
+    if(isLoading) return;
+    if(isFinallyPage) return;
+    // setLoading(true);
+    fetchOptionsHot.page += 1;
+    setFetchOptionsHot(fetchOptionsHot);
+    getList()
+  }
+  /**
+   * 
+   * @param onRefreshing  下拉刷新时，父组件传过来的 onRefreshing，用来关闭刷新状态
+   * @returns void
+   */
+  const onRefresh = (onRefreshing:()=>void)=>{
+    if(isLoading) return;
+    setFinallyPage(false);
+    fetchOptionsHot.page = 1;
+    setFetchOptionsHot(fetchOptionsHot);
+    getList(onRefreshing)
+  }
+  // 把父组件需要调用的方法暴露出来
+  useImperativeHandle(ref, () => ({
+    onLoadMore: onLoadMore,
+    onRefresh: onRefresh
+  }));
   
   return <View 
       style={{
