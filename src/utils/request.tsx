@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useState } from 'react';
 
-let host = process.env.NODE_ENV=='development'?'http://192.168.0.102:7002':'http://film.imgresource.com.cn'
+let host = process.env.NODE_ENV=='development'?'http://192.168.0.100:7002':'http://film.imgresource.com.cn'
 // let host = process.env.NODE_ENV=='development'?'http://film.imgresource.com.cn':'http://film.imgresource.com.cn'
 import { TopView, Toast,ModalIndicator } from '../component/teaset/index';
 function isLoading(text?:string){

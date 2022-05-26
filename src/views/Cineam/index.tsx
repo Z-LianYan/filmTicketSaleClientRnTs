@@ -1,21 +1,12 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   useColorScheme,
-  FlatList
+  FlatList,
+  RefreshControl
 } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { View,Text} from '../../component/Themed';
@@ -26,31 +17,84 @@ import {
 } from '../../component/teaset/index';
 
 import NavigationBar from '../../component/NavigationBar';
-
-
+import BottomLoading from '../../component/BottomLoading';
+import CinemaListItem from './CinemaListItem';
 
 const Cineam = () => {
   console.log('影院')
   let navigation = useNavigation();
   const [refreshing, setRefreshing] = React.useState(false);
-  return (<View>
+  let [list,setList] = useState([])
+  let [isLoading,setLoading] = useState(false);
+  let [isFinallyPage,setFinallyPage] = useState(false);
+
+  useEffect(()=>{
+    // getList()
+  },[])
+  return (<View style={styles.container}>
     <NavigationBar 
-    title={'影院'}/>
-    <Text style={styles._text} onPress={()=>{
-      navigation.goBack()
-    }}>影院
-    {/* 123456345678123456345678123456345678123456345678123456345678
-    123456345678123456345678123456345678123456345678123456345678 */}
-    
-    </Text>
+      style={{
+        zIndex:1
+      }}
+      position=''
+      title='影院'
+      leftView={<Text>234</Text>}/>
 
-    <Button type='primary' title="123"></Button>
+    {/* <Button type='primary' title="123"></Button> */}
 
+    <ScrollView
+    stickyHeaderIndices={[]}
+    refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={()=>{
+        setRefreshing(true);
+        setTimeout(() => {
+          setRefreshing(false);
+        }, 2000);
+        // activeTabIndex===0 && onRefresh();
+        // activeTabIndex===1 && onRefresh();
+      }} />
+    }
+    onScroll={(event)=>{
+      const offSetY = event.nativeEvent.contentOffset.y; // 获取滑动的距离
+      const contentSizeHeight = event.nativeEvent.contentSize.height; // scrollView  contentSize 高度
+      const oriageScrollHeight = event.nativeEvent.layoutMeasurement.height; // scrollView高度
+      
+      if (offSetY + oriageScrollHeight >= contentSizeHeight - 300) {
+        // activeTabIndex===0 && onLoadMore();
+        // activeTabIndex===1 && onLoadMore();
+      }
+      if(offSetY>=100){
+       
+      }else{
+        
+      }
+    }}
+    onMomentumScrollEnd={(event:any)=>{}}>
+      <View style={{flexDirection:'row'}}>
+        <View style={{flex:1,height:100,backgroundColor:'red'}}></View>
+        <View style={{flex:1,height:100,backgroundColor:'yellow'}}></View>
+      </View>
+      <CinemaListItem
+        title={'影院名称'}
+        value={'价格'}
+        label={'地址'}
+        distance={'距离'}
+        onPress={() => {
+          // this.props.history.push({
+          //   pathname: `/cinema/detail`,
+          //   state: {
+          //     cinema_id: item.cinema_id,
+          //     film_id: params && params.film_id,
+          //     date: fetchOptions.date,
+          //   },
+          // });
+          console.log('onPress')
+        }}
+      />
+      
+    </ScrollView>
 
-
-    <View style={{height:100}}></View>
-
-    <FlatList
+    {/* <FlatList
       // ListEmptyComponent={()=>(
       //   <View><Text>暂无内容</Text></View>
       // )}
@@ -59,18 +103,57 @@ const Cineam = () => {
           return <View><Text>66</Text></View>
         }
       }
-      // ListFooterComponent={()=>(<View><Text>我是Footer组件</Text></View>)}
+      ListFooterComponent={
+        <BottomLoading
+          emptyText='12'
+          isLoading={isLoading}
+          isFinallyPage={isFinallyPage}
+          hasContent={list.length?true:false}/>
+        }
       // ListHeaderComponent={()=>(<View><Text>我是Header组件</Text></View>)}
       data={[{title:'title1'},{title:'title2'},{title:'title3'},{title:'title4'},{title:'title5'},{title:'title6'}]}
       renderItem={({ item, index, separators }) => (
-        <View style={{backgroundColor:'#ccc',width:'48%',height:300}}><Text>{item.title}</Text></View>
+        // <CinemaListItem
+        //   key={index}
+        //   title={item.cinema_name}
+        //   value={item.min_low_sale_price}
+        //   label={item.address}
+        //   distance={item.distance}
+        //   onClick={() => {
+        //     this.props.history.push({
+        //       pathname: `/cinema/detail`,
+        //       state: {
+        //         cinema_id: item.cinema_id,
+        //         film_id: params && params.film_id,
+        //         date: fetchOptions.date,
+        //       },
+        //     });
+        //   }}
+        // />
+        <CinemaListItem
+          title={'影院名称'}
+          value={'价格'}
+          label={'地址'}
+          distance={'距离'}
+          onPress={() => {
+            // this.props.history.push({
+            //   pathname: `/cinema/detail`,
+            //   state: {
+            //     cinema_id: item.cinema_id,
+            //     film_id: params && params.film_id,
+            //     date: fetchOptions.date,
+            //   },
+            // });
+            console.log('onPress')
+          }}
+        />
       )}
       getItemLayout={(data, index) => (
         {length: 320, offset: 320 * index, index}
       )}
       horizontal={false}
       initialNumToRender={5}
-      columnWrapperStyle={{height:300,justifyContent: 'space-between'}}
+      columnWrapperStyle={{height:300}}
       numColumns={2}
       onRefresh={()=>{
         setRefreshing(true);
@@ -86,7 +169,7 @@ const Cineam = () => {
         }
       }
       onEndReachedThreshold={0.1}
-    />
+    /> */}
 
 
 
@@ -95,8 +178,8 @@ const Cineam = () => {
 };
 
 const styles = StyleSheet.create({
-  _text:{
-    // color:'#000'
+  container:{
+    flex:1
   }
 });
 

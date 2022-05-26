@@ -60,6 +60,7 @@ const Home = (props:any) => {
   const [refreshing, setRefreshing] = React.useState(false);
   const [activeTabIndex, setActiveTabIndex] = React.useState(0);
   const [navigationBarBg, setNavigationBarBg] = React.useState('transparent');
+  const [navigationTitle, setNavigationTitle] = React.useState('');
 
   let [fetchOptionsHot,setFetchOptionsHot] = useState({
     page: 1,
@@ -106,7 +107,7 @@ const Home = (props:any) => {
     setHotLoading(false);
     _list = [];
   }
-  async function getSoonShowList(onRefreshing?:()=>void){
+  async function getSoonShowList(){
     setSoonShowLoading(true);
     let result = await get_film_soon_show(fetchOptionsSoonShow);
     let _list = [];
@@ -136,7 +137,6 @@ const Home = (props:any) => {
       setFetchOptionsSoonShow(fetchOptionsSoonShow);
       getSoonShowList()
     }
-    
   }
   
    const onRefresh = ()=>{
@@ -160,6 +160,7 @@ const Home = (props:any) => {
       style={{
         zIndex:1
       }}
+      title={navigationTitle}
       backgroundColor={navigationBarBg}
       position='absolute'
       leftView={<RenderCityName/>}/>
@@ -182,11 +183,13 @@ const Home = (props:any) => {
         activeTabIndex===0 && onLoadMore();
         activeTabIndex===1 && onLoadMore();
       }
-      // if(offSetY>=50){
-      //   setNavigationBarBg('#fff');
-      // }else{
-      //   setNavigationBarBg('transparent');
-      // }
+      if(offSetY>=100){
+        setNavigationBarBg('');
+        setNavigationTitle("电影");
+      }else{
+        setNavigationBarBg('transparent');
+        setNavigationTitle("");
+      }
     }}
     onMomentumScrollEnd={(event:any)=>{}}>
       <Swiper/>
@@ -195,21 +198,21 @@ const Home = (props:any) => {
         setActiveTabIndex(val);
       }}/>
 
-          {
-            activeTabIndex===0?<Hot  
-            isLoading={isHotLoading}
-            isFinallyPage={isHotFinallyPage}
-            fetchOptionsHot={fetchOptionsHot}
-            list={hotList}
-            hotBoxStyle={{}}
-            ref={hotRef}/>:<SoonShow 
-            isLoading={isSoonShowLoading}
-            isFinallyPage={isSoonShowFinallyPage}
-            fetchOptionsSoonShow={fetchOptionsSoonShow}
-            list={SoonShowList}
-            hotBoxStyle={{}}
-            ref={soonShowRef}/>
-          }
+      {
+        activeTabIndex===0?<Hot  
+        isLoading={isHotLoading}
+        isFinallyPage={isHotFinallyPage}
+        fetchOptionsHot={fetchOptionsHot}
+        list={hotList}
+        hotBoxStyle={{}}
+        ref={hotRef}/>:<SoonShow 
+        isLoading={isSoonShowLoading}
+        isFinallyPage={isSoonShowFinallyPage}
+        fetchOptionsSoonShow={fetchOptionsSoonShow}
+        list={SoonShowList}
+        hotBoxStyle={{}}
+        ref={soonShowRef}/>
+      }
           
     </ScrollView>
   </View>);
