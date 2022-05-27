@@ -90,7 +90,8 @@ export default class NavigationBar extends Component {
   }
 
   buildStyle() {
-    let {style, type, statusBarInsets} = this.props;
+    let {style, type, statusBarInsets, borderBottomWidth, borderBottomColor} =
+      this.props;
 
     let justifyContent;
     switch (type === 'auto' ? Platform.OS : type) {
@@ -115,7 +116,7 @@ export default class NavigationBar extends Component {
         paddingLeft: 4 + leftInset,
         paddingRight: 4 + rightInset,
         borderBottomWidth: Theme.navSeparatorLineWidth,
-        borderBottomColor: Theme.navSeparatorColor,
+        borderBottomColor: borderBottomColor || Theme.navSeparatorColor,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent,

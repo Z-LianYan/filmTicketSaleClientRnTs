@@ -232,8 +232,9 @@ export default {
   navTitleColor: '#000',
   navTitleFontSize: 18,
   navButtonFontSize: 15,
-  navSeparatorColor: primaryColor,
-  navSeparatorLineWidth: 0,
+  navSeparatorDarkColor: '#1a1b1c',
+  navSeparatorColor: '#f4f4f4',
+  navSeparatorLineWidth: 1,
 
   //SegmentedBar
   sbColor: defaultColor,

@@ -1,4 +1,4 @@
-import * as HttpUtils from '../utils/request.tsx';
+import * as HttpUtils from '../utils/request';
 import * as Api from './constant';
 // import { Toast } from "antd-mobile";
 import {Theme, Toast} from '../component/teaset/index';

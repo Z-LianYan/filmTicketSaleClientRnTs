@@ -20,17 +20,66 @@ import NavigationBar from '../../component/NavigationBar';
 import BottomLoading from '../../component/BottomLoading';
 import CinemaListItem from './CinemaListItem';
 
+import { get_cinema_list } from '../../api/cinema';
+
+
 const Cineam = () => {
-  console.log('影院')
   let navigation = useNavigation();
   const [refreshing, setRefreshing] = React.useState(false);
   let [list,setList] = useState([])
   let [isLoading,setLoading] = useState(false);
   let [isFinallyPage,setFinallyPage] = useState(false);
+  let [fetchOptions,setFetchOptions] = useState({
+    page: 1,
+    limit: 4,
+    city_id: "440100",
+    district_id: "",
+    date: "",
+    film_id: "",
+    lat: "",
+    lng: "",
+    type: "",
+  })
+  
 
   useEffect(()=>{
-    // getList()
+    getList(true)
   },[])
+
+  const onLoadMore = ()=>{
+    if(isLoading || isFinallyPage) return;
+    fetchOptions.page += 1;
+    setFetchOptions(fetchOptions);
+    getList(true)
+  }
+  const onRefresh = ()=>{
+    setFinallyPage(false);
+    fetchOptions.page = 1;
+    setFetchOptions(fetchOptions);
+    getList(true)
+  }
+
+  async function getList(isLoading:boolean){
+    isLoading && setLoading(true);
+    let result:any = await get_cinema_list(fetchOptions,'');
+    // console.log('影院------》〉》〉',result);
+    let _list = [];
+    if(fetchOptions.page==1){
+      _list = result.rows;
+      setRefreshing(false)
+    }else{
+      _list = list.concat(result.rows);
+    }
+    setList(_list);
+    if(_list.length>=result.count){
+      setFinallyPage(true);
+    }
+    setLoading(false);
+    _list = [];
+  }
+
+
+
   return (<View style={styles.container}>
     <NavigationBar 
       style={{
@@ -38,7 +87,7 @@ const Cineam = () => {
       }}
       position=''
       title='影院'
-      leftView={<Text>234</Text>}/>
+      leftView={<Text>广州</Text>}/>
 
     {/* <Button type='primary' title="123"></Button> */}
 
@@ -46,12 +95,7 @@ const Cineam = () => {
     stickyHeaderIndices={[]}
     refreshControl={
       <RefreshControl refreshing={refreshing} onRefresh={()=>{
-        setRefreshing(true);
-        setTimeout(() => {
-          setRefreshing(false);
-        }, 2000);
-        // activeTabIndex===0 && onRefresh();
-        // activeTabIndex===1 && onRefresh();
+        onRefresh();
       }} />
     }
     onScroll={(event)=>{
@@ -60,8 +104,7 @@ const Cineam = () => {
       const oriageScrollHeight = event.nativeEvent.layoutMeasurement.height; // scrollView高度
       
       if (offSetY + oriageScrollHeight >= contentSizeHeight - 300) {
-        // activeTabIndex===0 && onLoadMore();
-        // activeTabIndex===1 && onLoadMore();
+        onLoadMore();
       }
       if(offSetY>=100){
        
@@ -70,28 +113,32 @@ const Cineam = () => {
       }
     }}
     onMomentumScrollEnd={(event:any)=>{}}>
-      <View style={{flexDirection:'row'}}>
-        <View style={{flex:1,height:100,backgroundColor:'red'}}></View>
-        <View style={{flex:1,height:100,backgroundColor:'yellow'}}></View>
-      </View>
-      <CinemaListItem
-        title={'影院名称'}
-        value={'价格'}
-        label={'地址'}
-        distance={'距离'}
-        onPress={() => {
-          // this.props.history.push({
-          //   pathname: `/cinema/detail`,
-          //   state: {
-          //     cinema_id: item.cinema_id,
-          //     film_id: params && params.film_id,
-          //     date: fetchOptions.date,
-          //   },
-          // });
-          console.log('onPress')
-        }}
-      />
-      
+      {
+        list.map((item:any,index)=>{
+          return <CinemaListItem
+            key={index}
+            title={item.cinema_name}
+            value={item.min_low_sale_price}
+            label={item.address}
+            distance={item.distance}
+            onPress={() => {
+              // this.props.history.push({
+              //   pathname: `/cinema/detail`,
+              //   state: {
+              //     cinema_id: item.cinema_id,
+              //     film_id: params && params.film_id,
+              //     date: fetchOptions.date,
+              //   },
+              // });
+              console.log('onPress')
+            }}
+          />
+        })
+      }
+      <BottomLoading
+      isLoading={isLoading}
+      isFinallyPage={isFinallyPage}
+      hasContent={list.length?true:false}/>
     </ScrollView>
 
     {/* <FlatList

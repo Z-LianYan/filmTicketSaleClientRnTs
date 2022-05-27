@@ -36,7 +36,8 @@ import {
 import { 
   Button,
   Carousel,
-  NavigationBar
+  NavigationBar,
+  Theme
 } from '../component/teaset/index';
 import PropTypes from 'prop-types';
 
@@ -69,6 +70,7 @@ const _NavigationBar = ({
       backgroundColor:backgroundColor?backgroundColor:colorScheme === 'dark' ? '#000' : '#fff',
       position:position?position:'relative',
     }}
+    borderBottomColor={backgroundColor=='transparent'?'transparent':colorScheme=='dark'?Theme.navSeparatorDarkColor:''}
     leftView={ leftView?(typeof leftView === 'number'||'string'?<Text>{leftView}</Text>:leftView):<View 
     style={{flexDirection:'row',alignItems:'center'}}>
       <Ionicons 

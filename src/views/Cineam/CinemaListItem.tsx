@@ -27,52 +27,50 @@ type propsType = {
   label?:string,
   value?:string,
   distance?:string,
-  onPress?: () => void
+  onPress?: () => void,
+  separator?:boolean
 }
 const CinemaListItem = ({
   title = '',
   label = '',
   value = '',
   distance = '',
-  onPress
+  onPress,
+  separator = true,
 }:propsType)=>{ 
   const colorScheme = useColorScheme();
-  // return <TouchableHighlight 
-  // activeOpacity={1} 
-  // underlayColor=''
-  // style={styles.cinema_item_wrapper}
-  // onPress={()=>{
-  //   onPress && onPress()
-  // }}>
+  return <TouchableHighlight>
+    <View>
+      <View style={styles.cinemaItemWrapper}>
+        <View style={styles.left_box}>
+          <Text numberOfLines={1} style={styles.title}>{title}</Text>
+          <Text numberOfLines={1} style={styles.label}>{label}</Text>
+        </View>
+        <View style={styles.right_box}>
+          <View  numberOfLines={1} style={styles.value}>
+            <Text style={styles.symbol}>¥</Text>
+            <Text style={styles.val}>{value}</Text>
+            <Text style={styles.qi}>起</Text>
+          </View>
+          <Text 
+          style={styles.distance}>
+            {distance}
+          </Text>
+        </View>
+      </View>
+      {separator ? <View style={{
+          ...styles.separator,
+          backgroundColor: colorScheme=='dark'?'#1a1b1c':'#eee'
+        }}></View> : null}
+    </View>
     
-  //     <View styles={styles.cinema_item}>
-  //       <View style={styles.left_box}>
-  //         <Text style={styles.title}>{title}</Text>
-  //         <Text style={styles.label}>{label}</Text>
-  //       </View>
-  //       <View style={styles.right_box}>
-  //         <View style={styles.value}>
-  //           <Text style={styles.symbol}>¥</Text>
-  //           <Text>{value}</Text>
-  //           <Text style={styles.qi}>起</Text>
-  //         </View>
-  //         <Text style={styles.distance}>{distance}</Text>
-  //       </View>
-  //     </View>
-  // </TouchableHighlight>
-  return <View style={{flexDirection:'row'}}>
-  <View style={{flex:1,height:100,backgroundColor:'red'}}></View>
-  <View style={{width:30,height:100,backgroundColor:'yellow'}}></View>
-</View>
+  </TouchableHighlight>
+  
 }
 export default CinemaListItem;
 const styles = StyleSheet.create({
-  cinema_item_wrapper:{
-
-  },
-  cinema_item:{
-    padding: 15,
-    // alignItems: 'center',
+  cinemaItemWrapper:{
+    padding:15,
     flexDirection:'row',
     color: '#797d82',
   },
@@ -80,7 +78,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title:{
-    color: '#191a1b',
+    // color: '#191a1b',
     fontSize: 15
   },
   label:{
@@ -90,18 +88,29 @@ const styles = StyleSheet.create({
     // width: ,
   },
   right_box:{
-    width: 70
+    width:60,
+    
   },
   value:{
-    color: Theme.primaryColor,
+    color: Theme.primaryColor, 
     fontSize: 15,
     textAlign: 'center',
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'center'
   },
   symbol:{
-    fontSize: 11,
-    marginRight: 30
+    color: Theme.primaryColor, 
+    fontSize: 11
+  },
+  val:{
+    fontSize: 14,
+    color: Theme.primaryColor, 
+    marginLeft:2,
+    marginRight:2
   },
   qi:{
+    color: Theme.primaryColor, 
     fontSize: 11,
   },
   distance:{
@@ -109,5 +118,10 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 11,
     textAlign: 'center',
+    justifyContent:'center'
+  },
+  separator:{
+    height: 1,
+    // marginLeft: 15,
   }
 });

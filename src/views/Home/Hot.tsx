@@ -84,7 +84,6 @@ const Hot = ({
       }
       
       <BottomLoading
-      emptyText='12'
       isLoading={isLoading}
       isFinallyPage={isFinallyPage}
       hasContent={list.length?true:false}/>
