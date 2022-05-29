@@ -39,7 +39,7 @@ import {
   NavigationBar,
   Theme
 } from '../component/teaset/index';
-import PropTypes from 'prop-types';
+import PropTypes, { number } from 'prop-types';
 
 
 import { get_film_hot } from '../api/film';
@@ -49,13 +49,15 @@ const _NavigationBar = ({
   style,
   backgroundColor,
   position,
-  leftView
+  leftView,
+  rightView
   }:{
     title?:string,
     style?:object,
     backgroundColor?:string,
     position?:string,
-    leftView?: Element
+    leftView?: number|string|Element,
+    rightView?: number|string|Element
   }) => {
     
   const colorScheme = useColorScheme();
@@ -72,23 +74,24 @@ const _NavigationBar = ({
     }}
     borderBottomColor={backgroundColor=='transparent'?'transparent':colorScheme=='dark'?Theme.navSeparatorDarkColor:''}
     leftView={ leftView?(typeof leftView === 'number'||'string'?<Text>{leftView}</Text>:leftView):<View 
-    style={{flexDirection:'row',alignItems:'center'}}>
-      <Ionicons 
-      name={'chevron-back'} 
-      size={25} 
-      color={colorScheme === 'dark' ? '#fff' : '#000'} 
-      onPress={()=>{
-          navigation.goBack()
-      }}/>
-      {/* <Ionicons 
-      name={'home'} 
-      size={25} 
-      color={colorScheme === 'dark' ? '#fff' : '#000'} 
-      onPress={()=>{
-          navigation.goBack()
-      }}/> */}
-    </View>
+      style={{flexDirection:'row',alignItems:'center'}}>
+        <Ionicons 
+        name={'chevron-back'} 
+        size={25} 
+        color={colorScheme === 'dark' ? '#fff' : '#000'} 
+        onPress={()=>{
+            navigation.goBack()
+        }}/>
+        {/* <Ionicons 
+        name={'home'} 
+        size={25} 
+        color={colorScheme === 'dark' ? '#fff' : '#000'} 
+        onPress={()=>{
+            navigation.goBack()
+        }}/> */}
+      </View>
     }
+    rightView={typeof rightView == 'number'||'string'?<Text>{rightView}</Text>:rightView}
     type={'ios'}/>
 
   </View>);

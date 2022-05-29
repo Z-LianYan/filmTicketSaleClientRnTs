@@ -49,9 +49,7 @@ import CustomTabView from './CustomTabView';
 
 import Hot from './Hot';
 import SoonShow from './SoonShow';
-import { Right } from '../../component/teaset/react-native-legacy-components/src/NavigatorBreadcrumbNavigationBarStyles.android';
 var ScreenWidth = Dimensions.get('window').width;
-
 
 const Home = (props:any) => {
   const hotRef:{current:any} = useRef();
@@ -84,14 +82,14 @@ const Home = (props:any) => {
 
 
   useEffect(() => {
-    getHotList();
-    getSoonShowList();
+    getHotList(true);
+    getSoonShowList(true);
     return ()=>{
     }
   },[])
 
-  async function getHotList(){
-    setHotLoading(true);
+  async function getHotList(isLoading:boolean){
+    isLoading && setHotLoading(true);
     let result = await get_film_hot(fetchOptionsHot);
     let _list = [];
     if(fetchOptionsHot.page==1){
@@ -103,12 +101,14 @@ const Home = (props:any) => {
     setHotList(_list);
     if(_list.length>=result.count){
       setHotFinallyPage(true);
+    }else{
+      setHotFinallyPage(false);
     }
     setHotLoading(false);
     _list = [];
   }
-  async function getSoonShowList(){
-    setSoonShowLoading(true);
+  async function getSoonShowList(isLoading:boolean){
+    isLoading && setSoonShowLoading(true);
     let result = await get_film_soon_show(fetchOptionsSoonShow);
     let _list = [];
     if(fetchOptionsSoonShow.page==1){
@@ -120,6 +120,8 @@ const Home = (props:any) => {
     setSoonShowList(_list);
     if(_list.length>=result.count){
       setSoonShowFinallyPage(true);
+    }else{
+      setSoonShowFinallyPage(false);
     }
     setSoonShowLoading(false);
     _list = [];
@@ -130,27 +132,25 @@ const Home = (props:any) => {
       if(isHotLoading || isHotFinallyPage) return;
       fetchOptionsHot.page += 1;
       setFetchOptionsHot(fetchOptionsHot);
-      getHotList()
+      getHotList(true)
     }else{
       if(isSoonShowLoading || isSoonShowFinallyPage) return;
       fetchOptionsSoonShow.page += 1;
       setFetchOptionsSoonShow(fetchOptionsSoonShow);
-      getSoonShowList()
+      getSoonShowList(true)
     }
   }
   
    const onRefresh = ()=>{
     if(!isHotLoading){
-      setHotFinallyPage(false);
       fetchOptionsHot.page = 1;
       setFetchOptionsHot(fetchOptionsHot);
-      getHotList()
+      getHotList(false)
     }
     if(!isSoonShowLoading) {
-      setSoonShowFinallyPage(false);
       fetchOptionsSoonShow.page = 1;
       setFetchOptionsSoonShow(fetchOptionsSoonShow);
-      getSoonShowList()
+      getSoonShowList(false)
     };
     
   }

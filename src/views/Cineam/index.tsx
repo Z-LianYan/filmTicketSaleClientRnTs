@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useRef} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -6,14 +6,19 @@ import {
   StyleSheet,
   useColorScheme,
   FlatList,
-  RefreshControl
+  RefreshControl,
+  TouchableHighlight
 } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { View,Text} from '../../component/Themed';
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { 
   Button,
-  Carousel
+  Carousel,
+  Theme,
+  Label,
+  Drawer,
+  ActionSheet
 } from '../../component/teaset/index';
 
 import NavigationBar from '../../component/NavigationBar';
@@ -21,9 +26,12 @@ import BottomLoading from '../../component/BottomLoading';
 import CinemaListItem from './CinemaListItem';
 
 import { get_cinema_list } from '../../api/cinema';
+import DropdownMenu from '../../component/DropdownMenu';
 
 
 const Cineam = () => {
+  const refDropdownMenu:{current:any} = useRef()
+  const colorScheme = useColorScheme();
   let navigation = useNavigation();
   const [refreshing, setRefreshing] = React.useState(false);
   let [list,setList] = useState([])
@@ -31,7 +39,7 @@ const Cineam = () => {
   let [isFinallyPage,setFinallyPage] = useState(false);
   let [fetchOptions,setFetchOptions] = useState({
     page: 1,
-    limit: 4,
+    limit: 3,
     city_id: "440100",
     district_id: "",
     date: "",
@@ -53,10 +61,10 @@ const Cineam = () => {
     getList(true)
   }
   const onRefresh = ()=>{
-    setFinallyPage(false);
+    // setFinallyPage(false);
     fetchOptions.page = 1;
     setFetchOptions(fetchOptions);
-    getList(true)
+    getList(false)
   }
 
   async function getList(isLoading:boolean){
@@ -73,6 +81,8 @@ const Cineam = () => {
     setList(_list);
     if(_list.length>=result.count){
       setFinallyPage(true);
+    }else{
+      setFinallyPage(false);
     }
     setLoading(false);
     _list = [];
@@ -87,10 +97,42 @@ const Cineam = () => {
       }}
       position=''
       title='影院'
-      leftView={<Text>广州</Text>}/>
-
-    {/* <Button type='primary' title="123"></Button> */}
-
+      leftView={
+        <TouchableHighlight
+          onPress={()=>{
+            // navigation.navigate({
+            //   path: "/citys",
+            // });
+          }}>
+            <View 
+            style={{flexDirection:'row',alignItems:'center'}}>
+              <Text>广州</Text>
+              <Ionicons 
+              name={'chevron-down-outline'} 
+              size={20} 
+              style={{marginTop:-2}}
+              color={colorScheme=='dark'?'#fff':'#000'} />
+            </View>
+        </TouchableHighlight>
+      }
+      rightView={
+        <TouchableHighlight
+          onPress={()=>{
+            // navigation.navigate({
+            //   path: "/cinema/search",
+            // });
+            refDropdownMenu.current.onHiddenMenu()
+          }}>
+          <Ionicons 
+          name={'search-outline'} 
+          size={20} 
+          color={colorScheme === 'dark' ? '#fff' : '#000'}/>
+        </TouchableHighlight>
+        
+      }/>
+    <DropdownMenu 
+    ref={refDropdownMenu}
+    list={[{title:'123457654'},{title:'456哈哈哈哈'},{title:'123'},{title:'456'},{title:'123'},{title:'456'},{title:'123'},{title:'456'}]}/>
     <ScrollView
     stickyHeaderIndices={[]}
     refreshControl={

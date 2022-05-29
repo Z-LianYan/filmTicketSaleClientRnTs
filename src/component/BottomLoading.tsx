@@ -52,7 +52,7 @@ const BottomLoading = ({
         height:50,
         lineHeight:50,
         textAlign:'center'
-      }}>加载中...</Text>):<View style={{
+      }}>上拉加载更多</Text>):<View style={{
         height:150,
         alignItems:'center',
         justifyContent:'center'
