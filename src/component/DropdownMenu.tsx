@@ -29,7 +29,8 @@ import {
   Button,
   Carousel,
   NavigationBar,
-  Theme
+  Theme,
+  ListRow
 } from '../component/teaset/index';
 import PropTypes, { number } from 'prop-types';
 
@@ -38,23 +39,32 @@ import { get_film_hot } from '../api/film';
 var ScreenHeight = Dimensions.get('window').height;
 const DropdownMenu = ({
   list=[],
-  titleStyle
+  titleStyle,
+  onTypeChange,
+  districtChange
   }:{
     list:any[],
-    titleStyle?:any
+    titleStyle?:any,
+    onTypeChange?:any
+    districtChange?:any
   },ref:any) => {
   const colorScheme = useColorScheme();
   const [title,setTitle] = useState(list && list.length?list[0].title:'');
   const [showMenu,setShowMenu] = useState(false);
-
+  const [showMenu2,setShowMenu2] = useState(false);
+  const [title2,setTitle2] = useState('全部');
+  const [type,setType] = useState('');
+  
 
   // 把父组件需要调用的方法暴露出来
   useImperativeHandle(ref, () => ({
     onHiddenMenu: ()=>{
-      setShowMenu(false)
+      setShowMenu(false);
+      setShowMenu2(false);
     },
     onShowMenu: ()=>{
-      setShowMenu(true)
+      setShowMenu(true);
+      setShowMenu2(true);
     }
   }));
 
@@ -64,11 +74,28 @@ const DropdownMenu = ({
       ...styles.btnBox
     }}>
         <Text style={styles.title} onPress={()=>{
-          setShowMenu(!showMenu)
+          setShowMenu(!showMenu);
+          if(!showMenu && showMenu2){
+            setShowMenu2(false);
+          }
+          
         }}>
           {title}
           <Ionicons
           name={showMenu?'caret-up':'caret-down-sharp'}
+          size={15} 
+          color={colorScheme === 'dark' ? '#fff' : '#000'}/>
+        </Text>
+
+        <Text style={styles.title} onPress={()=>{
+          setShowMenu2(!showMenu2);
+          if(showMenu && !showMenu2){
+            setShowMenu(false);
+          }
+        }}>
+          {title2}
+          <Ionicons
+          name={showMenu2?'caret-up':'caret-down-sharp'}
           size={15} 
           color={colorScheme === 'dark' ? '#fff' : '#000'}/>
         </Text>
@@ -85,24 +112,80 @@ const DropdownMenu = ({
             style={styles.contentItem}
             key={index} 
             onPress={()=>{
-              setTitle(item.title)
-              // setShowMenu(false)
+              setTitle(item.title);
+              setShowMenu(false);
+              districtChange(item.id)
             }}>
-              <Text numberOfLines={1}>{item.title}</Text>
+              <Text 
+              style={styles.contentItemTitle}
+              numberOfLines={1}>{item.title}</Text>
             </TouchableOpacity>
         })
         }
       </View>:null
     }
     {
-      showMenu?<TouchableHighlight
+      showMenu2?<View style={{
+        ...styles.contentBox2,
+        borderBottomColor: colorScheme === 'dark' ? '#1a1b1c' : '#f4f4f4',
+        
+      }}>
+          <TouchableHighlight onPress={()=>{
+            setShowMenu2(false);
+            setTitle2('全部');
+            onTypeChange('');
+            setType('');
+          }}>
+            <View style={{
+              ...styles.customCellRadio,
+              borderBottomWidth:1,
+              borderColor:colorScheme === 'dark' ? '#1a1b1c' : '#f4f4f4'
+            }}>
+              <Text style={styles.customCellRadioTxt}>全部</Text>
+              <Text style={styles.customCellRadioTxt}>
+                {
+                  !type?<Ionicons
+                  name={'checkmark-sharp'}
+                  size={15} 
+                  color={Theme.primaryColor}/>:null
+                }
+              </Text>
+            </View>
+          </TouchableHighlight>
+          
+          
+          <TouchableHighlight onPress={()=>{
+            setShowMenu2(false);
+            setTitle2('最近去过');
+            onTypeChange('zjqg');
+            setType('zjqg')
+          }}>
+            <View style={styles.customCellRadio}>
+              <Text style={styles.customCellRadioTxt}>最近去过</Text>
+              <Text style={styles.customCellRadioTxt}>
+              {
+                  type=='zjqg'?<Ionicons
+                  name={'checkmark-sharp'}
+                  size={15} 
+                  color={Theme.primaryColor}/>:null
+                }
+              </Text>
+            </View>
+          </TouchableHighlight>
+          
+      </View>:null
+    }
+    
+    {
+      (showMenu || showMenu2)?<TouchableHighlight
       underlayColor=''
       style={{
         ...styles.maskWrapper,
         backgroundColor:colorScheme === 'dark' ?'#666':'#000',
       }}
       onPress={()=>{
-        setShowMenu(false)
+        setShowMenu(false);
+        setShowMenu2(false);
       }}>
         <View 
       ></View>
@@ -115,7 +198,6 @@ const DropdownMenu = ({
 const styles = StyleSheet.create({
   dropdownMenuWrapper:{
     position:'relative',
-    // overflow:'hidden'
     zIndex:1
   },
   btnBox:{
@@ -124,48 +206,67 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     borderBottomWidth:1,
     alignContent:'center',
-    justifyContent:'center'
+    justifyContent:'space-around'
   },
   title:{
-    // height:25,
+    // flex:1,
     flexDirection:'row',
     lineHeight:50,
-    justifyContent:'center'
+    justifyContent:'center',
+    alignItems:'center'
   },
   contentBox:{
     position:'absolute',
-    // bottom:0,
     left:0,
     right:0,
     top:50,
     borderBottomWidth:1,
-    // padding:10,
-    // paddingLeft:10,
     paddingTop:10,
-    // paddingBottom:10,
-    // paddingRight:10,
     flexDirection:'row',
     flexWrap:'wrap',
     justifyContent:'space-around'
   },
   contentItem:{
     width:'23%',
-    padding:10,
+    padding:6,
     borderWidth:1,
     borderRadius:5,
     borderColor:'#eee',
-    // marginRight:10,
     marginBottom:10,
+  },
+  contentBox2:{
+    position:'absolute',
+    left:0,
+    right:0,
+    top:50,
+    borderBottomWidth:1,
+    paddingTop:10,
+    // flexDirection:'column',
+    // flexWrap:'wrap',
+    // justifyContent:'space-around'
+  },
+  contentItemTitle:{
+    textAlign:'center'
   },
   maskWrapper:{
     position:'absolute',
-    // bottom:0,
     left:0,
     right:0,
     top:50,
     bottom:-ScreenHeight,
     opacity:0.5,
     zIndex:-1
+  },
+  customCellRadio:{
+    height:40,
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center',
+    paddingLeft:10,
+    paddingRight:10,
+  },
+  customCellRadioTxt:{
+    height:18
   }
 });
 

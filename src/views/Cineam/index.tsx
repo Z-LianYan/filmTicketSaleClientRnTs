@@ -70,7 +70,7 @@ const Cineam = () => {
   async function getList(isLoading:boolean){
     isLoading && setLoading(true);
     let result:any = await get_cinema_list(fetchOptions,'');
-    // console.log('影院------》〉》〉',result);
+    console.log('影院------》〉》〉',result);
     let _list = [];
     if(fetchOptions.page==1){
       _list = result.rows;
@@ -132,7 +132,13 @@ const Cineam = () => {
       }/>
     <DropdownMenu 
     ref={refDropdownMenu}
-    list={[{title:'123457654'},{title:'456哈哈哈哈'},{title:'123'},{title:'456'},{title:'123'},{title:'456'},{title:'123'},{title:'456'}]}/>
+    list={[{title:'全城'},{title:'456哈哈哈哈'},{title:'123'},{title:'456'},{title:'123'},{title:'456'},{title:'123'},{title:'456'}]}
+    onTypeChange={(val:string)=>{
+      console.log('12345678',val)
+    }}
+    districtChange={(id:number)=>{
+      console.log('id----',id)
+    }}/>
     <ScrollView
     stickyHeaderIndices={[]}
     refreshControl={
