@@ -49,7 +49,7 @@ const DropdownMenu = ({
     districtChange?:any
   },ref:any) => {
   const colorScheme = useColorScheme();
-  const [title,setTitle] = useState(list && list.length?list[0].title:'');
+  const [title,setTitle] = useState('全城');
   const [showMenu,setShowMenu] = useState(false);
   const [showMenu2,setShowMenu2] = useState(false);
   const [title2,setTitle2] = useState('全部');
@@ -71,34 +71,38 @@ const DropdownMenu = ({
   return (<View style={styles.dropdownMenuWrapper}>
     <View style={{
       borderBottomColor: colorScheme === 'dark' ? '#1a1b1c' : '#f4f4f4',
-      ...styles.btnBox
+      ...styles.dropdownMenuBox
     }}>
-        <Text style={styles.title} onPress={()=>{
-          setShowMenu(!showMenu);
-          if(!showMenu && showMenu2){
-            setShowMenu2(false);
-          }
-          
-        }}>
-          {title}
-          <Ionicons
-          name={showMenu?'caret-up':'caret-down-sharp'}
-          size={15} 
-          color={colorScheme === 'dark' ? '#fff' : '#000'}/>
-        </Text>
+        <View style={styles.dropdownMenuItem}>
+          <Text style={styles.title} onPress={()=>{
+            setShowMenu(!showMenu);
+            if(!showMenu && showMenu2){
+              setShowMenu2(false);
+            }
+            
+          }}>
+            {title}
+            <Ionicons
+            name={showMenu?'caret-up':'caret-down-sharp'}
+            size={15} 
+            color={colorScheme === 'dark' ? '#fff' : '#000'}/>
+          </Text>
+        </View>
 
-        <Text style={styles.title} onPress={()=>{
-          setShowMenu2(!showMenu2);
-          if(showMenu && !showMenu2){
-            setShowMenu(false);
-          }
-        }}>
-          {title2}
-          <Ionicons
-          name={showMenu2?'caret-up':'caret-down-sharp'}
-          size={15} 
-          color={colorScheme === 'dark' ? '#fff' : '#000'}/>
-        </Text>
+        <View style={styles.dropdownMenuItem}>
+          <Text style={styles.title} onPress={()=>{
+            setShowMenu2(!showMenu2);
+            if(showMenu && !showMenu2){
+              setShowMenu(false);
+            }
+          }}>
+            {title2}
+            <Ionicons
+            name={showMenu2?'caret-up':'caret-down-sharp'}
+            size={15} 
+            color={colorScheme === 'dark' ? '#fff' : '#000'}/>
+          </Text>
+        </View>
     </View>
     {
       showMenu?<View style={{
@@ -109,16 +113,22 @@ const DropdownMenu = ({
         {
           list.map((item:any,index:number)=>{
             return <TouchableOpacity
-            style={styles.contentItem}
+            style={{
+              ...styles.contentItem,
+              borderColor:item.name==title?Theme.primaryColor:'#f4f4f4'
+            }}
             key={index} 
             onPress={()=>{
-              setTitle(item.title);
+              setTitle(item.name);
               setShowMenu(false);
               districtChange(item.id)
             }}>
               <Text 
-              style={styles.contentItemTitle}
-              numberOfLines={1}>{item.title}</Text>
+              style={{
+                ...styles.contentItemTitle,
+                color:item.name==title?Theme.primaryColor:colorScheme === 'dark' ? '#fff' : '#000'
+              }}
+              numberOfLines={1}>{item.name}</Text>
             </TouchableOpacity>
         })
         }
@@ -200,13 +210,19 @@ const styles = StyleSheet.create({
     position:'relative',
     zIndex:1
   },
-  btnBox:{
+  
+  dropdownMenuBox:{
     height:50,
     lineHeight:50,
     flexDirection:'row',
     borderBottomWidth:1,
     alignContent:'center',
     justifyContent:'space-around'
+  },
+  dropdownMenuItem:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center'
   },
   title:{
     // flex:1,

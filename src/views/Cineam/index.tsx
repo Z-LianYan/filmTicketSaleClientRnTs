@@ -26,6 +26,7 @@ import BottomLoading from '../../component/BottomLoading';
 import CinemaListItem from './CinemaListItem';
 
 import { get_cinema_list } from '../../api/cinema';
+import { get_city_district_list } from '../../api/citys';
 import DropdownMenu from '../../component/DropdownMenu';
 
 
@@ -47,11 +48,14 @@ const Cineam = () => {
     lat: "",
     lng: "",
     type: "",
+    user_id: 32
   })
+  let [city_district_list, set_city_district_list] = useState([]);
   
 
   useEffect(()=>{
-    getList(true)
+    getList(true);
+    getDistrictList();
   },[])
 
   const onLoadMore = ()=>{
@@ -69,8 +73,9 @@ const Cineam = () => {
 
   async function getList(isLoading:boolean){
     isLoading && setLoading(true);
+    // console.log('fetchOptions---',fetchOptions)
     let result:any = await get_cinema_list(fetchOptions,'');
-    console.log('影院------》〉》〉',result);
+    // console.log('影院------》〉》〉',result);
     let _list = [];
     if(fetchOptions.page==1){
       _list = result.rows;
@@ -86,6 +91,28 @@ const Cineam = () => {
     }
     setLoading(false);
     _list = [];
+  }
+
+  async function getDistrictList() {
+    // let { city_id } = props.locationInfo;
+    // let _cookies = Cookies.get("locationInfo");
+    // let _cookiesInfo = null;
+    // if (_cookies) {
+    //   _cookiesInfo = JSON.parse(_cookies);
+    // }
+    let result = await get_city_district_list({
+      // city_id:_cookiesInfo && _cookiesInfo.city_id ? _cookiesInfo.city_id : city_id,
+      city_id:"440100",
+    });
+    result.rows.unshift({
+      first_letter: null,
+      id: "",
+      is_hot: null,
+      module_id: "",
+      name: "全城",
+      pinyin: "quanbu",
+    });
+    set_city_district_list(result.rows);
   }
 
 
@@ -128,16 +155,23 @@ const Cineam = () => {
           size={20} 
           color={colorScheme === 'dark' ? '#fff' : '#000'}/>
         </TouchableHighlight>
-        
       }/>
     <DropdownMenu 
     ref={refDropdownMenu}
-    list={[{title:'全城'},{title:'456哈哈哈哈'},{title:'123'},{title:'456'},{title:'123'},{title:'456'},{title:'123'},{title:'456'}]}
-    onTypeChange={(val:string)=>{
-      console.log('12345678',val)
+    list={city_district_list}
+    onTypeChange={(type:string)=>{
+      console.log('12345678',type);
+      fetchOptions.type = type;
+      fetchOptions.page = 1;
+      setFetchOptions(fetchOptions);
+      getList(true)
     }}
-    districtChange={(id:number)=>{
-      console.log('id----',id)
+    districtChange={(id:any)=>{
+      console.log('id----',id);
+      fetchOptions.district_id = id;
+      fetchOptions.page = 1;
+      setFetchOptions(fetchOptions);
+      getList(true)
     }}/>
     <ScrollView
     stickyHeaderIndices={[]}
