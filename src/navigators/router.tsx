@@ -7,7 +7,7 @@ const routes=[
     component: HomePage, 
     name: "HomePage", 
     options: {
-      tabBarBadge:1,
+      // tabBarBadge:1,
       title:'电影'
     } 
   },
@@ -15,14 +15,14 @@ const routes=[
     component: CineamPage, 
     name:"CineamPage",
     options:{
-      tabBarBadge:2,
+      // tabBarBadge:2,
       title:'影院'
     }},
   { 
     component: MinePage, 
     name: "MinePage", 
     options: {
-      tabBarBadge:3,
+      // tabBarBadge:3,
       title:'我的'
     } 
   }

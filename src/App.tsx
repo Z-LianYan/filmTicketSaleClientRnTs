@@ -8,7 +8,7 @@
  * @format
  */
 
-import React from 'react';
+import React,{ useEffect } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -31,12 +31,14 @@ import store from './store/index';
 import { 
   NavigationContainer,
   DarkTheme,
-  DefaultTheme, 
+  DefaultTheme,
+  useNavigationContainerRef 
 } from '@react-navigation/native';
 import StackNavigators from './navigators/StackNavigators';
 import { observer, inject } from 'mobx-react';
 import { TopView, Toast,Theme } from './component/teaset/index';//使用 ./component/teaset/index ui库需要安装依赖 prop-types,rebound,immutable,react-timer-mixin,create-react-class,fbjs  
-
+import TabBar from './component/TabBar';
+import { any } from 'prop-types';
 
 // Theme.set(Theme.themes.black);
 // Theme.set({
@@ -45,23 +47,33 @@ import { TopView, Toast,Theme } from './component/teaset/index';//使用 ./compo
 // });
 
 
+
+
 const App = () => {
+  const navigationRef = useNavigationContainerRef(); // You can also use a regular ref with `React.useRef()`
+  
   
   const colorScheme = useColorScheme();
     return (
       <Provider {...store}>
-        {/* <SafeAreaView style={{flex:1}}> */}
+        <SafeAreaView style={{flex:1}}>
           <TopView style={{flex:1}}>
             <StatusBar 
             hidden={false} 
             backgroundColor={'green'} //状态栏的背景色  
             barStyle='dark-content'/>
             <NavigationContainer //给react navigation 设置夜间模式和白天模式
-            theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+            ref={navigationRef} 
+            onReady={()=>{
+              console.log('onReady-----')
+            }}>
               <StackNavigators/>
+
+              {/* <TabBar index={1}/> */}
             </NavigationContainer>
             </TopView>
-        {/* </SafeAreaView> */}
+        </SafeAreaView>
     </Provider>
    );
  };

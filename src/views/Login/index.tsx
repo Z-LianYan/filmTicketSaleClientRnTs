@@ -19,8 +19,8 @@ import {
 } from 'react-native';
 import { View,Text} from '../../component/Themed';
 import NavigationBar from '../../component/NavigationBar';
-
-const Login = ({ navigation, route }:{ navigation:any, route:any }) => {
+import { observer, inject } from 'mobx-react'
+const Login = (props:any) => {
   // 在页面显示之前设(重)置 options 值，相当于在 componentDidMount 阶段执行
   // useLayoutEffect 是阻塞同步的，即执行完此处之后，才会继续向下执行
   // useLayoutEffect(() => {
@@ -31,9 +31,13 @@ const Login = ({ navigation, route }:{ navigation:any, route:any }) => {
 
   useEffect(()=>{
 
-  }, [navigation])
+  }, [props.navigation])
   return (<View>
     <NavigationBar 
+    onBack={()=>{
+      props.navigation.goBack()
+      console.log('navigation',props.route);
+    }}
     title={'登录'}/>
     <Text>登录212</Text>
   </View>);
@@ -41,4 +45,4 @@ const Login = ({ navigation, route }:{ navigation:any, route:any }) => {
 
 const styles = StyleSheet.create({
 });
-export default Login;
+export default inject("app")(observer(Login));

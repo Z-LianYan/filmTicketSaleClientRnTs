@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import { observer, inject } from 'mobx-react'
-import {Text, View, Image,TouchableHighlight,TouchableOpacity} from 'react-native';
+import {Text, View, Image,TouchableHighlight} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -20,7 +20,6 @@ import {
 } from '../assets/image/index';
 
 import router from './router';
-import MyTabBar from '../component/TabBar';
 
 const Tab = createBottomTabNavigator();
 
@@ -37,36 +36,29 @@ function tabBarScreen(props:any){
   })
 }
 
-
 function BottomTabNavigator(props:any) {
-  // console.log('props😂----》〉',props)
   return (
     <Tab.Navigator
     initialRouteName="CineamPage"
-    tabBar={_props => <MyTabBar {..._props} />}
     screenOptions={({ route }) => ({
       headerShown:false,//是否隐藏头部导航
-      // tabBarIcon: ({ focused, color, size }) => {
-      //   let iconName; 
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName; 
 
-      //   if (route.name === 'HomePage') {
-      //     iconName = focused
-      //       ? FIlM_ACTIVE_ICON
-      //       : FIlM_ICON;
-      //   } else if (route.name === 'CineamPage') {
-      //     iconName = focused ? CINEMA_ACTIVE_ICON : CINEMA_ICON;
-      //   }else if (route.name === 'MinePage') {
-      //     iconName = focused ? MINE_ACTIVE_ICON : MINE_ICON;
-      //   }
-      //   return <TouchableHighlight onPress={()=>{
-      //     // console.log(12345)
-      //   }}>
-      //     <Image
-      //       style={{width:20,height:20}}
-      //       source={iconName}
-      //     />
-      //   </TouchableHighlight>;
-      // },
+        if (route.name === 'HomePage') {
+          iconName = focused
+            ? FIlM_ACTIVE_ICON
+            : FIlM_ICON;
+        } else if (route.name === 'CineamPage') {
+          iconName = focused ? CINEMA_ACTIVE_ICON : CINEMA_ICON;
+        }else if (route.name === 'MinePage') {
+          iconName = focused ? MINE_ACTIVE_ICON : MINE_ICON;
+        }
+        return <Image
+            style={{width:20,height:20}}
+            source={iconName}
+          />;
+      },
       tabBarActiveTintColor: '#e54847',//激活的颜色
       tabBarInactiveTintColor: '#333',//未必激活的颜色
 
@@ -83,4 +75,4 @@ function BottomTabNavigator(props:any) {
     </Tab.Navigator>
   );
 }
-export default BottomTabNavigator;
+export default inject('app','home')(observer(BottomTabNavigator));

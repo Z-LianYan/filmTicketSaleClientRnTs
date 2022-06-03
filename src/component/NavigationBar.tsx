@@ -43,22 +43,24 @@ import PropTypes, { number } from 'prop-types';
 
 
 import { get_film_hot } from '../api/film';
-
+type TypeProps = {
+  title?:string,
+  style?:object,
+  backgroundColor?:string,
+  position?:string,
+  leftView?: number|string|Element,
+  rightView?: number|string|Element,
+  onBack?:Function
+}
 const _NavigationBar = ({
   title,
   style,
   backgroundColor,
   position,
   leftView,
-  rightView
-  }:{
-    title?:string,
-    style?:object,
-    backgroundColor?:string,
-    position?:string,
-    leftView?: number|string|Element,
-    rightView?: number|string|Element
-  }) => {
+  rightView,
+  onBack,
+}:TypeProps) => {
     
   const colorScheme = useColorScheme();
   let navigation:any = useNavigation();
@@ -66,7 +68,7 @@ const _NavigationBar = ({
 
   return (<View style={{...style}}>
     <NavigationBar 
-    statusBarInsets={true} 
+    statusBarInsets={Platform.OS === 'ios' ? false : true} 
     title={<Text>{title}</Text>}
     style={{
       backgroundColor:backgroundColor?backgroundColor:colorScheme === 'dark' ? '#000' : '#fff',
@@ -80,7 +82,7 @@ const _NavigationBar = ({
         size={25} 
         color={colorScheme === 'dark' ? '#fff' : '#000'} 
         onPress={()=>{
-            navigation.goBack()
+          onBack ? onBack(): navigation.goBack();
         }}/>
         {/* <Ionicons 
         name={'home'} 

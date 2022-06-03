@@ -6,6 +6,8 @@ import {createStackNavigator} from '@react-navigation/stack'
 import { useNavigation } from '@react-navigation/core';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getHeaderTitle } from '@react-navigation/elements';
+// import CineamPage from '../views/Cineam/index';
+// import MinePage from '../views/Mine/index';
 
 const Stack = createStackNavigator();
 import {
@@ -41,6 +43,15 @@ const routes=[
         name:"LoginPage",
         // options:LoginPage.navigationOptions,//页面里配置options
     },
+
+    // { 
+    //     component: CineamPage, 
+    //     name:"CineamPage",
+    // },
+    // { 
+    //     component: MinePage, 
+    //     name:"MinePage",
+    // },
 ]
 
 function renderStackItems(){
@@ -56,7 +67,7 @@ function renderStackItems(){
 
 import store from '../store/index';
 
-function Router(){
+function StackNavigators(){
     let navigation:any = useNavigation()
     return <Stack.Navigator
         screenOptions={{
@@ -96,4 +107,4 @@ function Router(){
     </Stack.Navigator>
 }
 
-export default Router;
+export default StackNavigators;

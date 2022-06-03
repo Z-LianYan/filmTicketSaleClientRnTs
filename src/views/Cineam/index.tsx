@@ -9,6 +9,8 @@ import {
   RefreshControl,
   TouchableHighlight
 } from 'react-native';
+import { observer, inject } from 'mobx-react'
+
 import { useNavigation } from '@react-navigation/core';
 import { View,Text} from '../../component/Themed';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -29,8 +31,7 @@ import { get_cinema_list } from '../../api/cinema';
 import { get_city_district_list } from '../../api/citys';
 import DropdownMenu from '../../component/DropdownMenu';
 
-
-const Cineam = () => {
+const Cineam = (props:any) => {
   const refDropdownMenu:{current:any} = useRef()
   const colorScheme = useColorScheme();
   let navigation = useNavigation();
@@ -41,7 +42,7 @@ const Cineam = () => {
   let [fetchOptions,setFetchOptions] = useState({
     page: 1,
     limit: 3,
-    city_id: "440100",
+    city_id: props.app.locationInfo.city_id,
     district_id: "",
     date: "",
     film_id: "",
@@ -102,7 +103,7 @@ const Cineam = () => {
     // }
     let result = await get_city_district_list({
       // city_id:_cookiesInfo && _cookiesInfo.city_id ? _cookiesInfo.city_id : city_id,
-      city_id:"440100",
+      city_id:props.app.locationInfo.city_id,
     });
     result.rows.unshift({
       first_letter: null,
@@ -302,7 +303,6 @@ const Cineam = () => {
 
 
 
-
   </View>);
 };
 
@@ -312,4 +312,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Cineam;
+export default inject("app")(observer(Cineam));

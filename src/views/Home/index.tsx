@@ -36,7 +36,8 @@ import {
   Carousel,
   TabView,
   TransformView,
-  Theme
+  Theme,
+  Label
 } from '../../component/teaset/index';
 
 
@@ -50,6 +51,8 @@ import CustomTabView from './CustomTabView';
 import Hot from './Hot';
 import SoonShow from './SoonShow';
 var ScreenWidth = Dimensions.get('window').width;
+
+
 
 const Home = (props:any) => {
   const hotRef:{current:any} = useRef();
@@ -215,6 +218,7 @@ const Home = (props:any) => {
       }
           
     </ScrollView>
+
   </View>);
 };
 export default inject("home")(observer(Home));
