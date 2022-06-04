@@ -40,6 +40,9 @@ import { TopView, Toast,Theme } from './component/teaset/index';//使用 ./compo
 import TabBar from './component/TabBar';
 import { any } from 'prop-types';
 
+import { get_user_info } from "./api/user";
+
+
 // Theme.set(Theme.themes.black);
 // Theme.set({
 //   toastColor: '#e54847',
@@ -49,9 +52,26 @@ import { any } from 'prop-types';
 
 
 
-const App = () => {
-  const navigationRef = useNavigationContainerRef(); // You can also use a regular ref with `React.useRef()`
+const App = (props:any) => {
   
+  const navigationRef = useNavigationContainerRef(); // You can also use a regular ref with `React.useRef()`
+  useEffect(()=>{
+    // if(!store.app.userInfo){
+      getUserInfo();
+    // }
+  },[])
+
+  async function getUserInfo() {
+    try{
+      let result = await get_user_info();
+      if (result) {
+        delete result.token
+        store.app.setUserInfo(result);
+      }
+    }catch(err:any){
+      console.log('err',err.message)
+    }
+  }
   
   const colorScheme = useColorScheme();
     return (

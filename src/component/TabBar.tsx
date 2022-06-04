@@ -92,7 +92,6 @@ const TabBar = ({
     }
 
     const onPress = () => {
-      // console.log(12345,route,app)
       const event = navigation.emit({
         type: 'tabPress',
         target: route.key,
@@ -100,16 +99,13 @@ const TabBar = ({
       });
 
       if (!isFocused && !event.defaultPrevented) {
-        // The `merge: true` option makes sure that the params inside the tab screen are preserved
-        
+
+        console.log('userinfo ----===>',app.userInfo);
+
         if(route.name=='MinePage' && !app.userInfo){
-          navigation.navigate({ name: 'LoginPage', merge: true });
-          // app.setUserInfo({
-          //   name:'张三',
-          //   sex:'男',
-          //   age:18
-          // })
-          
+          navigation.navigate({ name: 'LoginPage', params:{
+            toUrl:'MinePage'
+          }});
           return;
         }
         navigation.navigate({ name: route.name, merge: true });

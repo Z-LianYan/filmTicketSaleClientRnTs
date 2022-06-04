@@ -8,7 +8,7 @@ class App {
 
   tabBarBadge = "Badge";
 
-  userInfo= null;
+  userInfo = null;
   locationInfo= {
     city_id: 440100, //默认城市编码
     lng: "",
@@ -33,7 +33,7 @@ class App {
     10: "棒极了,极力推荐",
   };
 
-  setUserInfo(info:object){
+  setUserInfo(info:any){
     this.userInfo = info
   }
 

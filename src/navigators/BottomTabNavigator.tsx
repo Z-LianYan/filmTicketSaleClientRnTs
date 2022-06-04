@@ -39,7 +39,6 @@ function tabBarScreen(props:any){
 
 
 function BottomTabNavigator(props:any) {
-  // console.log('props😂----》〉',props)
   return (
     <Tab.Navigator
     initialRouteName="CineamPage"

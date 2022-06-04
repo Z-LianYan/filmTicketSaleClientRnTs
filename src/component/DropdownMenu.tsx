@@ -41,12 +41,14 @@ const DropdownMenu = ({
   list=[],
   titleStyle,
   onTypeChange,
-  districtChange
+  districtChange,
+  app
   }:{
     list:any[],
     titleStyle?:any,
     onTypeChange?:any
-    districtChange?:any
+    districtChange?:any,
+    app:any
   },ref:any) => {
   const colorScheme = useColorScheme();
   const [title,setTitle] = useState('全城');
@@ -89,20 +91,22 @@ const DropdownMenu = ({
           </Text>
         </View>
 
-        <View style={styles.dropdownMenuItem}>
-          <Text style={styles.title} onPress={()=>{
-            setShowMenu2(!showMenu2);
-            if(showMenu && !showMenu2){
-              setShowMenu(false);
-            }
-          }}>
-            {title2}
-            <Ionicons
-            name={showMenu2?'caret-up':'caret-down-sharp'}
-            size={15} 
-            color={colorScheme === 'dark' ? '#fff' : '#000'}/>
-          </Text>
-        </View>
+        {
+          app.userInfo && <View style={styles.dropdownMenuItem}>
+            <Text style={styles.title} onPress={()=>{
+              setShowMenu2(!showMenu2);
+              if(showMenu && !showMenu2){
+                setShowMenu(false);
+              }
+            }}>
+              {title2}
+              <Ionicons
+              name={showMenu2?'caret-up':'caret-down-sharp'}
+              size={15} 
+              color={colorScheme === 'dark' ? '#fff' : '#000'}/>
+            </Text>
+          </View>
+        }
     </View>
     {
       showMenu?<View style={{
@@ -135,7 +139,7 @@ const DropdownMenu = ({
       </View>:null
     }
     {
-      showMenu2?<View style={{
+      showMenu2 && app.userInfo ?<View style={{
         ...styles.contentBox2,
         borderBottomColor: colorScheme === 'dark' ? '#1a1b1c' : '#f4f4f4',
         
@@ -286,4 +290,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default forwardRef(DropdownMenu);
+export default inject("app")(observer(forwardRef(DropdownMenu)));
