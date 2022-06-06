@@ -67,7 +67,7 @@ const TabBar = ({
   useEffect(()=>{
   })
 
-  return <View style={{ flexDirection: 'row',height:50 }}>
+  return <View style={{ flexDirection: 'row',height:50,borderTopWidth:1,borderTopColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4' }}>
   {state.routes.map((route:any, index:any) => {
     const { options } = descriptors[route.key];
     const label =
@@ -135,7 +135,7 @@ const TabBar = ({
           style={{width:20,height:20}}
           source={iconName}
         />
-        <Text style={{ color: isFocused ? Theme.primaryColor : colorScheme=='dark'?'#797d82':'#000' }}>
+        <Text style={{ color: isFocused ? Theme.primaryColor : colorScheme=='dark'?'#1a1b1c':'#000' }}>
           {label}
         </Text>
         

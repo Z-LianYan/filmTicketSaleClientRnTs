@@ -15,78 +15,119 @@ import {
   StatusBar,
   StyleSheet,
   useColorScheme,
+  Image,
 } from 'react-native';
 import { View,Text} from '../../component/Themed';
 import { useNavigation } from '@react-navigation/core';
 import { StackActions } from '@react-navigation/native';
 import NavigationBar from '../../component/NavigationBar';
-import { observer, inject } from 'mobx-react'
+import { observer, inject } from 'mobx-react';
+import { 
+  Button,
+  Carousel,
+  Theme,
+  Label,
+  Drawer,
+  ActionSheet,
+  Input,
+  // ListRow,
+  Toast
+} from '../../component/teaset/index';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import CustomListRow from '../../component/CustomListRow';
+
 
 const Mine = ({navigation,route,app}:any) => {
   // let navigation = useNavigation();
-  // useEffect(() => {
-  //   navigation.navigate("LoginPage",{
-  //     idP:1234
-  //   });
-  //   // if(prop)
-  //   // console.log('app---',app)
-  //   // if(!app.userInfo){
-  //   //   navigation.navigate("LoginPage");
-  //   //   // navigation.dispatch(
-  //   //   //   StackActions.replace('LoginPage', {
-  //   //   //       test:"from SelectGoodsPage"
-  //   //   //   })
-  //   //   // );
-  //   // }
-    
-
-
-  //   // const unsubscribe = navigation.addListener('tabPress', (e:any) => {
-  //   //   // Prevent default behavior
-  //   //   e.preventDefault();
-
-  //   //   console.log('66666--==')
-
-  //   //   // navigation.navigate('')
-  //   //   // navigation.navigate("LoginPage");
-  //   //   navigation.replace("LoginPage");
-  //   //   // alert('Default behavior prevented');
-  //   //   // Do something manually
-  //   //   // ...
-  //   // });
-  //   return ()=>{
-  //   }
-  // },[navigation])
-
-  // useEffect(() => {
-    
-
-  //   const unsubscribe = navigation.addListener('tabPress', (e:any) => {
-  //     // Prevent default behavior
-  //     e.preventDefault();
-  //     navigation.navigate("LoginPage");
+  const colorScheme = useColorScheme();
+  useEffect(() => {
+    return ()=>{
+    }
+  },[navigation]);
   
-  //     // Do something manually
-  //     // ...
-  //   });
+  return (<View style={styles.container}>
+    {/* <NavigationBar 
+    title={'我的'}/> */}
+    {/* <Text>我的{app.userInfo.avatar}</Text> */}
+    <View style={styles.headerBox}>
+      {
+        app.userInfo.avatar && <Image 
+        resizeMode='cover' 
+        style={styles.avatarImage} 
+        source={{
+          uri: app.userInfo.avatar 
+        }} />
+      }
 
-  //   if(!app.userInfo){
-  //     navigation.navigate("LoginPage");
-  //   }
-  
-  //   return unsubscribe;
-  // }, [navigation]);
-  
-  return (<View>
-    <NavigationBar 
-    title={'我的'}/>
-    <Text>我的</Text>
+
+      <View style={styles.rightBox}>
+        <Text style={styles.userName}>{app.userInfo.nickname}</Text>
+        <Text style={styles.userName}>{app.userInfo.phone_number}</Text>
+      </View>
+    </View>
+
+    <CustomListRow 
+    bottomSeparator="indent" 
+    title={'余额'} 
+    detail={'¥ '+app.userInfo.balance} />
+    <CustomListRow 
+    bottomSeparator="indent" 
+    title={'订单'} 
+    accessory="indicator" />
+
+    <CustomListRow 
+    bottomSeparator="indent" 
+    title={'充值'} 
+    accessory="indicator" />
+
+    <CustomListRow 
+    bottomSeparator="full" 
+    title={'设置'} 
+    accessory="indicator" 
+    onPress={() => {
+      navigation.navigate('SetPage')
+    }} />
+
+    {/* <ListRow 
+    style={{backgroundColor:'#000'}}
+    titleStyle={{color:'#fff'}}
+    bottomSeparator="indent" 
+    title={'detail'} 
+    accessory="indicator" /> */}
 
     
   </View>);
 };
 
 const styles = StyleSheet.create({
+  container:{
+    flex:1
+  },
+  headerBox:{
+    height:200,
+    backgroundColor:Theme.primaryColor,
+    paddingTop:64,
+    paddingLeft:22,
+    flexDirection:'row'
+  },
+  avatarImage:{
+    width:70,
+    height:70,
+    borderWidth:1,
+    borderColor:'#fff',
+    borderRadius: 35
+  },
+  rightBox:{
+    height:70,
+    // flex:1
+    backgroundColor:'transparent',
+    justifyContent:'center',
+    marginLeft:20
+  },
+  userName:{
+    height:20,
+    color:'#fff'
+  }
 });
 
 export default inject("app")(observer(Mine));

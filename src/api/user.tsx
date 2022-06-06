@@ -54,7 +54,7 @@ export function send_verify_code(params:any) {
   });
 }
 
-export function get_user_info(params:any) {
+export function get_user_info(params?:any) {
   return new Promise((resolve, reject) => {
     HttpUtils.post(Api.GET_USER_INFO, params, '').then((res:any) => {
       switch (res.error) {
@@ -67,7 +67,7 @@ export function get_user_info(params:any) {
           //   duration: 2000,
           //   text: res.message,
           // });
-          // reject(res.data);
+          reject(res);
           break;
       }
     });

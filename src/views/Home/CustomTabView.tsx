@@ -11,8 +11,8 @@ import React, { useState } from 'react';
    Platform,
    ActivityIndicator,
    Image,
-   View,
-   Text
+  //  View,
+  //  Text
  } from 'react-native';
 
  import { 
@@ -22,15 +22,20 @@ import React, { useState } from 'react';
   TransformView,
   Theme
 } from '../../component/teaset/index';
+import { 
+  View,
+  Text
+} from '../../component/Themed';
  
  const CustomTabView = ({onChange}:{onChange:(val:any)=>void})=>{
    let navigation:any = useNavigation();
+   const colorScheme = useColorScheme();
    const [activeTab, setActiveTab] = React.useState(0);
    return <TabView 
    barStyle={{
-    backgroundColor:'#fff',
+    backgroundColor:'transparent',
     fontSize:40,
-    borderBottomColor:'#f4f4f4',
+    borderBottomColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4',
     borderBottomWidth:1
   }} 
    style={{flex: 1}} 
@@ -43,12 +48,12 @@ import React, { useState } from 'react';
      <TabView.Sheet
        title={<Text style={{
          ...styles.tabBtn,
-         color:activeTab===0?Theme.primaryColor:'#000'
+         color:activeTab===0?Theme.primaryColor:colorScheme=='dark'?'#fff':'#000'
        }}>正在热映</Text>}
      >
      </TabView.Sheet>
      <TabView.Sheet
-       title={<Text style={{...styles.tabBtn,color:activeTab===1?Theme.primaryColor:'#000'}}>即将上映</Text>}
+       title={<Text style={{...styles.tabBtn,color:activeTab===1?Theme.primaryColor:colorScheme=='dark'?'#fff':'#000'}}>即将上映</Text>}
      >
      </TabView.Sheet>
    </TabView>

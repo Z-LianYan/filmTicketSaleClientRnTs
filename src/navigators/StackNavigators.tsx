@@ -14,10 +14,12 @@ import {
     Text,
     View
   } from 'react-native';
+  import BottomTabNavigator from './BottomTabNavigator';
 import LoginPage from '../views/Login/index';
 import HomePage from '../views/Home/index';
+import SetPage from '../views/Set/index';
 
-import BottomTabNavigator from './BottomTabNavigator';
+
 
 
 const routes=[
@@ -41,6 +43,11 @@ const routes=[
     { 
         component: LoginPage, 
         name:"LoginPage",
+        // options:LoginPage.navigationOptions,//页面里配置options
+    },
+    { 
+        component: SetPage, 
+        name:"SetPage",
         // options:LoginPage.navigationOptions,//页面里配置options
     },
 

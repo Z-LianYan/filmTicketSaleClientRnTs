@@ -54,7 +54,7 @@ var ScreenWidth = Dimensions.get('window').width;
 
 
 
-const Home = (props:any) => {
+const Home = ({app}:any) => {
   const hotRef:{current:any} = useRef();
   const soonShowRef:{current:any} = useRef();
   const colorScheme = useColorScheme();
@@ -66,7 +66,7 @@ const Home = (props:any) => {
   let [fetchOptionsHot,setFetchOptionsHot] = useState({
     page: 1,
     limit: 4,
-    city_id: "440100",
+    city_id: app.locationInfo.city_id,
   })
   let [hotList,setHotList] = useState([])
   let [isHotLoading,setHotLoading] = useState(false);
@@ -75,7 +75,7 @@ const Home = (props:any) => {
   let [fetchOptionsSoonShow,setFetchOptionsSoonShow] = useState({
     page: 1,
     limit: 6,
-    city_id: "440100",
+    city_id: app.locationInfo.city_id,
   });
 
   let [SoonShowList,setSoonShowList] = useState([])
@@ -221,7 +221,7 @@ const Home = (props:any) => {
 
   </View>);
 };
-export default inject("home")(observer(Home));
+export default inject("home","app")(observer(Home));
 
 
 const styles = StyleSheet.create({

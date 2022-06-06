@@ -24,10 +24,12 @@ import {
 import { phone_register, send_verify_code } from "../../api/user";
 import tools from "../../utils/tools";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomListRow from '../../component/CustomListRow';
 
 // declare function setInterval(callback: (...args: any[]) => void, ms: number, ...args: any[]): NodeJS.Timer;
 
 const Login = (props:any) => {
+  const colorScheme = useColorScheme();
   // 在页面显示之前设(重)置 options 值，相当于在 componentDidMount 阶段执行
   // useLayoutEffect 是阻塞同步的，即执行完此处之后，才会继续向下执行
   // useLayoutEffect(() => {
@@ -121,7 +123,7 @@ const Login = (props:any) => {
     }}
     title={'登录'}/>
     <View style={styles.contentContainer}>
-        <ListRow 
+        <CustomListRow 
         bottomSeparator="none" 
         title={
           <Input 
@@ -131,9 +133,15 @@ const Login = (props:any) => {
           onChangeText={(text:any)=>{
           set_phone_number(text);
           }}
-          style={{width: '60%',borderWidth:0}} />
+          style={{
+            width: '60%',
+            borderWidth:0,
+            backgroundColor:'transparent',
+            color:colorScheme=='dark'?'#fff':'#000'
+          }} />
         } detail={
           <Button
+            style={{backgroundColor:'transparent'}}
             title={isCodeDisabled ? (code_time + 's后再发送') : '发送验证码'}
             type="default"
             disabled={isCodeDisabled}
@@ -142,7 +150,7 @@ const Login = (props:any) => {
             }}
           />
         } />
-        <ListRow 
+        <CustomListRow 
         bottomSeparator="none"  
         title={
           <Input 
@@ -152,7 +160,12 @@ const Login = (props:any) => {
           onChangeText={(text:any)=>{
             set_verify_code(text);
           }}
-          style={{width: '100%',borderWidth:0}} />
+          style={{
+            width: '100%',
+            borderWidth:0,
+            backgroundColor:'transparent',
+            color:colorScheme=='dark'?'#fff':'#000'
+          }} />
         } detail='' />
 
         <Button

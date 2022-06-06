@@ -38,6 +38,11 @@
         <key>NSExceptionAllowsInsecureHTTPLoads</key>
         <true/>
       </dict>
+      <key>zly.imgresource.com.cn</key>
+      <dict>
+        <key>NSExceptionAllowsInsecureHTTPLoads</key>
+        <true/>
+      </dict>
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>

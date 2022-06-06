@@ -48,7 +48,7 @@ const DropdownMenu = ({
     titleStyle?:any,
     onTypeChange?:any
     districtChange?:any,
-    app:any
+    app?:any
   },ref:any) => {
   const colorScheme = useColorScheme();
   const [title,setTitle] = useState('全城');
