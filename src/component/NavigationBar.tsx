@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigation } from '@react-navigation/core';
 import { observer, inject } from 'mobx-react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -44,7 +44,7 @@ import PropTypes, { number } from 'prop-types';
 
 import { get_film_hot } from '../api/film';
 type TypeProps = {
-  title?:string,
+  title?:number|string|Element,
   style?:object,
   backgroundColor?:string,
   position?:string,
@@ -66,10 +66,12 @@ const _NavigationBar = ({
   let navigation:any = useNavigation();
   const [groupValues, setGroupValues] = useState(['0']);
 
+  useEffect(()=>{},[])
+
   return (<View style={{...style}}>
     <NavigationBar 
     statusBarInsets={Platform.OS === 'ios' ? false : true} 
-    title={<Text>{title}</Text>}
+    title={title?(typeof title === 'number'||'string'?<Text>{title}</Text>:title):''}
     style={{
       backgroundColor:backgroundColor?backgroundColor:colorScheme === 'dark' ? '#000' : '#fff',
       position:position?position:'relative',

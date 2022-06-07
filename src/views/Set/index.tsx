@@ -22,7 +22,8 @@ import {
   ActivityIndicator,
   Image,
   TouchableOpacity,
-  TouchableHighlight
+  TouchableHighlight,
+  Alert
 } from 'react-native';
 
 import { 
@@ -39,21 +40,44 @@ import {
   Carousel,
   // NavigationBar,
   Theme,
-  ListRow
+  ListRow,
+  Toast
 } from '../../component/teaset/index';
 import PropTypes, { number } from 'prop-types';
 import { get_film_hot } from '../../api/film';
 import CustomListRow from '../../component/CustomListRow';
 import NavigationBar from '../../component/NavigationBar';
+import { login_out } from "../../api/user";
 
 
 
-const SetPage = ({ app,navigation }:any) => {
+const SetPage = ({app,navigation}:any) => {
     
   const colorScheme = useColorScheme();
 
   useEffect(()=>{
   })
+
+  async function onLoginOut() {
+
+    Alert.alert(
+      "您确定退出登录吗？",
+      "",
+      [
+        {
+          text: "取消",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "确定", onPress: async () => {
+          await login_out();
+          navigation.navigate("HomePage");
+          app.setUserInfo(null);
+          // navigation.replace('LoginPage')
+        } }
+      ]
+    );
+  }
 
   return <View style={styles.container}>
     <NavigationBar 
@@ -63,18 +87,17 @@ const SetPage = ({ app,navigation }:any) => {
     title={''}/>
     <ScrollView
     stickyHeaderIndices={[]}
-    onScroll={(event)=>{}}
     onMomentumScrollEnd={(event:any)=>{}}>
       <CustomListRow 
       accessory="none"
       bottomSeparator="indent" 
       title={'账号ID'} 
-      detail={app.userInfo.user_id} />
+      detail={app.userInfo && app.userInfo.user_id} />
       <CustomListRow 
       accessory="none"
       bottomSeparator="indent" 
       title={'电话号码'} 
-      detail={app.userInfo.phone_number} />
+      detail={app.userInfo && app.userInfo.phone_number} />
       <CustomListRow 
       accessory="none"
       bottomSeparator="indent" 
@@ -85,16 +108,14 @@ const SetPage = ({ app,navigation }:any) => {
       title={'修改会员信息'} 
       accessory= "indicator"
       detail={''} />
-
       <Button
         style={{backgroundColor:'transparent',marginTop:100,marginLeft:20,marginRight:20}}
         title={'退出登录'}
         type="default"
-        
         onPress={() => {
+          onLoginOut()
         }}
       />
-      
     </ScrollView>
   </View>;
 };

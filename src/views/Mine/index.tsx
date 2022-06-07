@@ -46,39 +46,40 @@ const Mine = ({navigation,route,app}:any) => {
   },[navigation]);
   
   return (<View style={styles.container}>
-    {/* <NavigationBar 
-    title={'我的'}/> */}
-    {/* <Text>我的{app.userInfo.avatar}</Text> */}
     <View style={styles.headerBox}>
       {
-        app.userInfo.avatar && <Image 
+        app.userInfo && app.userInfo.avatar && <Image 
         resizeMode='cover' 
         style={styles.avatarImage} 
         source={{
-          uri: app.userInfo.avatar 
+          uri: app.userInfo && app.userInfo.avatar 
         }} />
       }
 
 
       <View style={styles.rightBox}>
-        <Text style={styles.userName}>{app.userInfo.nickname}</Text>
-        <Text style={styles.userName}>{app.userInfo.phone_number}</Text>
+        <Text style={styles.userName}>{app.userInfo && app.userInfo.nickname}</Text>
+        <Text style={styles.userName}>{app.userInfo && app.userInfo.phone_number}</Text>
       </View>
     </View>
 
     <CustomListRow 
     bottomSeparator="indent" 
     title={'余额'} 
-    detail={'¥ '+app.userInfo.balance} />
+    detail={'¥ '+(app.userInfo?app.userInfo.balance:'')} />
     <CustomListRow 
     bottomSeparator="indent" 
     title={'订单'} 
-    accessory="indicator" />
+    accessory="indicator"
+    onPress={() => {
+      navigation.navigate('OrderPage')
+    }} />
 
     <CustomListRow 
     bottomSeparator="indent" 
     title={'充值'} 
-    accessory="indicator" />
+    accessory="indicator"
+     />
 
     <CustomListRow 
     bottomSeparator="full" 

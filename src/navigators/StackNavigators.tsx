@@ -18,20 +18,21 @@ import {
 import LoginPage from '../views/Login/index';
 import HomePage from '../views/Home/index';
 import SetPage from '../views/Set/index';
+import OrderPage from '../views/Order/index';
 
 
 
 
 const routes=[
-    { 
-        component: HomePage, 
-        name: "HomePage", 
-        options: {
-            title:'首页',
+    // { 
+    //     component: HomePage, 
+    //     name: "HomePage", 
+    //     options: {
+    //         title:'首页',
             
-        } 
+    //     } 
         
-    },
+    // },
     { 
         component: BottomTabNavigator, 
         name: "AppTabBar", 
@@ -48,6 +49,11 @@ const routes=[
     { 
         component: SetPage, 
         name:"SetPage",
+        // options:LoginPage.navigationOptions,//页面里配置options
+    },
+    { 
+        component: OrderPage, 
+        name:"OrderPage",
         // options:LoginPage.navigationOptions,//页面里配置options
     },
 

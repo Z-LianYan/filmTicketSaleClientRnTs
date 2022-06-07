@@ -130,8 +130,9 @@ const Login = (props:any) => {
           placeholder="请输入手机号" 
           maxLength={11}
           value={phone_number} 
+          keyboardType="numeric"
           onChangeText={(text:any)=>{
-          set_phone_number(text);
+            set_phone_number(text);
           }}
           style={{
             width: '60%',
@@ -156,6 +157,7 @@ const Login = (props:any) => {
           <Input 
           placeholder="请输入短信验证码" 
           maxLength={4}
+          keyboardType="numeric"
           value={verify_code} 
           onChangeText={(text:any)=>{
             set_verify_code(text);

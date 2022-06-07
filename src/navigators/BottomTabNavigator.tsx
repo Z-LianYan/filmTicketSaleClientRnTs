@@ -41,7 +41,7 @@ function tabBarScreen(props:any){
 function BottomTabNavigator(props:any) {
   return (
     <Tab.Navigator
-    initialRouteName="CineamPage"
+    initialRouteName="HomePage"
     tabBar={_props => <MyTabBar {..._props} />}
     screenOptions={({ route }) => ({
       headerShown:false,//是否隐藏头部导航

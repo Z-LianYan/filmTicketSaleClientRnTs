@@ -1,10 +1,11 @@
-import * as HttpUtils from '@/utils/request';
-import * as Api from '@/api/constant';
-import {Toast} from '../component/teaset/index';
+import * as HttpUtils from '../utils/request';
+import * as Api from './constant';
+import {Theme, Toast} from '../component/teaset/index';
 
-export function get_order_list(params) {
+
+export function get_order_list(params?:any,text='努力加载中...') {
   return new Promise((resolve, reject) => {
-    HttpUtils.get(Api.GET_ORDER_LIST, params, '努力加载中...').then(res => {
+    HttpUtils.get(Api.GET_ORDER_LIST, params, text).then((res:any) => {
       switch (res.error) {
         case 0:
           resolve(res.data);
@@ -17,9 +18,9 @@ export function get_order_list(params) {
     });
   });
 }
-export function create_order(params) {
+export function create_order(params?:any,text='努力加载中...') {
   return new Promise((resolve, reject) => {
-    HttpUtils.get(Api.CREATE_ORDER, params, '努力加载中...').then(res => {
+    HttpUtils.get(Api.CREATE_ORDER, params, text).then((res:any) => {
       switch (res.error) {
         case 0:
           resolve(res.data);
@@ -33,10 +34,10 @@ export function create_order(params) {
   });
 }
 
-export function get_buy_ticket_detail(params) {
+export function get_buy_ticket_detail(params?:any,text='努力加载中...') {
   return new Promise((resolve, reject) => {
-    HttpUtils.get(Api.GET_BUY_TICKET_DETAIL, params, '努力加载中...').then(
-      res => {
+    HttpUtils.get(Api.GET_BUY_TICKET_DETAIL, params, text).then(
+      (res:any) => {
         switch (res.error) {
           case 0:
             resolve(res.data);
@@ -51,9 +52,9 @@ export function get_buy_ticket_detail(params) {
   });
 }
 
-export function cancle_order(params) {
+export function cancle_order(params?:any) {
   return new Promise((resolve, reject) => {
-    HttpUtils.post(Api.CANCLE_ORDER, params, '').then(res => {
+    HttpUtils.post(Api.CANCLE_ORDER, params, '').then((res:any) => {
       switch (res.error) {
         case 0:
           resolve(res.data);
@@ -67,9 +68,9 @@ export function cancle_order(params) {
   });
 }
 
-export function get_order_detail(params) {
+export function get_order_detail(params?:any,text='努力加载中...') {
   return new Promise((resolve, reject) => {
-    HttpUtils.get(Api.GET_ORDER_DETAIL, params, '努力加载中...').then(res => {
+    HttpUtils.get(Api.GET_ORDER_DETAIL, params, text).then((res:any) => {
       switch (res.error) {
         case 0:
           resolve(res.data);
@@ -83,9 +84,9 @@ export function get_order_detail(params) {
   });
 }
 
-export function pay_order(params) {
+export function pay_order(params?:any,text='努力加载中...') {
   return new Promise((resolve, reject) => {
-    HttpUtils.post(Api.PAY_ORDER, params, '支付中...').then(res => {
+    HttpUtils.post(Api.PAY_ORDER, params, text).then((res:any) => {
       switch (res.error) {
         case 0:
           resolve(res.data);

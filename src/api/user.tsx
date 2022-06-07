@@ -74,11 +74,16 @@ export function get_user_info(params?:any) {
   });
 }
 
-export function login_out(params:any) {
+export function login_out(params?:any) {
   return new Promise((resolve, reject) => {
     HttpUtils.post(Api.LOGIN_OUT, params, '').then((res:any) => {
       switch (res.error) {
         case 0:
+          Toast.show({
+            icon: 'success',
+            duration: 800,
+            text: res.message,
+          });
           resolve(res.data);
           break;
         default:

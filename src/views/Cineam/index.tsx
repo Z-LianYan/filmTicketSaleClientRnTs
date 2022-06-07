@@ -49,7 +49,7 @@ const Cineam = (props:any) => {
     lat: "",
     lng: "",
     type: "",
-    user_id: 32
+    user_id: props.app.userInfo?props.app.userInfo.user_id:''
   })
   let [city_district_list, set_city_district_list] = useState([]);
   
