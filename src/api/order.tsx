@@ -11,8 +11,8 @@ export function get_order_list(params?:any,text='努力加载中...') {
           resolve(res.data);
           break;
         default:
+          Toast.message(res.message);
           reject(res);
-          Toast.fail(res.message);
           break;
       }
     });
@@ -27,7 +27,7 @@ export function create_order(params?:any,text='努力加载中...') {
           break;
         default:
           reject(res);
-          Toast.fail(res.message);
+          Toast.message(res.message);
           break;
       }
     });
@@ -44,7 +44,7 @@ export function get_buy_ticket_detail(params?:any,text='努力加载中...') {
             break;
           default:
             reject(res);
-            Toast.fail(res.message);
+            Toast.message(res.message);
             break;
         }
       },
@@ -61,7 +61,7 @@ export function cancle_order(params?:any) {
           break;
         default:
           reject(res);
-          Toast.fail(res.message);
+          Toast.message(res.message);
           break;
       }
     });
@@ -77,7 +77,7 @@ export function get_order_detail(params?:any,text='努力加载中...') {
           break;
         default:
           reject(res);
-          Toast.fail(res.message);
+          Toast.message(res.message);
           break;
       }
     });
@@ -97,7 +97,7 @@ export function pay_order(params?:any,text='努力加载中...') {
           break;
         default:
           reject(res);
-          Toast.fail(res.message);
+          Toast.message(res.message);
           break;
       }
     });

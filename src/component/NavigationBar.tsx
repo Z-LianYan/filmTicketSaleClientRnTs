@@ -70,15 +70,21 @@ const _NavigationBar = ({
 
   return (<View style={{...style}}>
     <NavigationBar 
+    statusBarColor={Theme.primaryColor}
     statusBarInsets={Platform.OS === 'ios' ? false : true} 
-    title={title?(typeof title === 'number'||'string'?<Text>{title}</Text>:title):''}
+    statusBarStyle={'default'}
+    title={title?(typeof title === 'number'||'string'?<Text style={{fontSize:16}}>{title}</Text>:title):''}
     style={{
-      backgroundColor:backgroundColor?backgroundColor:colorScheme === 'dark' ? '#000' : '#fff',
+      backgroundColor:backgroundColor?backgroundColor:colorScheme === 'dark' ? 'blue' : Theme.primaryColor,
       position:position?position:'relative',
     }}
-    borderBottomColor={backgroundColor=='transparent'?'transparent':colorScheme=='dark'?Theme.navSeparatorDarkColor:''}
-    leftView={ leftView?(typeof leftView === 'number'||'string'?<Text>{leftView}</Text>:leftView):<View 
-      style={{flexDirection:'row',alignItems:'center'}}>
+    borderBottomColor={backgroundColor=='transparent'?'transparent':colorScheme=='dark'?Theme.navSeparatorDarkColor:Theme.primaryColor}
+    leftView={leftView?(typeof leftView === 'number'||'string'?<Text>{leftView}</Text>:leftView):<View 
+      style={{
+        flexDirection:'row',
+        alignItems:'center',
+        backgroundColor:Theme.primaryColor
+      }}>
         <Ionicons 
         name={'chevron-back'} 
         size={25} 

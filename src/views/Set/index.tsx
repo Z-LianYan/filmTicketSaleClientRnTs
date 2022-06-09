@@ -1,13 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React, { useState,useEffect } from 'react';
 import { useNavigation } from '@react-navigation/core';
 import { observer, inject } from 'mobx-react'
@@ -80,11 +70,11 @@ const SetPage = ({app,navigation}:any) => {
   }
 
   return <View style={styles.container}>
-    <NavigationBar 
+    {/* <NavigationBar 
     onBack={()=>{
       navigation.goBack()
     }}
-    title={''}/>
+    title={'设置'}/> */}
     <ScrollView
     stickyHeaderIndices={[]}
     onMomentumScrollEnd={(event:any)=>{}}>

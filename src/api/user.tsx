@@ -62,6 +62,7 @@ export function get_user_info(params?:any) {
           resolve(res.data);
           break;
         default:
+          // Toast.fail(res.message);
           // Toast.show({
           //   icon: "fail",
           //   duration: 2000,

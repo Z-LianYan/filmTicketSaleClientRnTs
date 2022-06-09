@@ -67,7 +67,13 @@ const TabBar = ({
   useEffect(()=>{
   })
 
-  return <View style={{ flexDirection: 'row',height:50,borderTopWidth:1,borderTopColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4' }}>
+  return <View style={{ 
+    flexDirection: 'row',
+    height:50,
+    borderTopWidth:1,
+    borderTopColor:colorScheme=='dark'?'#1a1b1c':Theme.primaryColor,
+    backgroundColor:colorScheme=='dark'?'#000':Theme.primaryColor
+  }}>
   {state.routes.map((route:any, index:any) => {
     const { options } = descriptors[route.key];
     const label =
@@ -132,10 +138,10 @@ const TabBar = ({
         style={{ flex: 1,alignItems:'center',justifyContent:'center' }}
       >
         <Image
-          style={{width:20,height:20}}
+          style={{width:20,height:20,tintColor:isFocused? (colorScheme=='dark'?Theme.primaryColor:'#fff'):(colorScheme=='dark'?'#fff':'#000')}}
           source={iconName}
         />
-        <Text style={{ color: isFocused ? Theme.primaryColor : colorScheme=='dark'?'#1a1b1c':'#000' }}>
+        <Text style={{ color: isFocused? (colorScheme=='dark'?Theme.primaryColor:'#fff'):(colorScheme=='dark'?'#fff':'#000') }}>
           {label}
         </Text>
         

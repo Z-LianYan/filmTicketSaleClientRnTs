@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import { observer, inject } from 'mobx-react'
-import {Text, View, Image,TouchableHighlight,TouchableOpacity} from 'react-native';
+import {Text, View, Image,useColorScheme,TouchableHighlight,TouchableOpacity} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -18,6 +18,12 @@ import {
   MINE_ICON,
   MINE_ACTIVE_ICON,
 } from '../assets/image/index';
+import { 
+  Button,
+  Carousel,
+  NavigationBar,
+  Theme
+} from '../component/teaset/index';
 
 import router from './router';
 import MyTabBar from '../component/TabBar';
@@ -39,12 +45,13 @@ function tabBarScreen(props:any){
 
 
 function BottomTabNavigator(props:any) {
+  const colorScheme = useColorScheme();
   return (
     <Tab.Navigator
     initialRouteName="HomePage"
     tabBar={_props => <MyTabBar {..._props} />}
     screenOptions={({ route }) => ({
-      headerShown:false,//是否隐藏头部导航
+      headerShown:true,//是否隐藏头部导航
       // tabBarIcon: ({ focused, color, size }) => {
       //   let iconName; 
 
@@ -74,6 +81,11 @@ function BottomTabNavigator(props:any) {
         marginBottom:5
       },
       tabBarStyle:{
+      },
+      headerStyle: { 
+        backgroundColor: colorScheme=='dark'?'#000':Theme.primaryColor,
+        borderBottomWidth:1,
+        borderBottomColor:colorScheme=='dark'?'#1a1b1c':Theme.primaryColor
       }
     })}
     

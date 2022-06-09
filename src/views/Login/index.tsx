@@ -116,12 +116,12 @@ const Login = (props:any) => {
     props.navigation.goBack();
   }
   return (<View style={styles.container}>
-    <NavigationBar 
+    {/* <NavigationBar 
     onBack={()=>{
       props.navigation.goBack()
       console.log('navigation',props.route);
     }}
-    title={'登录'}/>
+    title={'登录'}/> */}
     <View style={styles.contentContainer}>
         <CustomListRow 
         bottomSeparator="none" 

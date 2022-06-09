@@ -9,9 +9,13 @@ import {
 } from 'react-native';
 import { useState } from 'react';
 
-let host = process.env.NODE_ENV=='development'?'http://192.168.0.26:7002':'http://film.imgresource.com.cn'
+let host = process.env.NODE_ENV=='development'?'http://film.imgresource.com.cn':'http://film.imgresource.com.cn'
 // let host = process.env.NODE_ENV=='development'?'http://film.imgresource.com.cn':'http://film.imgresource.com.cn'
 import { TopView, Toast,ModalIndicator } from '../component/teaset/index';
+import app from '../store/app';
+
+// let routerNavigation:any = null;
+
 function isLoading(text?:string){
   if(text){
     ModalIndicator.hide()
@@ -34,7 +38,7 @@ const service = axios.create({
 
 export default service;
 service.interceptors.request.use(
-  (config) => {
+  (config:any) => {
     // config.headers['token'] = getToken()
     return config;
   },
@@ -55,17 +59,10 @@ service.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-export function post(url:string, data:object, text:string) {
+export function post(url:string, data?:any, text?:string) {
+
   return new Promise((resolve, reject) => {
     if (text) isLoading(text);
-
-    
-
-      // Toast.show({
-      //   icon: "loading",
-      //   duration: 2000,
-      //   content: text,
-      // });
     service({
       url: host+url,
       method: "POST",
@@ -75,25 +72,24 @@ export function post(url:string, data:object, text:string) {
       .then((res) => {
         resolve(res.data);
         if (text) hideLoading();
+        if(res.data.error==401){
+          data.navigation && data.navigation.replace('HomePage');
+          app.setUserInfo(null);
+        }
       })
       .catch((err) => {
         reject(err);
-        // Toast.show({
-        //   icon: "fail",
-        //   duration: 2000,
-        //   content: err.message,
-        // });
+        if (text) hideLoading();
       });
   });
 }
 
-export function get(url:string, params?:object, text?:string) {
+export function get(url:string, params?:any, text?:string) {
   return new Promise((resolve, reject) => {
     if (text) isLoading(text);
     // Toast.success('Toast success');
     // Toast.smile('Toast smile');
     // Toast.stop('Toast stop');
-    // ToastAndroid.show("A pikachu appeared nearby !", ToastAndroid.SHORT);
     
     service({
       url: host+url,
@@ -104,14 +100,14 @@ export function get(url:string, params?:object, text?:string) {
       .then((res) => {
         resolve(res.data);
         if (text) hideLoading();
+        if(res.data.error==401){
+          params.navigation && params.navigation.navigate('HomePage');
+          app.setUserInfo(null);
+        }
       })
       .catch((err) => {
         reject(err);
-        // Toast.show({
-        //   icon: "fail",
-        //   duration: 2000,
-        //   content: err.message,
-        // });
+        if (text) hideLoading();
       });
   });
 }

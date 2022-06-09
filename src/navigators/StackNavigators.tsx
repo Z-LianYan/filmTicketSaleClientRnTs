@@ -6,6 +6,8 @@ import {createStackNavigator} from '@react-navigation/stack'
 import { useNavigation } from '@react-navigation/core';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getHeaderTitle } from '@react-navigation/elements';
+import {Image,useColorScheme,TouchableHighlight,TouchableOpacity} from 'react-native';
+
 // import CineamPage from '../views/Cineam/index';
 // import MinePage from '../views/Mine/index';
 
@@ -19,7 +21,12 @@ import LoginPage from '../views/Login/index';
 import HomePage from '../views/Home/index';
 import SetPage from '../views/Set/index';
 import OrderPage from '../views/Order/index';
-
+import { 
+Button,
+Carousel,
+NavigationBar,
+Theme
+} from '../component/teaset/index';
 
 
 
@@ -44,17 +51,25 @@ const routes=[
     { 
         component: LoginPage, 
         name:"LoginPage",
-        // options:LoginPage.navigationOptions,//页面里配置options
+        options: {
+            headerShown:true,
+            title:'登录'
+        } 
     },
     { 
         component: SetPage, 
         name:"SetPage",
-        // options:LoginPage.navigationOptions,//页面里配置options
+        options: {
+            title:'设置'
+        } 
     },
     { 
         component: OrderPage, 
         name:"OrderPage",
-        // options:LoginPage.navigationOptions,//页面里配置options
+        options: {
+            headerShown:true,
+            title:'订单'
+        } 
     },
 
     // { 
@@ -81,24 +96,28 @@ function renderStackItems(){
 import store from '../store/index';
 
 function StackNavigators(){
-    let navigation:any = useNavigation()
+    let navigation:any = useNavigation();
+    const colorScheme = useColorScheme();
+
     return <Stack.Navigator
         screenOptions={{
-            headerShown:false,//是否隐藏头部导航
-            // headerLeft:()=>{
-            //     return <Ionicons 
-            //     name={'md-chevron-back-sharp'} 
-            //     size={30} 
-            //     color={'#000'} 
-            //     onPress={()=>{
-            //         navigation.goBack()
-            //     }}/>
-            // },
-            headerRight:()=>{
-                return <Text>Right</Text>
+            headerShown:true,//是否隐藏头部导航
+            headerLeft:()=>{
+                return <Ionicons 
+                name={'md-chevron-back-sharp'} 
+                size={30} 
+                color={colorScheme=='dark'?'#fff':'#000'} 
+                onPress={()=>{
+                    navigation.goBack()
+                }}/>
             },
+            // headerRight:()=>{
+            //     return <Text>Right</Text>
+            // },
             headerStyle:{
-                // backgroundColor:'#fff'
+                backgroundColor:colorScheme=='dark'?'#000':Theme.primaryColor,
+                borderBottomWidth:1,
+                borderBottomColor:colorScheme=='dark'?'#1a1b1c':Theme.primaryColor
             },
             headerTitleStyle: {
                 // fontSize: 18, color: '#666666'

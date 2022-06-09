@@ -41,7 +41,7 @@ const Cineam = (props:any) => {
   let [isFinallyPage,setFinallyPage] = useState(false);
   let [fetchOptions,setFetchOptions] = useState({
     page: 1,
-    limit: 3,
+    limit: 15,
     city_id: props.app.locationInfo.city_id,
     district_id: "",
     date: "",
@@ -119,7 +119,7 @@ const Cineam = (props:any) => {
 
 
   return (<View style={styles.container}>
-    <NavigationBar 
+    {/* <NavigationBar 
       style={{
         zIndex:1
       }}
@@ -133,8 +133,8 @@ const Cineam = (props:any) => {
             // });
           }}>
             <View 
-            style={{flexDirection:'row',alignItems:'center'}}>
-              <Text>广州</Text>
+            style={{flexDirection:'row',alignItems:'center',backgroundColor:'transparent'}}>
+              <Text>{props.app.locationInfo.city_name}</Text>
               <Ionicons 
               name={'chevron-down-outline'} 
               size={20} 
@@ -156,7 +156,7 @@ const Cineam = (props:any) => {
           size={20} 
           color={colorScheme === 'dark' ? '#fff' : '#000'}/>
         </TouchableHighlight>
-      }/>
+      }/> */}
     <DropdownMenu 
     ref={refDropdownMenu}
     list={city_district_list}

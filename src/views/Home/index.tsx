@@ -159,14 +159,14 @@ const Home = ({app}:any) => {
   }
 
   return (<View style={styles.container}>
-    <NavigationBar 
+    {/* <NavigationBar 
       style={{
         zIndex:1
       }}
-      title={navigationTitle}
-      backgroundColor={navigationBarBg}
-      position='absolute'
-      leftView={<RenderCityName/>}/>
+      title={'电影'}
+      // backgroundColor={navigationBarBg}
+      position=''
+      leftView={<RenderCityName/>}/> */}
     <ScrollView
     stickyHeaderIndices={[]}
     refreshControl={

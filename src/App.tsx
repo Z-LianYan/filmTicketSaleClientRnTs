@@ -77,12 +77,13 @@ const App = (props:any) => {
   const colorScheme = useColorScheme();
     return (
       <Provider {...store}>
-        <SafeAreaView style={{flex:1}}>
+        <SafeAreaView style={{flex:1,backgroundColor:colorScheme === 'dark' ?'#000':Theme.primaryColor}}>
           <TopView style={{flex:1}}>
             <StatusBar 
             hidden={false} 
-            backgroundColor={'green'} //状态栏的背景色  
-            barStyle='dark-content'/>
+            backgroundColor={colorScheme === 'dark' ?'#000':Theme.primaryColor} //状态栏的背景色  
+            barStyle={colorScheme=='dark'?'#000':'dark-content'}
+            />
             <NavigationContainer //给react navigation 设置夜间模式和白天模式
             theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
             ref={navigationRef} 
@@ -90,8 +91,6 @@ const App = (props:any) => {
               console.log('onReady-----')
             }}>
               <StackNavigators/>
-
-              {/* <TabBar index={1}/> */}
             </NavigationContainer>
             </TopView>
         </SafeAreaView>

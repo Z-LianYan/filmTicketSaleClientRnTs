@@ -22,7 +22,8 @@ import {
   Label,
   Drawer,
   ActionSheet,
-  Input
+  Input,
+  Toast
 } from '../../component/teaset/index';
 
 import NavigationBar from '../../component/NavigationBar';
@@ -35,11 +36,12 @@ import { get_order_list } from "../../api/order";
 import { Left } from '../../component/teaset/react-native-legacy-components/src/NavigatorBreadcrumbNavigationBarStyles.android';
 var ScreenWidth = Dimensions.get('window').width;
 // import DropdownMenu from '../../component/DropdownMenu';
+import TabViews from './Tabs';
 
-const OrderPage = (props:any) => {
+const OrderPage = ({navigation}:any) => {
   const refDropdownMenu:{current:any} = useRef()
   const colorScheme = useColorScheme();
-  let navigation = useNavigation();
+  // let navigation = useNavigation();
   const [refreshing, setRefreshing] = React.useState(false);
   let [list,setList] = useState([])
   let [isLoading,setLoading] = useState(false);
@@ -70,37 +72,43 @@ const OrderPage = (props:any) => {
   }
 
   async function getList(isLoading:boolean){
-    isLoading && setLoading(true);
-    let result:any = await get_order_list({
-      ...fetchOptions,
-      keywords
-    },'');
-    console.log('订单详情-----》〉》〉',result);
-    let _list = [];
-    if(fetchOptions.page==1){
-      _list = result.rows;
-      setRefreshing(false)
-    }else{
-      _list = list.concat(result.rows);
+    try{
+      isLoading && setLoading(true);
+      let result:any = await get_order_list({
+        ...fetchOptions,
+        keywords,
+        navigation
+      },'');
+      console.log('订单详情-----》〉》〉',result);
+      let _list = [];
+      if(fetchOptions.page==1){
+        _list = result.rows;
+        setRefreshing(false)
+      }else{
+        _list = list.concat(result.rows);
+      }
+      setList(_list);
+      if(_list.length>=result.count){
+        setFinallyPage(true);
+      }else{
+        setFinallyPage(false);
+      }
+      setLoading(false);
+      _list = [];
+    }catch(err:any){
+      console.log('err',err.message);
     }
-    setList(_list);
-    if(_list.length>=result.count){
-      setFinallyPage(true);
-    }else{
-      setFinallyPage(false);
-    }
-    setLoading(false);
-    _list = [];
+    
   }
   
 
   return (<View style={styles.container}>
-    <NavigationBar 
+    {/* <NavigationBar 
       style={{
         zIndex:1
       }}
       position=''
-      title={<View>
+      title={<View style={{backgroundColor:Theme.primaryColor}}>
         <Input 
         placeholder="搜索电影名称，影院名称"
         value={keywords} 
@@ -111,8 +119,8 @@ const OrderPage = (props:any) => {
         style={{
           width: ScreenWidth/1.5,
           borderWidth:1,
-          backgroundColor:'transparent',
-          color:colorScheme=='dark'?'#fff':'#000',
+          backgroundColor:colorScheme=='dark'?'#eee':'#fff',
+          color:colorScheme=='dark'?'#000':'#000',
           borderRadius:20
         }}/>
         </View>
@@ -121,138 +129,49 @@ const OrderPage = (props:any) => {
         <Button
         style={{backgroundColor:'transparent',borderRadius:15}}
         title={'搜索'}
-        type="default"
+        type="primary"
         onPress={() => {
           fetchOptions.page = 1;
           setFetchOptions(fetchOptions);
           getList(true);
         }}
       />
-      }/>
-      <View style={{height:40}}>
-        <ScrollView
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        stickyHeaderIndices={[]}>
-          <View style={{
-            ...styles.statusWrapper,
-            width:ScreenWidth,
-            borderBottomColor:colorScheme=='dark'?'#1a1b1c':'#eee',
-          }}>
-            <TouchableHighlight 
-            underlayColor='' 
-            style={styles.statusItem} onPress={()=>{
-              fetchOptions.status = '';
-              fetchOptions.page = 1;
-              setFetchOptions(fetchOptions);
-              getList(true);
-            }}>
-              <View style={styles.statusItemWrapper}>
-                <Text style={{color:fetchOptions.status===''?Theme.primaryColor:colorScheme=='dark'?'#fff':'#000'}}>全部</Text>
-                {
-                  fetchOptions.status==='' && <Text style={{
-                    ...styles.statusItemLine,
-                    backgroundColor:Theme.primaryColor
-                  }}></Text>
-                }
-              </View>
-            </TouchableHighlight>
-            <TouchableHighlight 
-            underlayColor='' 
-            style={styles.statusItem} 
-            onPress={()=>{
-              fetchOptions.status = '0';
-              fetchOptions.page = 1;
-              setFetchOptions(fetchOptions);
-              getList(true);
-            }}>
-              
-              <View style={styles.statusItemWrapper}>
-                <Text style={{color:fetchOptions.status==='0'?Theme.primaryColor:colorScheme=='dark'?'#fff':'#000'}}>待支付</Text>
-                {
-                  fetchOptions.status=='0' && <Text style={{
-                    ...styles.statusItemLine,
-                    backgroundColor:Theme.primaryColor
-                  }}></Text>
-                }
-              </View>
-            </TouchableHighlight>
-            <TouchableHighlight 
-            underlayColor='' 
-            style={styles.statusItem} 
-            onPress={()=>{
-              fetchOptions.status = '1';
-              fetchOptions.page = 1;
-              setFetchOptions(fetchOptions);
-              getList(true);
-            }}>
-              <View style={styles.statusItemWrapper}>
-                <Text style={{color:fetchOptions.status==='1'?Theme.primaryColor:colorScheme=='dark'?'#fff':'#000'}}>待使用</Text>
-                {
-                  fetchOptions.status==='1' && <Text style={{
-                    ...styles.statusItemLine,
-                    backgroundColor:Theme.primaryColor
-                  }}></Text>
-                }
-              </View>
-            </TouchableHighlight>
-            <TouchableHighlight 
-            underlayColor='' 
-            style={styles.statusItem} 
-            onPress={()=>{
-              fetchOptions.status = '2';
-              fetchOptions.page = 1;
-              setFetchOptions(fetchOptions);
-              getList(true);
-            }}>
-              <View style={styles.statusItemWrapper}>
-                <Text style={{color:fetchOptions.status==='2'?Theme.primaryColor:colorScheme=='dark'?'#fff':'#000'}}>待评价</Text>
-                {
-                  fetchOptions.status==='2' && <Text style={{
-                    ...styles.statusItemLine,
-                    backgroundColor:Theme.primaryColor
-                  }}></Text>
-                }
-              </View>
-            </TouchableHighlight>
-          </View>
-          
-        </ScrollView>
-      </View>
-      
+      }/> */}
+      <TabViews active='1' onChange={(status)=>{
+        fetchOptions.page = 1;
+        fetchOptions.status = status;
+        setFetchOptions(fetchOptions);
+        getList(true);
+      }}/>
     
-    
-    <ScrollView
-    stickyHeaderIndices={[]}
-    refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={()=>{
-        onRefresh();
-      }} />
-    }
-    onMomentumScrollEnd={(event:any)=>{
-      const offSetY = event.nativeEvent.contentOffset.y; // 获取滑动的距离
-      const contentSizeHeight = event.nativeEvent.contentSize.height; // scrollView  contentSize 高度
-      const oriageScrollHeight = event.nativeEvent.layoutMeasurement.height; // scrollView高度
-      
-      if (offSetY + oriageScrollHeight >= contentSizeHeight - 300) {
-        onLoadMore();
+      <ScrollView
+      stickyHeaderIndices={[]}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={()=>{
+          onRefresh();
+        }} />
       }
-    }}>
-      {
-        list.map((item:any,index)=>{
-          return <OrderListItem item={item} key={index}/>
-        })
-      }
-      <BottomLoading
-      isLoading={isLoading}
-      isFinallyPage={isFinallyPage}
-      hasContent={list.length?true:false}/>
-    </ScrollView>
-
-    
-
-
-  </View>);
+      onMomentumScrollEnd={(event:any)=>{
+        const offSetY = event.nativeEvent.contentOffset.y; // 获取滑动的距离
+        const contentSizeHeight = event.nativeEvent.contentSize.height; // scrollView  contentSize 高度
+        const oriageScrollHeight = event.nativeEvent.layoutMeasurement.height; // scrollView高度
+        
+        if (offSetY + oriageScrollHeight >= contentSizeHeight - 300) {
+          onLoadMore();
+        }
+      }}>
+        {
+          list.map((item:any,index)=>{
+            return <OrderListItem item={item} key={index}/>
+          })
+        }
+        <BottomLoading
+        isLoading={isLoading}
+        isFinallyPage={isFinallyPage}
+        hasContent={list.length?true:false}/>
+      </ScrollView>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -283,7 +202,7 @@ const styles = StyleSheet.create({
     position:'absolute',
     left:'25%',
     bottom:-1,
-    height:1,
+    height:2,
     width:'50%'
   }
 });
