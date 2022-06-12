@@ -97,7 +97,10 @@ const SetPage = ({app,navigation}:any) => {
       bottomSeparator="indent" 
       title={'修改会员信息'} 
       accessory= "indicator"
-      detail={''} />
+      detail={''} 
+      onPress={()=>{{
+        navigation.navigate('EditUserInfo');
+      }}}/>
       <Button
         style={{backgroundColor:'transparent',marginTop:100,marginLeft:20,marginRight:20}}
         title={'退出登录'}

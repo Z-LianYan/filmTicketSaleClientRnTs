@@ -42,7 +42,7 @@ import {
   ListRow
 } from '../component/teaset/index';
 
-const CustomListRow = ({ title,detail,bottomSeparator,accessory='none',onPress }:any) => {
+const CustomListRow = ({ title,detail,bottomSeparator,accessory='none',onPress,activeOpacity=1,titleStyle={} }:any) => {
     
   const colorScheme = useColorScheme();
 
@@ -50,17 +50,23 @@ const CustomListRow = ({ title,detail,bottomSeparator,accessory='none',onPress }
   })
 
   const obj = {
-    style:{backgroundColor:colorScheme=='dark'?'#000':'#fff'},
-    titleStyle:{color:colorScheme=='dark'?'#fff':'#000'},
+    style:{
+      backgroundColor:colorScheme=='dark'?'#000':'#fff'
+    },
+    titleStyle:{
+      color:colorScheme=='dark'?'#fff':'#000',
+      ...titleStyle
+    },
     bottomSeparator:bottomSeparator,
     title:title,
     accessory:accessory,
     detail:detail,
+    activeOpacity,
     onPress:()=>{
       onPress && onPress()
     }
   }
-  return <ListRow 
+  return <ListRow
     {...obj} />;
 };
 

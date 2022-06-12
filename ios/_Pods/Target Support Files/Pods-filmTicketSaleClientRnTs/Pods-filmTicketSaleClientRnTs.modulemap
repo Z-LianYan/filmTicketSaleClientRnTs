@@ -1,0 +1,6 @@
+module Pods_filmTicketSaleClientRnTs {
+  umbrella header "Pods-filmTicketSaleClientRnTs-umbrella.h"
+
+  export *
+  module * { export * }
+}

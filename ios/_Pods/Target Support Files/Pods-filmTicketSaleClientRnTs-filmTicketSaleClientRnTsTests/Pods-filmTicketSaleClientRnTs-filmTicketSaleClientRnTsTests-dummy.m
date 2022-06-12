@@ -1,0 +1,5 @@
+#import <Foundation/Foundation.h>
+@interface PodsDummy_Pods_filmTicketSaleClientRnTs_filmTicketSaleClientRnTsTests : NSObject
+@end
+@implementation PodsDummy_Pods_filmTicketSaleClientRnTs_filmTicketSaleClientRnTsTests
+@end

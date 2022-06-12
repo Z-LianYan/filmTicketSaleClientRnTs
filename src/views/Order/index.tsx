@@ -147,7 +147,12 @@ const OrderPage = ({navigation}:any) => {
       <ScrollView
       stickyHeaderIndices={[]}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={()=>{
+        <RefreshControl 
+        tintColor={Theme.primaryColor}//ios
+        colors={[Theme.primaryColor]}//android
+        refreshing={refreshing} 
+        title="下拉刷新"//ios
+        onRefresh={()=>{
           onRefresh();
         }} />
       }

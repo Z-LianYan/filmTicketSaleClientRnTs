@@ -1,7 +1,7 @@
 import React,{useEffect} from 'react';
 
 
-import {createStackNavigator} from '@react-navigation/stack'
+import {createStackNavigator,CardStyleInterpolators} from '@react-navigation/stack'
 // import { NavigationContainer } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/core';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -21,13 +21,15 @@ import LoginPage from '../views/Login/index';
 import HomePage from '../views/Home/index';
 import SetPage from '../views/Set/index';
 import OrderPage from '../views/Order/index';
+import Recharge from '../views/Recharge/index';
+import EditUserInfo from '../views/EditUserInfo/index';
+import FilmDetail from '../views/FilmDetail/index';
 import { 
 Button,
 Carousel,
 NavigationBar,
-Theme
+Theme,
 } from '../component/teaset/index';
-
 
 
 const routes=[
@@ -61,7 +63,7 @@ const routes=[
         name:"SetPage",
         options: {
             title:'设置'
-        } 
+        }
     },
     { 
         component: OrderPage, 
@@ -71,15 +73,33 @@ const routes=[
             title:'订单'
         } 
     },
-
-    // { 
-    //     component: CineamPage, 
-    //     name:"CineamPage",
-    // },
-    // { 
-    //     component: MinePage, 
-    //     name:"MinePage",
-    // },
+    { 
+        component: Recharge, 
+        name:"Recharge",
+        options: {
+            headerShown:true,
+            title:'充值',
+        } 
+    },
+    { 
+        component: EditUserInfo, 
+        name:"EditUserInfo",
+        options: {
+            headerShown:true,
+            title:'修改会员信息',
+        } 
+    },
+    { 
+        component: FilmDetail, 
+        name:"FilmDetail",
+        options: {
+            cardStyle:{backgroundColor: 'transparent'},
+            // transparentModal:'card',
+            // presentation: 'transparentModal',
+            headerShown:true,
+            title:'',
+        } 
+    }
 ]
 
 function renderStackItems(){
@@ -98,15 +118,15 @@ import store from '../store/index';
 function StackNavigators(){
     let navigation:any = useNavigation();
     const colorScheme = useColorScheme();
-
     return <Stack.Navigator
         screenOptions={{
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,//切换路由时的显示和隐藏的动画方式
             headerShown:true,//是否隐藏头部导航
             headerLeft:()=>{
                 return <Ionicons 
                 name={'md-chevron-back-sharp'} 
                 size={30} 
-                color={colorScheme=='dark'?'#fff':'#000'} 
+                color={colorScheme=='dark'?'#fff':'#fff'} 
                 onPress={()=>{
                     navigation.goBack()
                 }}/>
@@ -117,10 +137,12 @@ function StackNavigators(){
             headerStyle:{
                 backgroundColor:colorScheme=='dark'?'#000':Theme.primaryColor,
                 borderBottomWidth:1,
-                borderBottomColor:colorScheme=='dark'?'#1a1b1c':Theme.primaryColor
+                borderBottomColor:colorScheme=='dark'?'#1a1b1c':Theme.primaryColor,
+                
             },
             headerTitleStyle: {
-                // fontSize: 18, color: '#666666'
+                // fontSize: 18, 
+                color: '#fff'
             },
             // headerTintColor:'#000',//头部导航标题颜色
             headerTitleAlign:'center',//头部标题居中

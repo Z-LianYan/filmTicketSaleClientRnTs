@@ -48,12 +48,12 @@ const Mine = ({navigation,route,app}:any) => {
   return (<View style={styles.container}>
     <View style={styles.headerBox}>
       {
-        app.userInfo && app.userInfo.avatar && <Image 
+        (app.userInfo && app.userInfo.avatar) ? <Image 
         resizeMode='cover' 
         style={styles.avatarImage} 
         source={{
           uri: app.userInfo && app.userInfo.avatar 
-        }} />
+        }} />:null
       }
 
 
@@ -79,7 +79,9 @@ const Mine = ({navigation,route,app}:any) => {
     bottomSeparator="indent" 
     title={'充值'} 
     accessory="indicator"
-     />
+    onPress={() => {
+      navigation.navigate('Recharge')
+    }}  />
 
     <CustomListRow 
     bottomSeparator="full" 
@@ -88,13 +90,6 @@ const Mine = ({navigation,route,app}:any) => {
     onPress={() => {
       navigation.navigate('SetPage')
     }} />
-
-    {/* <ListRow 
-    style={{backgroundColor:'#000'}}
-    titleStyle={{color:'#fff'}}
-    bottomSeparator="indent" 
-    title={'detail'} 
-    accessory="indicator" /> */}
 
     
   </View>);

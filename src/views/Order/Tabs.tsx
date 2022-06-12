@@ -52,6 +52,7 @@ const Tabs = ({onChange,active=''}:{
         <TouchableHighlight 
         underlayColor='' 
         style={styles.statusItem} onPress={()=>{
+          if(!activate) return;
           setActivate('')
           onChange && onChange('')
         }}>
@@ -69,6 +70,7 @@ const Tabs = ({onChange,active=''}:{
         underlayColor='' 
         style={styles.statusItem} 
         onPress={()=>{
+          if(activate==='0') return;
           setActivate('0')
           onChange && onChange('0')
         }}>
@@ -87,6 +89,7 @@ const Tabs = ({onChange,active=''}:{
         underlayColor='' 
         style={styles.statusItem} 
         onPress={()=>{
+          if(activate==='1') return;
           setActivate('1')
           onChange && onChange('1')
         }}>
@@ -104,6 +107,7 @@ const Tabs = ({onChange,active=''}:{
         underlayColor='' 
         style={styles.statusItem} 
         onPress={()=>{
+          if(activate==='2') return;
           setActivate('2')
           onChange && onChange('2')
         }}>

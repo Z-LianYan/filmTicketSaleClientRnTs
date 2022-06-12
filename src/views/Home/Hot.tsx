@@ -67,9 +67,7 @@ const Hot = ({
           imgUrl={item.poster_img}
           separator={list.length === index + 1 ? false : true}
           onPress={() => {
-            // navigation.navigate({
-            //   path: "/film/detail/" + item.film_id,
-            // });
+            navigation.navigate('FilmDetail',{film_id:item.film_id});
           }}
           onRightClick={() => {
             // this.props.history.push({

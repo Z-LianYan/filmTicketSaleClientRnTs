@@ -15,12 +15,8 @@ export function phone_register(params:any,text='登录中...') {
           });
           break;
         default:
+          Toast.fail(res.message);
           reject(res);
-          Toast.show({
-            icon: 'fail',
-            duration: 2000,
-            text: res.message,
-          });
           break;
       }
     });
@@ -28,7 +24,6 @@ export function phone_register(params:any,text='登录中...') {
 }
 
 export function send_verify_code(params:any) {
-  console.log('12345---===', params);
   return new Promise((resolve, reject) => {
     HttpUtils.post(Api.SEND_VERIFY_CODE, params, '努力加载中...').then((res:any) => {
       console.log('12345', res);
@@ -42,11 +37,8 @@ export function send_verify_code(params:any) {
           });
           break;
         default:
-          Toast.show({
-            icon: 'fail',
-            duration: 2000,
-            text: res.message,
-          });
+          // Toast.message(res.message);
+          Toast.fail(res.message);
           reject(res.data);
           break;
       }
@@ -54,20 +46,16 @@ export function send_verify_code(params:any) {
   });
 }
 
-export function get_user_info(params?:any) {
+export function get_user_info(params?:any,text="") {
   return new Promise((resolve, reject) => {
-    HttpUtils.post(Api.GET_USER_INFO, params, '').then((res:any) => {
+    HttpUtils.post(Api.GET_USER_INFO, params, text).then((res:any) => {
       switch (res.error) {
         case 0:
           resolve(res.data);
           break;
         default:
+          // Toast.message(res.message);
           // Toast.fail(res.message);
-          // Toast.show({
-          //   icon: "fail",
-          //   duration: 2000,
-          //   text: res.message,
-          // });
           reject(res);
           break;
       }
@@ -88,11 +76,8 @@ export function login_out(params?:any) {
           resolve(res.data);
           break;
         default:
-          Toast.show({
-            icon: 'fail',
-            duration: 2000,
-            text: res.message,
-          });
+          // Toast.message(res.message);
+          Toast.fail(res.message);
           reject(res.data);
           break;
       }
@@ -113,11 +98,8 @@ export function user_recharge(params:any) {
           });
           break;
         default:
-          Toast.show({
-            icon: 'fail',
-            duration: 2000,
-            text: res.message,
-          });
+          // Toast.message(res.message);
+          Toast.fail(res.message);
           reject(res.data);
           break;
       }
@@ -138,11 +120,8 @@ export function edit_user_info(params:any) {
           });
           break;
         default:
-          Toast.show({
-            icon: 'fail',
-            duration: 2000,
-            text: res.message,
-          });
+          // Toast.message(res.message);
+          Toast.fail(res.message||'修改成功');
           reject(res);
           break;
       }

@@ -170,7 +170,12 @@ const Home = ({app}:any) => {
     <ScrollView
     stickyHeaderIndices={[]}
     refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={()=>{
+      <RefreshControl 
+      tintColor={Theme.primaryColor}//ios
+      colors={[Theme.primaryColor]}//android
+      refreshing={refreshing} 
+      title="下拉刷新"//ios
+      onRefresh={()=>{
         setRefreshing(true)
         activeTabIndex===0 && onRefresh();
         activeTabIndex===1 && onRefresh();
