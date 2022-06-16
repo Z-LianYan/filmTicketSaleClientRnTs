@@ -93,11 +93,10 @@ const routes=[
         component: FilmDetail, 
         name:"FilmDetail",
         options: {
-            cardStyle:{backgroundColor: 'transparent'},
-            // transparentModal:'card',
-            // presentation: 'transparentModal',
+            // cardStyle:{backgroundColor: 'transparent'},
             headerShown:true,
             title:'',
+            headerTransparent:true
         } 
     }
 ]
@@ -141,7 +140,6 @@ function StackNavigators(){
                 
             },
             headerTitleStyle: {
-                // fontSize: 18, 
                 color: '#fff'
             },
             // headerTintColor:'#000',//头部导航标题颜色

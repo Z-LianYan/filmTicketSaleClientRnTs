@@ -1,7 +1,8 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useCallback } from 'react';
 import { useNavigation } from '@react-navigation/core';
 import { observer, inject } from 'mobx-react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useHeaderHeight } from '@react-navigation/elements';
 import {
   SafeAreaView,
   ScrollView,
@@ -15,7 +16,9 @@ import {
   TouchableHighlight,
   Alert,
   Dimensions,
-  RefreshControl
+  RefreshControl,
+  ImageBackground,
+  View as Viw
 } from 'react-native';
 
 import { 
@@ -42,40 +45,65 @@ import CustomListRow from '../../component/CustomListRow';
 import NavigationBar from '../../component/NavigationBar';
 import { login_out } from "../../api/user";
 import { edit_user_info, get_user_info } from "../../api/user";
+import HeaderBar from "../../component/HeaderBar";
+import HeaderContainer from './HeaderContainer'
+
+import { get_film_detail, add_cancel_want_see } from "../../api/film";
 var ScreenObj = Dimensions.get('window');
 
-const FilmDetail = ({app,navigation}:any) => {
-    
+const FilmDetail = ({app,navigation,route}:any) => {
+  const headerHeight = useHeaderHeight();
   const colorScheme = useColorScheme();
   let [submiting,setSubmiting] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
+  // const [headerTransparent, setHeaderTransparent] = React.useState(true);
+  let [detail,setDetail] = useState<any>(null);
+  let [isSkeleton,setIsSkeleton] = useState(true);
+  let [headerBackgroundColor,setHeaderBackgroundColor] = useState<any>('transparent');
+  let [title,setTitle] = useState<any>('');
 
   useEffect(()=>{
     navigation.setOptions({
-      title: '电影详情',
-      headerMode:'float',
-      // headerLeft:()=>{
-      //   return <Text>txt</Text>
-      // },
-      // headerStyle:{
-      //   // backgroundColor:'transparent',
-      //   // position:'absolute',
-      //   // headerTransparent:true
-      // }
+      title: '',
+      headerLeft:'',
+      headerTransparent: true,
+      headerBackground: () => (
+        <HeaderBar 
+        title={title} 
+        headerHeight={headerHeight}
+        backgroundColor={headerBackgroundColor}/>
+      )
     });
-
-    const unsubscribe = navigation.addListener('gestureStart', (e:any) => {
-      console.log('gestureStart')
-      // Do something
-    });
+    getFilmDetail();
   
-    return unsubscribe;
-  },[navigation]);
+    return ()=>{
+
+    };
+  },[headerBackgroundColor]);
+
+  const getFilmDetail = useCallback(async ()=>{
+    let { locationInfo } = app;
+    let { params } = route;
+    let result = await get_film_detail({
+      film_id: params && params.film_id,
+      city_id: locationInfo && locationInfo.city_id,
+    });
+    setDetail(result);
+    setIsSkeleton(false);
+    // const color_result = await ImageColors.getColors(result.poster_img, {
+    //   fallback: '#228B22',
+    //   cache: true,
+    //   key: 'unique_key',
+    // })
+    console.log('color_result----',result);
+    
+  },[])
   
 
   return <View style={styles.container}>
     <ScrollView
     stickyHeaderIndices={[]}
+    style={{position:'relative'}}
     refreshControl={
       <RefreshControl 
       tintColor={Theme.primaryColor}//ios
@@ -83,33 +111,34 @@ const FilmDetail = ({app,navigation}:any) => {
       refreshing={refreshing} 
       title="下拉刷新"//ios
       onRefresh={()=>{
+        console.log('onRefresh')
       }} />
     }
     onScroll={(event)=>{
       const offSetY = event.nativeEvent.contentOffset.y; // 获取滑动的距离
       const contentSizeHeight = event.nativeEvent.contentSize.height; // scrollView  contentSize 高度
       const oriageScrollHeight = event.nativeEvent.layoutMeasurement.height; // scrollView高度
-      if (offSetY + oriageScrollHeight >= contentSizeHeight - 300) {
-        
-      }
-      if(offSetY>=100){
-        
-      }else{
-        
-      }
+      setHeaderBackgroundColor(offSetY>=100?Theme.primaryColor:'transparent')
+      setTitle(offSetY>=100?detail.film_name:'')
     }}
     onMomentumScrollEnd={(event:any)=>{}}>
+      {
+        detail?<HeaderContainer detail={detail}/>:null
+      }
+
       <CustomListRow 
       accessory="indicator" 
       bottomSeparator="none" 
       title={'用户名'} 
       detail={<View>
-        <Text>全部</Text>
+        <Text onPress={()=>{
+          console.log('12345')
+        }}>全部</Text>
       </View>} />
 
       <Button
         style={styles.btnRecharge}
-        title={'保存'}
+        title={'选座购票'}
         type="primary"
         size="lg"
         disabled={submiting}
@@ -118,7 +147,7 @@ const FilmDetail = ({app,navigation}:any) => {
         }}
       />
 
-      <View style={{height:300}}></View>
+      <View style={{height:800}}></View>
 
     </ScrollView>
   </View>;
@@ -128,10 +157,17 @@ const styles = StyleSheet.create({
   container:{
     flex:1
   },
+  
+  
     
   btnRecharge:{
-    marginHorizontal:10,
-    marginTop:ScreenObj.height - ScreenObj.height/1.8
+    position:'absolute',
+    left:0,
+    right:0,
+    bottom:0,
+    zIndex:100
+    // marginHorizontal:10,
+    // marginTop:ScreenObj.height - ScreenObj.height/1.8
   }
 });
 

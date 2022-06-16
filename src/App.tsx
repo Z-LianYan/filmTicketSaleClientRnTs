@@ -81,8 +81,8 @@ const App = (props:any) => {
           <TopView style={{flex:1}}>
             <StatusBar 
             hidden={false} 
-            backgroundColor={colorScheme === 'dark' ?'#000':Theme.primaryColor} //状态栏的背景色  
-            barStyle={colorScheme=='dark'?'#000':'dark-content'}
+            backgroundColor={Theme.primaryColor} //状态栏的背景色  
+            barStyle={'light-content'}
             />
             <NavigationContainer //给react navigation 设置夜间模式和白天模式
             theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}

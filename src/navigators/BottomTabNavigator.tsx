@@ -86,6 +86,10 @@ function BottomTabNavigator(props:any) {
         backgroundColor: colorScheme=='dark'?'#000':Theme.primaryColor,
         borderBottomWidth:1,
         borderBottomColor:colorScheme=='dark'?'#1a1b1c':Theme.primaryColor
+      },
+      headerTitleStyle: {
+        // fontSize: 18,
+        color:'#fff' 
       }
     })}
     
