@@ -12,16 +12,16 @@ import TransformView from '../TransformView/TransformView';
 
 export default class AlbumSheet extends TransformView {
   static propTypes = {
-    ...TransformView.propTypes,
-    image: PropTypes.oneOfType([Image.propTypes.source, PropTypes.element])
-      .isRequired,
-    thumb: Image.propTypes.source,
-    defaultPosition: PropTypes.oneOf(['center', 'left', 'right']),
-    space: PropTypes.number,
-    load: PropTypes.bool,
-    onWillLoadImage: PropTypes.func,
-    onLoadImageSuccess: PropTypes.func, //(width, height)
-    onLoadImageFailure: PropTypes.func, //(error)
+    // ...TransformView.propTypes,
+    // // image: PropTypes.oneOfType([Image.propTypes.source, PropTypes.element])
+    // //   .isRequired,
+    // thumb: Image.propTypes.source,
+    // defaultPosition: PropTypes.oneOf(['center', 'left', 'right']),
+    // space: PropTypes.number,
+    // load: PropTypes.bool,
+    // onWillLoadImage: PropTypes.func,
+    // onLoadImageSuccess: PropTypes.func, //(width, height)
+    // onLoadImageFailure: PropTypes.func, //(error)
   };
 
   static defaultProps = {

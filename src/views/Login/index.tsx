@@ -80,40 +80,41 @@ const Login = (props:any) => {
     set_is_code_disabled(false);
   }
   async function doLogin() {
-    // let { formData, reg_tel } = this.state;
-    // let { history,location } = this.props;
-    let route = props.route;
-    if (!phone_number) {
-      return Toast.message("请输入手机号");
-    }
-    if (!reg_tel.test(phone_number)) {
-      return Toast.message("请输入正确的手机号");
-    }
-    if (!verify_code) {
-      return Toast.message("请输入4位数的短信验证码");
-    }
-    if (verify_code.length < 4) {
-      return Toast.message("请输入4位数的短信验证码");
-    }
-    let result:any = await phone_register({
-      phone_number,
-      verify_code
-    },'');
-    clearIntervalDis();
-    
-    
-    // let storage_token = await AsyncStorage.getItem('token');
-    // await AsyncStorage.setItem('token', result.token);
-    delete result.token
-    props.app.setUserInfo(result);
+    // if(!isCodeDisabled) return Toast.message("请输入发送短信验证码");
+    try{
+      let route = props.route;
+      if (!phone_number) {
+        return Toast.message("请输入手机号");
+      }
+      if (!reg_tel.test(phone_number)) {
+        return Toast.message("请输入正确的手机号");
+      }
+      if (!verify_code) {
+        return Toast.message("请输入4位数的短信验证码");
+      }
+      if (verify_code.length < 4) {
+        return Toast.message("请输入4位数的短信验证码");
+      }
+      let result:any = await phone_register({
+        phone_number,
+        verify_code
+      },'');
+      clearIntervalDis();
+      
+      // let storage_token = await AsyncStorage.getItem('token');
+      // await AsyncStorage.setItem('token', result.token);
+      delete result.token
+      props.app.setUserInfo(result);
 
-    console.log('storage---==>>',result)
-
-    if(route.params.toUrl){
-      props.navigation.navigate(route.params.toUrl);
-      return;
+      if(route.params && route.params.toUrl){
+        props.navigation.navigate(route.params.toUrl);
+        return;
+      }
+      props.navigation.goBack();
+    }catch(err:any){
+      console.log(err.message)
     }
-    props.navigation.goBack();
+    
   }
   return (<View style={styles.container}>
     {/* <NavigationBar 
@@ -173,6 +174,7 @@ const Login = (props:any) => {
         <Button
           title={'登录'}
           type="primary"
+          disabled={!isCodeDisabled}
           style={{marginLeft:10,marginRight:10,marginTop:50}}
           onPress={() => {
             doLogin()

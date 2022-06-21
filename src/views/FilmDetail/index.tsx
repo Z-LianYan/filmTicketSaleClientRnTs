@@ -1,4 +1,4 @@
-import React, { useState,useEffect,useCallback } from 'react';
+import React, { useState,useEffect,useCallback,useRef } from 'react';
 import { useNavigation } from '@react-navigation/core';
 import { observer, inject } from 'mobx-react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -18,7 +18,8 @@ import {
   Dimensions,
   RefreshControl,
   ImageBackground,
-  View as Viw
+  View as Viw,
+  Modal
 } from 'react-native';
 
 import { 
@@ -37,7 +38,8 @@ import {
   Theme,
   ListRow,
   Toast,
-  Input
+  Input,
+  AlbumView
 } from '../../component/teaset/index';
 import PropTypes, { number } from 'prop-types';
 import { get_film_hot } from '../../api/film';
@@ -46,7 +48,12 @@ import NavigationBar from '../../component/NavigationBar';
 import { login_out } from "../../api/user";
 import { edit_user_info, get_user_info } from "../../api/user";
 import HeaderBar from "../../component/HeaderBar";
-import HeaderContainer from './HeaderContainer'
+import HeaderContainer from './HeaderContainer';
+import Actors from './Actors';
+import Still from './Still';
+import CommentArea from './CommentArea';
+import ImageViewer from '../../component/ImageViewer';
+
 
 import { get_film_detail, add_cancel_want_see } from "../../api/film";
 var ScreenObj = Dimensions.get('window');
@@ -61,7 +68,12 @@ const FilmDetail = ({app,navigation,route}:any) => {
   let [isSkeleton,setIsSkeleton] = useState(true);
   let [headerBackgroundColor,setHeaderBackgroundColor] = useState<any>('transparent');
   let [title,setTitle] = useState<any>('');
+  let [openAbstract,setOpenAbstract] = useState<boolean>(false);
+  // let [visibleModal,setVisibleModal] = useState<boolean>(true);
+  const refImageViewer:{current:any} = useRef();
 
+  
+  
   useEffect(()=>{
     navigation.setOptions({
       title: '',
@@ -84,6 +96,7 @@ const FilmDetail = ({app,navigation,route}:any) => {
   const getFilmDetail = useCallback(async ()=>{
     let { locationInfo } = app;
     let { params } = route;
+    
     let result = await get_film_detail({
       film_id: params && params.film_id,
       city_id: locationInfo && locationInfo.city_id,
@@ -123,33 +136,49 @@ const FilmDetail = ({app,navigation,route}:any) => {
     }}
     onMomentumScrollEnd={(event:any)=>{}}>
       {
-        detail?<HeaderContainer detail={detail}/>:null
+        detail?<HeaderContainer 
+        detail={detail} 
+        reSetDetail={()=>{
+          getFilmDetail();
+        }}/>:null
       }
 
-      <CustomListRow 
-      accessory="indicator" 
-      bottomSeparator="none" 
-      title={'用户名'} 
-      detail={<View>
-        <Text onPress={()=>{
-          console.log('12345')
-        }}>全部</Text>
-      </View>} />
+      <View style={styles.abstractWrapper}>
+        <Text style={{height:openAbstract?'auto':40}}>{detail && detail.abstract}</Text>
+        <View style={styles.abstractBotBtn}>
+          <Ionicons 
+          name={openAbstract?'md-chevron-up':'md-chevron-down'}
+          size={20} 
+          color={colorScheme=='dark'?'#fff':'#000'}
+          onPress={()=>{
+            setOpenAbstract(!openAbstract);
+          }}/>
+        </View>
+      </View>
 
-      <Button
-        style={styles.btnRecharge}
-        title={'选座购票'}
-        type="primary"
-        size="lg"
-        disabled={submiting}
-        onPress={() => {
-          // onEditUserInfo();
-        }}
-      />
+      {
+        detail && <Actors detail={detail}/>
+      }
+     
+      {
+        detail && <Still  detail={detail}/>
+      }
 
-      <View style={{height:800}}></View>
+      <CommentArea/>
+      <View style={{height:20}}></View>
 
     </ScrollView>
+
+    <Button
+      style={styles.selectSeatBuyTicket}
+      title={'选座购票'}
+      type="primary"
+      size="lg"
+      disabled={submiting}
+      onPress={() => {
+        // onEditUserInfo();
+      }}
+    />
   </View>;
 };
 
@@ -160,14 +189,17 @@ const styles = StyleSheet.create({
   
   
     
-  btnRecharge:{
-    position:'absolute',
-    left:0,
-    right:0,
-    bottom:0,
-    zIndex:100
-    // marginHorizontal:10,
-    // marginTop:ScreenObj.height - ScreenObj.height/1.8
+  selectSeatBuyTicket:{
+    borderRadius:0
+  },
+  abstractWrapper:{
+    paddingTop:12,
+    paddingBottom:0,
+    paddingHorizontal:15,
+  },
+  abstractBotBtn:{
+    flexDirection:'row',
+    justifyContent:'center'
   }
 });
 

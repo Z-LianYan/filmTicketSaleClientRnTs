@@ -107,7 +107,8 @@ const styles = StyleSheet.create({
 
   },
   title:{
-    fontSize:18
+    fontSize:18,
+    color:'#fff'
   },
   rightView:{
     fontSize:18

@@ -53,6 +53,7 @@ export function get_banner(params) {
 }
 
 export function get_film_detail(params) {
+  console.log('77777===>', params);
   return new Promise((resolve, reject) => {
     HttpUtils.get(Api.GET_FILM_DETAIL, params, '').then(res => {
       switch (res.error) {
@@ -69,6 +70,7 @@ export function get_film_detail(params) {
 }
 
 export function add_cancel_want_see(params) {
+  console.log('params---', params);
   return new Promise((resolve, reject) => {
     HttpUtils.post(Api.ADD_CANCEL_WANT_SEE, params, '').then(res => {
       switch (res.error) {

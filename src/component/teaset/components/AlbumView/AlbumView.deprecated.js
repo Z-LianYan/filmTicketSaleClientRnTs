@@ -14,24 +14,24 @@ import CarouselControl from '../Carousel/CarouselControl';
 
 export default class AlbumView extends Component {
   static propTypes = {
-    ...ViewPropTypes,
-    images: PropTypes.arrayOf(Image.propTypes.source).isRequired,
-    thumbs: PropTypes.arrayOf(Image.propTypes.source),
-    defaultIndex: PropTypes.number,
-    index: PropTypes.number,
-    maxScale: PropTypes.number,
-    space: PropTypes.number,
-    control: PropTypes.oneOfType([PropTypes.bool, PropTypes.element]),
-    onChange: PropTypes.func, //(index, oldIndex)
-    onPress: PropTypes.func, //(index, event)
-    onLongPress: PropTypes.func, //(index, event)
-    onWillLoadImage: PropTypes.func, //(index)
-    onLoadImageSuccess: PropTypes.func, //(index, width, height)
-    onLoadImageFailure: PropTypes.func, //(index, error)
+    // ...ViewPropTypes,
+    // images: PropTypes.arrayOf(Image.propTypes.source).isRequired,
+    // thumbs: PropTypes.arrayOf(Image.propTypes.source),
+    // defaultIndex: PropTypes.number,
+    // index: PropTypes.number,
+    // maxScale: PropTypes.number,
+    // space: PropTypes.number,
+    // control: PropTypes.oneOfType([PropTypes.bool, PropTypes.element]),
+    // onChange: PropTypes.func, //(index, oldIndex)
+    // onPress: PropTypes.func, //(index, event)
+    // onLongPress: PropTypes.func, //(index, event)
+    // onWillLoadImage: PropTypes.func, //(index)
+    // onLoadImageSuccess: PropTypes.func, //(index, width, height)
+    // onLoadImageFailure: PropTypes.func, //(index, error)
   };
 
   static defaultProps = {
-    ...View.defaultProps,
+    // ...View.defaultProps,
     // ...ViewPropTypes,
     defaultIndex: 0,
     maxScale: 3,
