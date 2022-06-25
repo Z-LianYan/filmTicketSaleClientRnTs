@@ -55,8 +55,11 @@ import CommentArea from './CommentArea';
 import ImageViewer from '../../component/ImageViewer';
 
 
+
 import { get_film_detail, add_cancel_want_see } from "../../api/film";
 var ScreenObj = Dimensions.get('window');
+
+
 
 const FilmDetail = ({app,navigation,route}:any) => {
   const headerHeight = useHeaderHeight();
@@ -164,7 +167,12 @@ const FilmDetail = ({app,navigation,route}:any) => {
         detail && <Still  detail={detail}/>
       }
 
-      <CommentArea/>
+      <CommentArea 
+      userInfo={app.userInfo} 
+      route={route} 
+      film_detail={detail}
+      getFilmDetail={getFilmDetail}/>
+
       <View style={{height:20}}></View>
 
     </ScrollView>

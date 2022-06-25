@@ -144,7 +144,7 @@ const HeaderContainer = ({detail,app,reSetDetail}:any) => {
             fontSize:12,
             alignItems:'center'
           }}>
-            1人
+            {detail.total_comment_num}人
             <Ionicons 
             name={'ios-chevron-forward'} 
             size={12} 

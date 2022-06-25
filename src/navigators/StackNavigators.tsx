@@ -24,6 +24,7 @@ import OrderPage from '../views/Order/index';
 import Recharge from '../views/Recharge/index';
 import EditUserInfo from '../views/EditUserInfo/index';
 import FilmDetail from '../views/FilmDetail/index';
+import CommentList from '../views/CommentList/index';
 import { 
 Button,
 Carousel,
@@ -97,6 +98,15 @@ const routes=[
             headerShown:true,
             title:'',
             headerTransparent:true
+        } 
+    },
+    { 
+        component: CommentList, 
+        name:"CommentListPage",
+        options: {
+            headerShown:true,
+            title:'',
+            // headerTransparent:true
         } 
     }
 ]
