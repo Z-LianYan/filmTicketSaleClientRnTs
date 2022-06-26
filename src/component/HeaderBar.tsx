@@ -21,7 +21,9 @@ import {
   Platform,
   ActivityIndicator,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  View as Viw,
+  Text as Txt
 } from 'react-native';
 
 import { 
@@ -82,17 +84,36 @@ const HeaderBar = ({
   return (<View style={{
     ...headerContainerObj
   }}>
-    {
-      <Ionicons 
-      name={'chevron-back'} 
-      size={25} 
-      color={colorScheme === 'dark' ? '#fff' : '#000'} 
-      onPress={()=>{
-        onBack ? onBack(): navigation.goBack();
-      }}/>
-    }
-    {typeof title=='string'||'number'?<Text style={styles.title}>{title}</Text>:title}
-    {typeof rightView=='string'||'number'?<Text style={styles.rightView}>{rightView}</Text>:rightView}
+    <Viw style={{
+      ...styles.headerItem,
+      justifyContent:'flex-start',
+      minWidth:40
+    }}>
+      {
+        <Ionicons 
+        name={'chevron-back'} 
+        size={25} 
+        color={colorScheme === 'dark' ? '#fff' : '#000'} 
+        onPress={()=>{
+          onBack ? onBack(): navigation.goBack();
+        }}/>
+      }
+    </Viw>
+    <Viw style={{
+      ...styles.headerItem,
+      justifyContent:'center',
+      flex:1
+    }}>
+      {typeof title=='string'||'number'?<Text style={styles.title}>{title}</Text>:title}
+    </Viw>
+    <Viw style={{
+      ...styles.headerItem,
+      justifyContent:'flex-end',
+      minWidth:40,
+      paddingRight:8
+    }}>
+      {typeof rightView=='string'||'number'?<Text style={styles.rightView}>{rightView}</Text>:rightView}
+    </Viw>
   </View>);
 };
 
@@ -102,6 +123,10 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     justifyContent:'space-between',
     alignItems:'center'
+  },
+  headerItem:{
+    // flex:1,
+    flexDirection:'row',
   },
   leftView:{
 

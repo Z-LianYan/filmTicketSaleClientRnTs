@@ -45,7 +45,7 @@ import HeaderBar from "../../component/HeaderBar";
 import { useHeaderHeight } from '@react-navigation/elements';
 var ScreenObj = Dimensions.get('window');
 
-const CommentList = ({app,navigation}:any) => {
+const CommentList = ({app,navigation,route}:any) => {
     
   const colorScheme = useColorScheme();
   const headerHeight = useHeaderHeight();
@@ -56,12 +56,18 @@ const CommentList = ({app,navigation}:any) => {
     navigation.setOptions({
       title: '',
       headerLeft:'',
-      headerTransparent: true,
+      headerTransparent: false,
       headerBackground: () => (
         <HeaderBar 
-        title={'title'} 
+        title={route.params.film_name} 
         headerHeight={headerHeight}
-        backgroundColor={headerBackgroundColor}/>
+        rightView={
+          <Button 
+          style={{borderRadius:20,backgroundColor:'#00b578'}} 
+          titleStyle={{color:'#fff'}} 
+          title="编辑我的评论" 
+          size="sm"></Button>
+        }/>
       )
     });
   },[]);
@@ -69,9 +75,14 @@ const CommentList = ({app,navigation}:any) => {
   return <View style={styles.container}>
     <CustomListRow 
     accessory="none" 
-    bottomSeparator="full" //full,indent,none
+    bottomSeparator="none" //full,indent,none
     title={'评论'}
-    detail={'detail'}
+    detail={
+      <Ionicons 
+      name={'md-information-circle-outline'}
+      size={20} 
+      color={'#ccc'}/>
+    }
     />
   </View>;
 };

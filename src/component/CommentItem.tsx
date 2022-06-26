@@ -90,9 +90,7 @@
       backgroundColor:colorScheme=='dark'?'#000':'#fff',
     }}
     onPress={()=>{
-      console.log(123456)
       onSelected && onSelected('取消');
-      // Overlay.hide(overlayView)
     }}>
       <Text style={{color:colorScheme=='dark'?'#fff':'#000'}}>取消</Text>
     </TouchableOpacity>
@@ -137,7 +135,6 @@
   alreadyThumbUp, //判断当前用户是否点赞过
  }:any) => {
    const colorScheme = useColorScheme();
-   const [isVisibleAction,setIsVisibleAction] = useState(false);
    const [isShowUnfold,setIsShowUnfold] = useState(true);
    const navigation:any = useNavigation();
    const [_overlay,setOverlay] = useState<any>(null);
@@ -214,13 +211,11 @@
             color={colorScheme=='dark'?'#fff':'#000'}
             onPress={()=>{
               let ol = Overlay.show(overlayView(colorScheme,actionsOption,(val:string)=>{
-                console.log(123450999999,val)
-
-                if(val=='取消'){
+                
+                if(val==='取消'){
                   Overlay.hide(ol);
                   return;
                 }
-
                 if (!userInfo) {
                   navigation.navigate({
                     name: "LoginPage",
@@ -234,19 +229,6 @@
               }));
 
               setOverlay(ol);
-
-              
-
-              return;
-
-
-              // if (userInfo) {
-              //   setIsVisibleAction(true);
-              // } else {
-              //   navigation.navigate({
-              //     name: "LoginPage",
-              //   });
-              // }
             }}/>
           )}
         </View>
@@ -296,7 +278,7 @@
                 name={'ios-thumbs-up-sharp'}
                 size={13} 
                 color={alreadyThumbUp?Theme.primaryColor:'#999'}/>
-                <Txt style={{marginLeft:3,color:alreadyThumbUp?Theme.primaryColor:'#999'}}>{dzNum}</Txt>
+                <Txt style={{marginLeft:3,color:alreadyThumbUp?Theme.primaryColor:'#999'}}>{dzNum||0}</Txt>
               </TouchableOpacity>
             )}
             {onReplyMessage && (
@@ -320,21 +302,6 @@
         
         {separator ? <View style={styles.line}></View> : null}
       </View>
-      {/* <ActionSheet
-        extra=""
-        cancelText="取消"
-        visible={isVisibleAction}
-        actions={actionsOption}
-        closeOnAction
-        onAction={(action) => {
-          onAction && onAction(action);
-        }}
-        onClose={() => {
-          this.setState({
-            isVisibleAction: false,
-          });
-        }} 
-      />*/}
     </View>;
  };
  

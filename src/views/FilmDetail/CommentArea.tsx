@@ -52,7 +52,7 @@ import {
   del_comment,
   comment_jubao,
 } from "../../api/comment";
-import { any } from 'prop-types';
+import ReplyCommentModal from '../../component/ReplyCommentModal';
 
 
 
@@ -68,6 +68,7 @@ const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any) => {
   const colorScheme = useColorScheme();
   const [commentlist,setCommentlist] = useState<any>([]);
   const [selectReplyItem,setSelectReplyItem] = useState<any>(null);
+  const replyCommentModalRef:{current:any} = useRef();
   
   useEffect(()=>{
     getcommentlist()
@@ -104,8 +105,10 @@ const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any) => {
     // item.page = item.page ? item.page + 1 : 1;
     let page = 1;
     if(Array.isArray(item.backup_reply_list)){
-      page = item.backup_reply_list.length<3?1:item.backup_reply_list.length%3 == 0?((item.backup_reply_list.length/3)+1):Math.floor(item.backup_reply_list.length/3);
+      page = item.backup_reply_list.length<3?1:item.backup_reply_list.length%3 == 0?((item.backup_reply_list.length/3)+1):Math.floor(item.backup_reply_list.length/3)+1;
+      console.log('page---item.backup_reply_list.length',item.backup_reply_list.length)
     }
+    console.log('page---',page)
     setCommentlist([
       ...commentlist
     ])
@@ -114,6 +117,7 @@ const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any) => {
       limit: 3,
       comment_id: item.comment_id,
     });
+    console.log('result====>',result);
     if (item.replyList) {
       for (let it of item.replyList) {
         for (let i = 0; i < result.rows.length; i++) {
@@ -127,9 +131,12 @@ const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any) => {
     }
 
     item.replyList = item.replyList.concat(result.rows);
+
+    console.log('item.replyList====>',item.replyList.length);
     item.backup_reply_list = _lodash.cloneDeep(item.replyList);
     item.isReplyCommentLoading = false;
     // item.isShowUnfold = item.replyList.length >= result.count ? true : false;
+    
     item.isFinalllyPage = item.replyList.length >= result.count ? true : false;
     setCommentlist([
       ...commentlist
@@ -286,15 +293,27 @@ const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any) => {
             app.userInfo && app.userInfo.user_id == item.user_id
           }
           onReplyTextBtn={() => {
-            let selectReplyItem = {
+            // let selectReplyItem = {
+            //   commentlistIndex: index,
+            //   reply_person_nickname: item.nickname,
+            //   reply_parent_id: 0,
+            //   reply_content: "",
+            //   parent_user_id: item.user_id,
+            //   comment_id: item.comment_id,
+            // };
+            // // setSelectReplyItem(selectReplyItem);
+            // setSelectReplyItem({
+            //   ...selectReplyItem
+            // });
+
+            replyCommentModalRef.current.open({
               commentlistIndex: index,
               reply_person_nickname: item.nickname,
               reply_parent_id: 0,
               reply_content: "",
               parent_user_id: item.user_id,
               comment_id: item.comment_id,
-            };
-            setSelectReplyItem(selectReplyItem);
+            });
           }}
           isShowMenuBtn={true}
           // messageNum={785}
@@ -457,7 +476,6 @@ const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any) => {
                   score={item.score}
                   actionsOption={actionsOptionReply}
                   onAction={(val:any) => {
-                    console.log("val---回复", val);
                     if (val == "删除") {
                       onDel(item, it, "reply", idx);
                     }
@@ -508,17 +526,14 @@ const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any) => {
                   }}
                   history={'history'}
                   onReplyTextBtn={() => {
-                    // selectReplyItem = {
-                    //   commentlistIndex: index,
-                    //   reply_person_nickname: it.nickname,
-                    //   reply_parent_id: it.reply_id,
-                    //   reply_content: "",
-                    //   parent_user_id: it.user_id,
-                    //   comment_id: item.comment_id,
-                    // };
-                    // this.setState({
-                    //   selectReplyItem,
-                    // });
+                    replyCommentModalRef.current.open({
+                      commentlistIndex: index,
+                      reply_person_nickname: it.nickname,
+                      reply_parent_id: it.reply_id,
+                      reply_content: "",
+                      parent_user_id: it.user_id,
+                      comment_id: item.comment_id,
+                    });
                   }}
                 />
               );
@@ -548,6 +563,14 @@ const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any) => {
         
       </Text>:null
     }
+
+    <ReplyCommentModal 
+    app={app} 
+    ref={replyCommentModalRef} 
+    commentlist={commentlist}
+    replySuccess={(commentlist:any)=>{
+      setCommentlist([...commentlist])
+    }}/>
   </Viw>;
 };
 
@@ -563,7 +586,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   btn:{
-    marginLeft:20
+    marginLeft:10
   },
   showCommentBtn:{
     height: 50,
