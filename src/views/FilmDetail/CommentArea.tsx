@@ -67,7 +67,7 @@ const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any) => {
   let navigation:any = useNavigation();
   const colorScheme = useColorScheme();
   const [commentlist,setCommentlist] = useState<any>([]);
-  const [selectReplyItem,setSelectReplyItem] = useState<any>(null);
+  // const [selectReplyItem,setSelectReplyItem] = useState<any>(null);
   const replyCommentModalRef:{current:any} = useRef();
   
   useEffect(()=>{
@@ -293,19 +293,6 @@ const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any) => {
             app.userInfo && app.userInfo.user_id == item.user_id
           }
           onReplyTextBtn={() => {
-            // let selectReplyItem = {
-            //   commentlistIndex: index,
-            //   reply_person_nickname: item.nickname,
-            //   reply_parent_id: 0,
-            //   reply_content: "",
-            //   parent_user_id: item.user_id,
-            //   comment_id: item.comment_id,
-            // };
-            // // setSelectReplyItem(selectReplyItem);
-            // setSelectReplyItem({
-            //   ...selectReplyItem
-            // });
-
             replyCommentModalRef.current.open({
               commentlistIndex: index,
               reply_person_nickname: item.nickname,
@@ -542,26 +529,27 @@ const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any) => {
       );
     })}
     {
-      commentlist && commentlist.length?<Text
-        style={styles.showCommentBtn}
-        onPress={() => {
-          navigation.navigate({
-            name: "CommentListPage",
-            params:{
-              film_id: film_detail.id,
-              film_name: film_detail.film_name
-            }
-          });
-        }}
-      >
-        查看全部 {film_detail?film_detail.total_comment_num:0} 条讨论
-        {/* <RightOutline /> */}
-        <Ionicons 
-        name={'md-chevron-forward-outline'}
-        size={14} 
-        color={Theme.primaryColor}/>
-        
-      </Text>:null
+      commentlist && commentlist.length?<TouchableOpacity 
+      activeOpacity={1} 
+      style={styles.showCommentBtnWrapper}
+      onPress={() => {
+        navigation.navigate({
+          name: "CommentListPage",
+          params:{
+            film_id: film_detail.id,
+            film_name: film_detail.film_name
+          }
+        });
+      }}>
+        <Text style={styles.showCommentBtn}>
+          查看全部 {film_detail?film_detail.total_comment_num:0} 条讨论
+          <Ionicons 
+          name={'md-chevron-forward-outline'}
+          size={14} 
+          color={Theme.primaryColor}/>
+        </Text>
+      </TouchableOpacity>:null
+      
     }
 
     <ReplyCommentModal 
@@ -588,16 +576,18 @@ const styles = StyleSheet.create({
   btn:{
     marginLeft:10
   },
-  showCommentBtn:{
+  showCommentBtnWrapper:{
     height: 50,
-    textAlignVertical:'center',
-    textAlign: 'center',
-    color: Theme.primaryColor,
-    fontWeight: 'bold',
     borderTopWidth: 0.5,
     borderTopColor: '#ccc',
     borderBottomWidth:0.5,
     borderBottomColor: '#ccc',
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  showCommentBtn:{
+    color: Theme.primaryColor,
+    fontWeight: 'bold',
   }
 });
 
