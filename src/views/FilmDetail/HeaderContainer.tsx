@@ -124,7 +124,19 @@ const HeaderContainer = ({detail,app,reSetDetail}:any) => {
             }
           </Viw>
         </Viw>
-        <Viw style={styles.headerContainerMiddleRight}>
+        
+        <TouchableOpacity 
+        activeOpacity={1} 
+        style={styles.headerContainerMiddleRight}
+        onPress={()=>{
+          navigation.navigate({
+            name: "CommentListPage",
+            params:{
+              film_id: detail.id,
+              film_name: detail.film_name
+            }
+          });
+        }}>
           <Txt style={{
             ...styles.whiteFont,
             fontSize:12
@@ -134,7 +146,6 @@ const HeaderContainer = ({detail,app,reSetDetail}:any) => {
           }}>
             <Txt style={{
               ...styles.whiteFont,
-              // fontSize:12,
               color:Theme.primaryColor
             }}>{detail.score}分</Txt> 
             <Star style={{marginLeft:5}} value={detail.score / 2}/>
@@ -150,7 +161,7 @@ const HeaderContainer = ({detail,app,reSetDetail}:any) => {
             size={12} 
             color={"#fff"}/>
           </Txt>
-        </Viw>
+        </TouchableOpacity>
       </Viw>:null
     }
     

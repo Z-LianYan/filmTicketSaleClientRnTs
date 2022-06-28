@@ -4,7 +4,7 @@ import {Theme, Toast} from '../component/teaset/index';
 
 export function get_comment_list(params:any) {
   return new Promise((resolve, reject) => {
-    HttpUtils.get(Api.GET_COMMENT_LIST, params, '努力加载中...').then((res:any) => {
+    HttpUtils.get(Api.GET_COMMENT_LIST, params, '').then((res:any) => {
       switch (res.error) {
         case 0:
           resolve(res.data);

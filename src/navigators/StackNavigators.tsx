@@ -26,6 +26,7 @@ import EditUserInfo from '../views/EditUserInfo/index';
 import FilmDetail from '../views/FilmDetail/index';
 import CommentList from '../views/CommentList/index';
 import CommentPage from '../views/Comment/index';
+import CommentCompletePage from '../views/CommentComplete/index';
 import { 
 Button,
 Carousel,
@@ -113,6 +114,15 @@ const routes=[
     { 
         component: CommentPage, 
         name:"CommentPage",
+        options: {
+            headerShown:true,
+            title:'',
+            // headerTransparent:true
+        } 
+    },
+    { 
+        component: CommentCompletePage, 
+        name:"CommentCompletePage",
         options: {
             headerShown:true,
             title:'',

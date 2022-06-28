@@ -537,7 +537,8 @@ const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any) => {
           name: "CommentListPage",
           params:{
             film_id: film_detail.id,
-            film_name: film_detail.film_name
+            film_name: film_detail.film_name,
+            // comment_id: app.userInfo?commentlist[0].comment_id:'',
           }
         });
       }}>

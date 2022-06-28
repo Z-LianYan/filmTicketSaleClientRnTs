@@ -63,6 +63,9 @@ import {
 import dayjs from "dayjs";
 import _lodash from "lodash";
 
+import BottomLoading from '../../component/BottomLoading';
+
+
 var ScreenWidth = Dimensions.get('window').width;
 
 
@@ -72,12 +75,51 @@ const CommentList = ({app,navigation,route}:any) => {
   const headerHeight = useHeaderHeight();
   const [refreshing, setRefreshing] = React.useState(false);
   const [commentlist,setCommentlist] = useState<any>([]);
+  const [page,setPage] = useState<number>(1);
+  let [isLoading,setLoading] = useState(false);
+  let [isFinallyPage,setFinallyPage] = useState(false);
   const replyCommentModalRef:{current:any} = useRef();
   
 
   const customAlertRef:{current:any} = useRef()
 
   useEffect(()=>{
+    getcommentlist(true);
+    
+  },[]);
+
+
+  async function getcommentlist(isLoading?:boolean) {
+    isLoading && setLoading(true);
+    let result:any = await get_comment_list({
+      page: page,
+      limit: 10,
+      film_id: route && route.params && route.params.film_id,
+      city_id: app.locationInfo && app.locationInfo.city_id,
+      user_id: app.userInfo && app.userInfo.user_id,
+    });
+    let _commentlist = []
+    if(page==1){
+      _commentlist = result.rows;
+      // setCommentlist(result.rows);
+    }else{
+      _commentlist = commentlist.concat(result.rows)
+      // setCommentlist(commentlist.concat(result.rows));
+    }
+    setCommentlist(_commentlist);
+    if (_commentlist.length >= result.count) {
+      setFinallyPage(true);
+    } else {
+      setFinallyPage(false);
+    }
+    setLoading(false);
+    
+    setRefreshing(false);
+
+    setNavigation(_commentlist);
+  }
+
+  function setNavigation(commentlist:any){
     navigation.setOptions({
       title: '',
       headerLeft:'',
@@ -87,7 +129,7 @@ const CommentList = ({app,navigation,route}:any) => {
         title={route.params.film_name} 
         headerHeight={headerHeight}
         rightView={
-          <Button 
+          app.userInfo && commentlist.some((item:any) => item.user_id == app.userInfo.user_id) && (<Button 
           style={{borderRadius:20,backgroundColor:'#00b578'}} 
           titleStyle={{color:'#fff'}} 
           title="编辑我的评论" 
@@ -102,29 +144,15 @@ const CommentList = ({app,navigation,route}:any) => {
             navigation.navigate({
               name: "CommentPage",
               params:{
-                film_id: route.params.id,
+                film_id: route.params.film_id,
                 comment_id: commentData.comment_id,
               }
             });
-          }}></Button>
+          }}/>)
+          
         }/>
       )
     });
-    getcommentlist();
-  },[]);
-
-
-  async function getcommentlist() {
-    let result:any = await get_comment_list({
-      page: 1,
-      limit: 10,
-      film_id: route && route.params && route.params.film_id,
-      city_id: app.locationInfo && app.locationInfo.city_id,
-      user_id: app.userInfo && app.userInfo.user_id,
-    });
-    // console.log('123456---',result.rows);
-    setCommentlist(result.rows);
-    setRefreshing(false)
   }
 
   function handleDate(date:any) {
@@ -298,7 +326,7 @@ const CommentList = ({app,navigation,route}:any) => {
       onRefresh={()=>{
         console.log('onRefresh');
         setRefreshing(true);
-        getcommentlist();
+        getcommentlist(true);
       }} />
     }
     onMomentumScrollEnd={(event:any)=>{
@@ -306,7 +334,9 @@ const CommentList = ({app,navigation,route}:any) => {
       const contentSizeHeight = event.nativeEvent.contentSize.height; // scrollView  contentSize 高度
       const oriageScrollHeight = event.nativeEvent.layoutMeasurement.height; // scrollView高度
       if (offSetY + oriageScrollHeight >= contentSizeHeight - 300) {
-        
+        if(isLoading || isFinallyPage) return;
+        setPage(page+1)
+        getcommentlist();
       }
     }}>
       
@@ -580,6 +610,11 @@ const CommentList = ({app,navigation,route}:any) => {
           )})
       }
 
+      <BottomLoading
+      isLoading={isLoading}
+      isFinallyPage={isFinallyPage}
+      hasContent={commentlist.length?true:false}/>
+      <View style={{height:50}}></View>
     </ScrollView>
 
     <CustomAlert ref={customAlertRef}/>
