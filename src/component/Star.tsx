@@ -59,12 +59,14 @@ type TypeProps = {
   maxValue?:number,
   // allowHalf?:boolean,
   readOnly?:boolean,
-  style?: object
+  style?: object,
+  marginRight?:number
 }
 const Star = ({
-  size = 15,
+  size = 13,
   value = 0,
   maxValue = 5,
+  marginRight = 3,
   // allowHalf = false,
   readOnly = false,
   style
@@ -78,10 +80,11 @@ const Star = ({
     for(let i=0;i<maxValue;i++){
       let isHalf = i<value && value<(i+1)
       dom.push(<Ionicons 
+      style={{marginRight:marginRight}}
       key={i+'star'}
       name={isHalf?'md-star-half-sharp':(i+1)<=value?'md-star':'md-star-outline'} 
       size={size} 
-      color={((i+1)<=value || isHalf)?Theme.secondaryColor:'#fff'}/>)
+      color={((i+1)<=value || isHalf)?Theme.secondaryColor:'#ccc'}/>)
     }
     return dom;
   },[])

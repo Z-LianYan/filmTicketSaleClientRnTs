@@ -74,7 +74,6 @@ const CommentPage = ({app,navigation,route}:any) => {
     
   const colorScheme = useColorScheme();
   const headerHeight = useHeaderHeight();
-  const [commentlist,setCommentlist] = useState<any>([]);
   const [filmInfo,setFilmInfo] = useState<any>(null);
   const [productionNum,setProductionNum] = useState<any>(null);
   const [formData,setFormData] = useState<any>({
@@ -86,9 +85,10 @@ const CommentPage = ({app,navigation,route}:any) => {
   
   useEffect(()=>{
     getDefault();
-    
-  },[]);
+    return ()=>{
 
+    }
+  },[]);
 
   const getDefault = useCallback(async()=>{
     if (route.params && !route.params.film_id) return;
@@ -103,7 +103,6 @@ const CommentPage = ({app,navigation,route}:any) => {
     
       setNavigation(result.filmInfo)
       if (route.params && route.params.comment_id) {
-        // console.log('result====>>哈哈哈哈哈哈---',route.params);
         let commentInfo = result.commentInfo;
         formData.score = commentInfo.score;
         formData.comment_content = commentInfo.comment_content;
@@ -121,7 +120,7 @@ const CommentPage = ({app,navigation,route}:any) => {
     }
   },[])
 
-  function setNavigation(filmInfo:any){
+  const setNavigation = useCallback((filmInfo)=>{
     navigation.setOptions({
       title: '',
       headerLeft:'',
@@ -138,17 +137,16 @@ const CommentPage = ({app,navigation,route}:any) => {
           style={{borderRadius:20,backgroundColor:'#00b578'}} 
           titleStyle={{color:'#fff'}} 
           title="发布" 
-          size="sm"
+          size="md"
           onPress={()=>{
             addComment();
           }}></Button>
         }/>
       )
     });
-  }
-
+  },[formData])
+ 
   function onGotoCommentCompletePage(comment_id:any) {
-    // let { location, history } = this.props;
     setTimeout(() => {
       navigation.navigate({
         name:'CommentCompletePage',
@@ -159,16 +157,13 @@ const CommentPage = ({app,navigation,route}:any) => {
       })
     }, 500);
   }
-  async function addComment() {
-    // let { location, history } = this.props;
-    // let { formData } = this.state;
+  const addComment = useCallback(async()=>{
     if (!formData.score) return Toast.message("您还没给评分呢");
-    if (!formData.comment_content)
-      return Toast.message("您还没评论呢");
+    if (!formData.comment_content) return Toast.message("您还没评论呢");
     if (route.params && route.params.comment_id) {
       await edit_comment({
         ...formData,
-        comment_id: route.params.comment_id,
+        comment_id: route.params.comment_id
       });
       onGotoCommentCompletePage(route.params.comment_id);
       return;
@@ -179,100 +174,47 @@ const CommentPage = ({app,navigation,route}:any) => {
     });
     if (!result) return;
     onGotoCommentCompletePage(result.comment_id);
-  }
-
-
-  
-  // async function onDel(item:any, it:any, type:any, index:any) {
-  //   Alert.alert(
-  //     `您确定删除吗？`,
-  //     "",
-  //     [
-  //       {
-  //         text: "再想想",
-  //         onPress: () => console.log("Cancel Pressed"),
-  //         style: "cancel"
-  //       },
-  //       { 
-  //         text: "确定", onPress: async () => {
-  //           try {
-  //             if (type == "comment") {
-  //               let result = await del_comment({
-  //                 comment_id: item.comment_id,
-  //               });
-  //               commentlist.splice(index, 1);
-  //               setCommentlist([...commentlist])
-  //               // getFilmDetail && getFilmDetail();
-  //             }
-  //             if (type == "reply") {
-  //               // console.log("reply000====---", it.reply_id);
-  //               let result = await del_comment_reply({
-  //                 reply_id: it.reply_id,
-  //               });
-  //               item.replyList.splice(index, 1);
-  //               item.backup_reply_list.splice(index, 1);
-  //               item.reply_count -= 1;
-  //               setCommentlist([...commentlist])
-  //               // console.log("删除回复", result);
-  //             }
-  //           } catch (err:any) {
-  //             if (err.error == 401) {
-  //               app.setUserInfo(null); //如果token认证过期 清空当前缓存的登录信息
-  //               navigation.navigate({
-  //                 name: "LoginPage"
-  //               });
-  //             }
-  //           }
-  //         }
-  //       }
-  //     ]
-  //   );
-  // }
-
-  
-
- 
+  },[formData]);
   
   return <View style={styles.container}>
     <View style={styles.contentWrapper}>
       <Text style={styles.headTxt}>您总共参与讨论了<Text style={styles.headTxtNum}>{productionNum}</Text>部作品</Text>
       <View style={styles.starBox}>
         <Text>评分</Text>
-        <Star style={{marginLeft:5}} value={2}/>
+        <Star style={{marginLeft:5}} marginRight={10} size={20} value={2}/>
         <Text>
         {formData.score ? (
                   <Text style={styles.scoreTxt}>{formData.score}分</Text>
                 ) : null}
                 <Text>{app.rateLevelTex[formData.score]}</Text>
         </Text>
-        
-        
-      
-    </View>
+      </View>
 
-    <Input 
-    placeholder={`大家都在问：剧情怎么样，画面好吗，演技如何？`} 
-    style={{
-      backgroundColor:colorScheme=='dark'?'#000':'#fff',
-      // height:50,
-      // borderWidth:0,
-      color:colorScheme=='dark'?'#fff':'#000',
-      // flex:1,
-      height:200,
-      borderWidth:0
-    }}
-    editable={true}//是否可编辑
-    keyboardAppearance={colorScheme}//'default', 'light', 'dark'
-    size='lg'
-    multiline={true}
-    value={formData.comment_content}
-    onChangeText={(text:any) => {
-      formData.comment_content = text;
-      setFormData({
-        ...formData
-      })
-    }}
-    />
+      <Input 
+      placeholder={`大家都在问：剧情怎么样，画面好吗，演技如何？`} 
+      style={{
+        backgroundColor:colorScheme=='dark'?'#000':'#fff',
+        // height:50,
+        // borderWidth:0,
+        color:colorScheme=='dark'?'#fff':'#000',
+        // flex:1,
+        height:200,
+        borderWidth:0
+      }}
+      editable={true}//是否可编辑
+      keyboardAppearance={colorScheme}//'default', 'light', 'dark'
+      size='lg'
+      multiline={true}
+      value={formData.comment_content}
+      onChangeText={(text:any) => {
+        formData.comment_content = text;
+        setFormData({
+          ...formData,
+          comment_content:text
+        });
+        setNavigation(filmInfo)
+      }}
+      />
     
     </View>
     
@@ -300,6 +242,7 @@ const styles = StyleSheet.create({
     paddingBottom:15,
     // borderBottomWidth:1,
     // borderBottomColor:'#1a1b1c'
+    alignItems:'center'
   },
   scoreTxt:{
     color:Theme.primaryColor

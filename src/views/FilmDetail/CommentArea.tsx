@@ -258,12 +258,14 @@ const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any) => {
   
 
   return <Viw style={styles.commentContainer}>
-    <CustomListRow 
-    accessory="none" 
-    bottomSeparator="full" //full,indent,none
-    title={'评论'}
-    detail={renderEditCommentBtn()}
-    />
+    {
+      commentlist && commentlist.length?<CustomListRow 
+      accessory="none" 
+      bottomSeparator="full" //full,indent,none
+      title={'评论'}
+      detail={renderEditCommentBtn()}
+      />:null
+    }
     {commentlist.map((item:any, index:number) => {
       let actionsOptionComment = ["举报"];
       if (app.userInfo && app.userInfo.user_id == item.user_id) {

@@ -176,6 +176,8 @@ type TypeProps = {
             ...styles.contentWrapper
           }}>
             <Input 
+            // keyboardShouldPersistTaps="always"
+            blurOnSubmit={true}
             placeholder={`回复 ${selectReplyItem?selectReplyItem.reply_person_nickname:''}：`} 
             style={{
               backgroundColor:colorScheme=='dark'?'#fff':'#fff',

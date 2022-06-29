@@ -133,7 +133,7 @@ const CommentList = ({app,navigation,route}:any) => {
           style={{borderRadius:20,backgroundColor:'#00b578'}} 
           titleStyle={{color:'#fff'}} 
           title="编辑我的评论" 
-          size="sm"
+          size="md"
           onPress={()=>{
             let commentData:any = {};
             for (let item of commentlist) {
