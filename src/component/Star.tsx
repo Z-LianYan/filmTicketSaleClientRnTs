@@ -60,7 +60,8 @@ type TypeProps = {
   // allowHalf?:boolean,
   readOnly?:boolean,
   style?: object,
-  marginRight?:number
+  marginRight?:number,
+  onChange?:(val:number)=> void
 }
 const Star = ({
   size = 13,
@@ -69,7 +70,8 @@ const Star = ({
   marginRight = 3,
   // allowHalf = false,
   readOnly = false,
-  style
+  style,
+  onChange
 }:TypeProps) => {
   const colorScheme = useColorScheme();
   useEffect(()=>{
@@ -79,20 +81,42 @@ const Star = ({
     let dom = []
     for(let i=0;i<maxValue;i++){
       let isHalf = i<value && value<(i+1)
-      dom.push(<Ionicons 
-      style={{marginRight:marginRight}}
-      key={i+'star'}
-      name={isHalf?'md-star-half-sharp':(i+1)<=value?'md-star':'md-star-outline'} 
-      size={size} 
-      color={((i+1)<=value || isHalf)?Theme.secondaryColor:'#ccc'}/>)
+      dom.push(<View 
+        key={i+'star'} 
+        style={{
+          ...styles.starItem,
+          marginRight:marginRight,
+          height:size,
+          width:size
+        }}>
+        <Ionicons
+        name={isHalf?'star-half-sharp':(i+1)<=value?'star-sharp':'md-star-outline'} 
+        size={isHalf?size:(i+1)<=value?size:size-3} 
+        color={((i+1)<=value || isHalf)?Theme.primaryColor:Theme.primaryColor}
+        style={{marginTop:isHalf?0:(i+1)<=value?0:1.5,marginLeft:isHalf?0:(i+1)<=value?0:-1.55}}/>
+        <TouchableOpacity 
+        style={styles.leftWrapper} 
+        activeOpacity={0.9}
+        onPress={()=>{
+          let len = i+1
+          onChange && onChange(((len - 0.5)=== value)?(value-0.5):(len - 0.5))
+        }}></TouchableOpacity>
+        <TouchableOpacity 
+        style={styles.rightWrapper} 
+        activeOpacity={0.9}
+        onPress={()=>{
+          let len = i+1
+          onChange && onChange((len == value)?(value-0.5):len)
+        }}></TouchableOpacity>
+      </View>)
     }
     return dom;
-  },[])
+  },[value])
 
   return <View style={{ 
     // height:size,
     // width:'100%',
-    flex:1,
+    // flex:1,
     backgroundColor:'transparent',
     flexDirection:'row',
     ...style
@@ -102,6 +126,32 @@ const Star = ({
 };
 
 const styles = StyleSheet.create({
+  starItem:{
+    position:'relative',
+    backgroundColor:'transparent',
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  leftWrapper:{
+    position:'absolute',
+    left:0,
+    width:'50%',
+    height:'100%',
+    backgroundColor:'transparent',
+    zIndex:1,
+    justifyContent:'center',
+    opacity:0.5
+  },
+  rightWrapper:{
+    position:'absolute',
+    right:0,
+    width:'50%',
+    height:'100%',
+    backgroundColor:'transparent',
+    zIndex:1,
+    justifyContent:'center',
+    opacity:0.5
+  },
 });
 
 export default Star;

@@ -91,7 +91,8 @@ const CommentPage = ({app,navigation,route}:any) => {
   },[]);
 
   const getDefault = useCallback(async()=>{
-    if (route.params && !route.params.film_id) return;
+    // console.log('result.commentInfo.length-----',route.param && route.params.film_id)
+    // if (route.params && !route.params.film_id) return;
     try {
       let result:any = await get_comment_detail({
         film_id: route.params.film_id,
@@ -100,8 +101,7 @@ const CommentPage = ({app,navigation,route}:any) => {
       
       setFilmInfo(result.filmInfo);
       setProductionNum((route.params && route.params.comment_id)?result.count:(result.count + 1))
-    
-      setNavigation(result.filmInfo)
+      setNavigation(result.filmInfo,true)
       if (route.params && route.params.comment_id) {
         let commentInfo = result.commentInfo;
         formData.score = commentInfo.score;
@@ -109,6 +109,8 @@ const CommentPage = ({app,navigation,route}:any) => {
         setFormData({
           ...formData
         });
+
+        setNavigation(result.filmInfo,commentInfo.comment_content.length>=6?false:true)
       }
     } catch (err:any) {
       if (err.error == 401) {
@@ -120,7 +122,7 @@ const CommentPage = ({app,navigation,route}:any) => {
     }
   },[])
 
-  const setNavigation = useCallback((filmInfo)=>{
+  const setNavigation = useCallback((filmInfo,disabled)=>{
     navigation.setOptions({
       title: '',
       headerLeft:'',
@@ -134,6 +136,7 @@ const CommentPage = ({app,navigation,route}:any) => {
         headerHeight={headerHeight}
         rightView={
           <Button 
+          disabled={disabled}
           style={{borderRadius:20,backgroundColor:'#00b578'}} 
           titleStyle={{color:'#fff'}} 
           title="发布" 
@@ -144,7 +147,7 @@ const CommentPage = ({app,navigation,route}:any) => {
         }/>
       )
     });
-  },[formData])
+  },[formData,filmInfo])
  
   function onGotoCommentCompletePage(comment_id:any) {
     setTimeout(() => {
@@ -180,8 +183,22 @@ const CommentPage = ({app,navigation,route}:any) => {
     <View style={styles.contentWrapper}>
       <Text style={styles.headTxt}>您总共参与讨论了<Text style={styles.headTxtNum}>{productionNum}</Text>部作品</Text>
       <View style={styles.starBox}>
-        <Text>评分</Text>
-        <Star style={{marginLeft:5}} marginRight={10} size={20} value={2}/>
+        <View style={styles.star}>
+          <Text style={{marginTop:4}}>评分</Text>
+          <Star 
+          style={{marginLeft:5}} 
+          marginRight={8} 
+          size={22}
+          value={formData.score / 2}
+          onChange={(val:number) => {
+            formData.score = val * 2;
+            setFormData({
+              ...formData
+            });
+            setNavigation(filmInfo,formData.comment_content.length>=6?false:true)
+          }}/>
+        </View>
+        
         <Text>
         {formData.score ? (
                   <Text style={styles.scoreTxt}>{formData.score}分</Text>
@@ -193,12 +210,9 @@ const CommentPage = ({app,navigation,route}:any) => {
       <Input 
       placeholder={`大家都在问：剧情怎么样，画面好吗，演技如何？`} 
       style={{
-        backgroundColor:colorScheme=='dark'?'#000':'#fff',
-        // height:50,
-        // borderWidth:0,
+        backgroundColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4',
         color:colorScheme=='dark'?'#fff':'#000',
-        // flex:1,
-        height:200,
+        height:300,
         borderWidth:0
       }}
       editable={true}//是否可编辑
@@ -207,19 +221,21 @@ const CommentPage = ({app,navigation,route}:any) => {
       multiline={true}
       value={formData.comment_content}
       onChangeText={(text:any) => {
+        if(text.length>150) return;
         formData.comment_content = text;
         setFormData({
           ...formData,
           comment_content:text
         });
-        setNavigation(filmInfo)
+        setNavigation(filmInfo,formData.comment_content.length>=6?false:true)
       }}
       />
-    
+      <View style={{alignItems:'flex-end'}}>
+        <Text>{formData.comment_content.length}/150</Text>
+      </View>
     </View>
-    
    
-  </View>;
+  </View>
 };
 
 const styles = StyleSheet.create({
@@ -228,7 +244,7 @@ const styles = StyleSheet.create({
   },
   contentWrapper:{
     paddingHorizontal:25,
-    marginTop:30
+    marginTop:30,
   },
   headTxt:{
 
@@ -240,8 +256,11 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     paddingTop:20,
     paddingBottom:15,
-    // borderBottomWidth:1,
-    // borderBottomColor:'#1a1b1c'
+    alignItems:'center'
+  },
+  star:{
+    flex:1,
+    flexDirection:'row',
     alignItems:'center'
   },
   scoreTxt:{

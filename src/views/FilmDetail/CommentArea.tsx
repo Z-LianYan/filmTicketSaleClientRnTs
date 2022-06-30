@@ -1,4 +1,4 @@
-import React, { useState,useEffect,useCallback,useRef } from 'react';
+import React, { useState,useEffect,useCallback,useRef,useImperativeHandle,forwardRef } from 'react';
 import { useNavigation } from '@react-navigation/core';
 import { observer, inject } from 'mobx-react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -63,7 +63,7 @@ var ScreenObj = Dimensions.get('window');
 
 
 
-const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any) => {
+const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any,ref:any) => {
   let navigation:any = useNavigation();
   const colorScheme = useColorScheme();
   const [commentlist,setCommentlist] = useState<any>([]);
@@ -74,6 +74,13 @@ const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any) => {
     getcommentlist()
     return ()=>{};
   },[]);
+
+  // 把父组件需要调用的方法暴露出来
+  useImperativeHandle(ref, () => ({
+    refreshCommentlist:()=>{
+      getcommentlist()
+    }
+  }));
 
   async function getcommentlist() {
     let result:any = await get_comment_list({
@@ -594,4 +601,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject("app")(observer(CommentArea));
+export default inject("app")(observer(forwardRef(CommentArea)));

@@ -74,26 +74,175 @@ const CommentPage = ({app,navigation,route}:any) => {
     
   const colorScheme = useColorScheme();
   const headerHeight = useHeaderHeight();
-  
+  const [filmInfo, setFilmInfo] = React.useState<any>(null);
+  const [commentInfo, setCommentInfo] = React.useState<any>(null);
+  const [productionNum, setProductionNum] = React.useState(0);
   
   useEffect(()=>{
+    getData()
   },[]);
 
-
+  const getData = useCallback(async ()=>{
+    let result:any = await get_comment_detail({
+      film_id: route.params && route.params.film_id,
+      comment_id: route.params && route.params.comment_id,
+    });
+    console.log('result--评论详情',result);
+    setFilmInfo(result.filmInfo);
+    setCommentInfo(result.commentInfo);
+    setProductionNum(result.count);
+  },[])
   
 
-  
+  return <Viw style={styles.container}>
+    <ScrollView
+    stickyHeaderIndices={[]}>
 
-  return <View style={styles.container}>
-    
-   <Txt>23456</Txt>
-  </View>;
+      
+      {/* <Ionicons 
+      name={'md-people-circle-outline'}
+      size={20} 
+      color={colorScheme=='dark'?'#fff':'#000'}/> */}
+
+
+      <Viw style={styles.contentContainer}>
+        <Viw style={{
+          ...styles.contentWrapper,
+          backgroundColor: colorScheme=='dark'?'#1a1b1c':'#fff',
+        }}>
+          <Viw  style={styles.userInfo}>
+            {
+              commentInfo && commentInfo.avatar ? (
+                <Image 
+                style={styles.avatar}
+                resizeMode='cover' 
+                source={{uri: commentInfo.avatar }} />
+              ) : (<Ionicons 
+                name={'md-people-circle-outline'} 
+                size={20} 
+                color={colorScheme=='dark'?'#fff':'#000'}/>
+              )
+            }
+            <Viw  style={styles.rightWrapper}>
+              {commentInfo && commentInfo.nickname ? (
+                <Text style={styles.nickname}>
+                  {commentInfo.nickname} <Text  style={styles.ping}>评</Text>
+                </Text>
+              ) : null}
+              {productionNum ? (
+                <Text style={styles.num}>在这里记录了共 {productionNum} 部作品</Text>
+              ) : null}
+            </Viw>
+          </Viw>
+          <Viw style={styles.scoreWrapper}>
+            {filmInfo && filmInfo.film_name ? (
+              <Text  style={{
+                ...styles.filmName,
+                backgroundColor: colorScheme=='dark'?'#1a1b1c':'#fff'
+              }}>《{filmInfo.film_name}》</Text>
+            ) : null}
+            {commentInfo && commentInfo.score ? (
+              <Star 
+              style={{marginLeft:5,marginVertical:20}} 
+              marginRight={8} 
+              size={25}
+              value={commentInfo.score / 2}/>
+            ) : null}
+            {commentInfo && commentInfo.score ? (
+              <Text style={styles.score}>
+                {commentInfo.score}分 {app.rateLevelTex[commentInfo.score]}
+              </Text>
+            ) : null}
+          </Viw>
+          <Text style={styles.commentContent}>
+            {commentInfo && commentInfo.comment_content}
+          </Text>
+          {
+            filmInfo && 
+            <Viw style={styles.posterImgWrapper}>
+              <Image 
+              style={styles.posterImg}
+              resizeMode='contain' 
+              source={{uri: filmInfo.poster_img }} />
+            </Viw>
+          }
+        </Viw>
+      </Viw>
+
+
+    </ScrollView>
+  </Viw>;
 };
 
 const styles = StyleSheet.create({
   container:{
     flex:1
   },
+  contentContainer:{
+    marginTop: 30,
+    paddingBottom: 10,
+    paddingTop:15
+  },
+  contentWrapper:{
+    borderRadius: 10,
+    paddingBottom: 10,
+    marginHorizontal:20
+  },
+  userInfo:{
+    height: 100,
+    flexDirection:'row',
+    alignItems: 'center',
+    paddingLeft: 30,
+  },
+  avatar:{
+    width: 50,
+    height: 50,
+    borderRadius: 25
+  },
+  rightWrapper:{
+    marginLeft: 20
+  },
+  nickname:{
+
+  },
+  ping:{
+    color: '#999'
+  },
+  num:{
+    color: '#999'
+  },
+  scoreWrapper:{
+    position: 'relative',
+    height: 100,
+    borderTopWidth:1,
+    // borderStyle:'dotted',
+    borderTopColor:'#ccc',
+    rderBottomWidth:1,
+    borderBottomColor:'#ccc',
+    alignItems: 'center',
+  },
+  filmName:{
+    position: 'absolute',
+    top: -10,
+  },
+  score:{
+    color:Theme.primaryColor,
+    fontWeight:'bold'
+  },
+  commentContent:{
+    paddingVertical:15,
+    paddingHorizontal:10,
+    
+  },
+  posterImgWrapper:{
+    paddingVertical:15,
+    paddingHorizontal:10,
+  },
+  posterImg:{
+    width:'100%',
+    height:300,
+    
+  }
   
   
 });

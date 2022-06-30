@@ -125,7 +125,7 @@ const routes=[
         name:"CommentCompletePage",
         options: {
             headerShown:true,
-            title:'',
+            title:'评论成功',
             // headerTransparent:true
         } 
     }

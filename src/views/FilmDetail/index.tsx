@@ -57,6 +57,7 @@ import ImageViewer from '../../component/ImageViewer';
 
 
 import { get_film_detail, add_cancel_want_see } from "../../api/film";
+import { Right } from '../../component/teaset/react-native-legacy-components/src/NavigatorBreadcrumbNavigationBarStyles.android';
 var ScreenObj = Dimensions.get('window');
 
 
@@ -69,12 +70,12 @@ const FilmDetail = ({app,navigation,route}:any) => {
   // const [headerTransparent, setHeaderTransparent] = React.useState(true);
   let [detail,setDetail] = useState<any>(null);
   let [isSkeleton,setIsSkeleton] = useState(true);
+  let [isInitPage,setInitPage] = useState(true);
   let [headerBackgroundColor,setHeaderBackgroundColor] = useState<any>('transparent');
   let [title,setTitle] = useState<any>('');
   let [openAbstract,setOpenAbstract] = useState<boolean>(false);
   // let [visibleModal,setVisibleModal] = useState<boolean>(true);
-  const refImageViewer:{current:any} = useRef();
-
+  const refCommentList:{current:any} = useRef();
   
   
   useEffect(()=>{
@@ -105,7 +106,13 @@ const FilmDetail = ({app,navigation,route}:any) => {
       city_id: locationInfo && locationInfo.city_id,
     });
     setDetail(result);
-    setIsSkeleton(false);
+    
+    setRefreshing(false);
+    
+    if(isInitPage){
+      setIsSkeleton(false);
+      setInitPage(false)
+    }
     // const color_result = await ImageColors.getColors(result.poster_img, {
     //   fallback: '#228B22',
     //   cache: true,
@@ -127,7 +134,10 @@ const FilmDetail = ({app,navigation,route}:any) => {
       refreshing={refreshing} 
       title="下拉刷新"//ios
       onRefresh={()=>{
-        console.log('onRefresh')
+        console.log('onRefresh');
+        setRefreshing(true);
+        getFilmDetail();
+        refCommentList.current.refreshCommentlist()
       }} />
     }
     onScroll={(event)=>{
@@ -171,6 +181,7 @@ const FilmDetail = ({app,navigation,route}:any) => {
       userInfo={app.userInfo} 
       route={route} 
       film_detail={detail}
+      ref={refCommentList}
       getFilmDetail={getFilmDetail}/>
 
       <View style={{height:20}}></View>
@@ -187,6 +198,13 @@ const FilmDetail = ({app,navigation,route}:any) => {
         // onEditUserInfo();
       }}
     />
+
+    {
+      isSkeleton && <View style={{
+        ...styles.skeletonContainer,
+        backgroundColor:colorScheme=='dark'?'#000':'#fff'
+      }}></View>
+    }
   </View>;
 };
 
@@ -208,6 +226,14 @@ const styles = StyleSheet.create({
   abstractBotBtn:{
     flexDirection:'row',
     justifyContent:'center'
+  },
+
+  skeletonContainer:{
+    position:'absolute',
+    left:0,
+    right:0,
+    bottom:0,
+    top:0
   }
 });
 

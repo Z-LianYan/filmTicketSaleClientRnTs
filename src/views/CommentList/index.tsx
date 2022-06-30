@@ -64,6 +64,7 @@ import dayjs from "dayjs";
 import _lodash from "lodash";
 
 import BottomLoading from '../../component/BottomLoading';
+import ReplyCommentModal from '../../component/ReplyCommentModal';
 
 
 var ScreenWidth = Dimensions.get('window').width;
@@ -616,6 +617,14 @@ const CommentList = ({app,navigation,route}:any) => {
       hasContent={commentlist.length?true:false}/>
       <View style={{height:50}}></View>
     </ScrollView>
+
+    <ReplyCommentModal 
+    app={app} 
+    ref={replyCommentModalRef} 
+    commentlist={commentlist}
+    replySuccess={(commentlist:any)=>{
+      setCommentlist([...commentlist])
+    }}/>
 
     <CustomAlert ref={customAlertRef}/>
   </View>;

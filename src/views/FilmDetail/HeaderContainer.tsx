@@ -54,7 +54,7 @@ const HeaderContainer = ({detail,app,reSetDetail}:any) => {
   const colorScheme = useColorScheme();
   
   useEffect(()=>{
-    console.log('刷新了')
+    console.log('刷新了',detail.id)
     return ()=>{
 
     };
@@ -142,7 +142,8 @@ const HeaderContainer = ({detail,app,reSetDetail}:any) => {
             fontSize:12
           }}>评分</Txt>
           <Viw style={{
-            flexDirection:'row'
+            flexDirection:'row',
+            alignItems:'center'
           }}>
             <Txt style={{
               ...styles.whiteFont,
@@ -260,8 +261,8 @@ const HeaderContainer = ({detail,app,reSetDetail}:any) => {
             }
             navigation.navigate({
               name: "CommentPage",
-              state: {
-                film_id: detail.id,
+              params: {
+                film_id: detail.id
               },
             });
           }}>
