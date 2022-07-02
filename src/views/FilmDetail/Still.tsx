@@ -85,27 +85,31 @@ const StillCompnent = ({detail,app}:any) => {
     <ImageViewer ref={refImageViewer}/>
     <CustomListRow 
     accessory="indicator" 
-    bottomSeparator="none" 
+    bottomSeparator="full" //full,indent,none
     title={'剧照'}
     style={{marginBottom:10}}
     detail={<View>
-      <Text onPress={()=>{
+      {/* <Text onPress={()=>{
         console.log('12345')
-      }}>全部({detail.stage_photo ? detail.stage_photo.length : 0})</Text>
+      }}>全部({detail.stage_photo ? detail.stage_photo.length : 0})</Text> */}
     </View>} />
-    <ScrollView
-    horizontal={true}
-    style={{paddingHorizontal:5}}
-    showsHorizontalScrollIndicator={false}
-    stickyHeaderIndices={[]}>
-      {renderAction()}
-    </ScrollView>
+    <View style={{height:10}}></View>
+    <View style={{paddingHorizontal:5}}>
+      <ScrollView
+      horizontal={true}
+      style={{paddingHorizontal:5}}
+      showsHorizontalScrollIndicator={false}
+      stickyHeaderIndices={[]}>
+        {renderAction()}
+      </ScrollView>
+    </View>
+    
   </Viw>;
 };
 
 const styles = StyleSheet.create({
   actionsContainer:{
-    paddingHorizontal:5
+    // paddingHorizontal:5
   },
   actorItem:{
     width:150,

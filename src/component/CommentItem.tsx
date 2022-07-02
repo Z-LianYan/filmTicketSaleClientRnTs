@@ -53,6 +53,7 @@
    CINEMA_ACTIVE_ICON,
    MINE_ICON,
    MINE_ACTIVE_ICON,
+   DETAIL_AVATAR
  } from '../assets/image/index';
  
  import { get_film_hot } from '../api/film';
@@ -156,18 +157,11 @@
       }}
     >
       <View style={styles.leftWrapper}>
-        {avatar ? (
-          <Image 
-          resizeMode='cover' 
-          key={avatar}
-          style={styles.avatar} 
-          source={{uri: avatar }} />
-        ) : (
-          <Ionicons 
-          name={'md-people-circle-outline'}
-          size={20} 
-          color={colorScheme=='dark'?'#fff':'#000'}/>
-        )}
+        <Image 
+        resizeMode='cover' 
+        key={avatar}
+        style={styles.avatar} 
+        source={avatar?{uri: avatar }:DETAIL_AVATAR} />
       </View>
       <View 
       style={styles.rightWrapper}>

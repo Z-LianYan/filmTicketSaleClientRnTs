@@ -196,6 +196,15 @@ const FilmDetail = ({app,navigation,route}:any) => {
       disabled={submiting}
       onPress={() => {
         // onEditUserInfo();
+        console.log('CinemaPageStack',detail.id,detail.film_name);
+
+        navigation.navigate({
+          name: "CinemaPageStack",
+          params:{
+            film_id: detail.id,
+            film_name: detail.film_name
+          }
+        });
       }}
     />
 

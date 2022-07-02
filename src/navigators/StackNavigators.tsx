@@ -2,23 +2,25 @@ import React,{useEffect} from 'react';
 
 
 import {createStackNavigator,CardStyleInterpolators} from '@react-navigation/stack'
-// import { NavigationContainer } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/core';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getHeaderTitle } from '@react-navigation/elements';
 import {Image,useColorScheme,TouchableHighlight,TouchableOpacity} from 'react-native';
-
-// import CineamPage from '../views/Cineam/index';
-// import MinePage from '../views/Mine/index';
 
 const Stack = createStackNavigator();
 import {
     Text,
     View
   } from 'react-native';
-  import BottomTabNavigator from './BottomTabNavigator';
+import { 
+    Button,
+    Carousel,
+    NavigationBar,
+    Theme,
+} from '../component/teaset/index';
+
+import BottomTabNavigator from './BottomTabNavigator';
 import LoginPage from '../views/Login/index';
-import HomePage from '../views/Home/index';
 import SetPage from '../views/Set/index';
 import OrderPage from '../views/Order/index';
 import Recharge from '../views/Recharge/index';
@@ -27,29 +29,25 @@ import FilmDetail from '../views/FilmDetail/index';
 import CommentList from '../views/CommentList/index';
 import CommentPage from '../views/Comment/index';
 import CommentCompletePage from '../views/CommentComplete/index';
-import { 
-Button,
-Carousel,
-NavigationBar,
-Theme,
-} from '../component/teaset/index';
+import CinemaPageStack from '../views/Cinema/index';
+import CitySearchPage from '../views/CitySearch/index';
+
 
 
 const routes=[
-    // { 
-    //     component: HomePage, 
-    //     name: "HomePage", 
-    //     options: {
-    //         title:'首页',
-            
-    //     } 
-        
-    // },
     { 
         component: BottomTabNavigator, 
         name: "AppTabBar", 
         options: {
             headerShown:false
+        } 
+    },
+    { 
+        component: CinemaPageStack, 
+        name:"CinemaPageStack",
+        options: {
+            headerShown:true,
+            title:''
         } 
     },
     
@@ -126,6 +124,15 @@ const routes=[
         options: {
             headerShown:true,
             title:'评论成功',
+            // headerTransparent:true
+        } 
+    },
+    { 
+        component: CitySearchPage, 
+        name:"CitySearchPage",
+        options: {
+            headerShown:true,
+            title:'',
             // headerTransparent:true
         } 
     }

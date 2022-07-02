@@ -93,21 +93,25 @@ const ActionsCompnent = ({detail,app}:any) => {
     <ImageViewer ref={refImageViewer}/>
     <CustomListRow 
     accessory="none" 
-    bottomSeparator="none" 
+    bottomSeparator="full" //full,indent,none
     title={'演职人员'}/>
-    <ScrollView
-    horizontal={true}
-    style={{paddingHorizontal:5}}
-    showsHorizontalScrollIndicator={false}
-    stickyHeaderIndices={[]}>
-      {renderAction()}
-    </ScrollView>
+    <View style={{height:10}}></View>
+    <View style={{paddingHorizontal:5}}>
+      <ScrollView
+      horizontal={true}
+      style={{paddingHorizontal:5}}
+      showsHorizontalScrollIndicator={false}
+      stickyHeaderIndices={[]}>
+        {renderAction()}
+      </ScrollView>
+    </View>
+    
   </Viw>;
 };
 
 const styles = StyleSheet.create({
   actionsContainer:{
-    paddingHorizontal:5
+    // paddingHorizontal:5
   },
   actorItem:{
     width:80,

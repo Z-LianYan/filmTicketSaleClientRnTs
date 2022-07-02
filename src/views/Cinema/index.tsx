@@ -1,4 +1,4 @@
-import React,{useState,useEffect,useRef} from 'react';
+import React,{useState,useEffect,useRef,useCallback} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -7,7 +7,9 @@ import {
   useColorScheme,
   FlatList,
   RefreshControl,
-  TouchableHighlight
+  TouchableHighlight,
+  View as Viw,
+  Text as Txt
 } from 'react-native';
 import { observer, inject } from 'mobx-react'
 
@@ -29,12 +31,13 @@ import CinemaListItem from './CinemaListItem';
 
 import { get_cinema_list } from '../../api/cinema';
 import { get_city_district_list } from '../../api/citys';
+import { get_film_detail } from "../../api/film";
 import DropdownMenu from '../../component/DropdownMenu';
 
-const Cineam = (props:any) => {
+const Cinema = ({app,navigation,route}:any) => {
   const refDropdownMenu:{current:any} = useRef()
   const colorScheme = useColorScheme();
-  let navigation = useNavigation();
+  // let navigation = useNavigation();
   const [refreshing, setRefreshing] = React.useState(false);
   let [list,setList] = useState([])
   let [isLoading,setLoading] = useState(false);
@@ -42,22 +45,66 @@ const Cineam = (props:any) => {
   let [fetchOptions,setFetchOptions] = useState({
     page: 1,
     limit: 15,
-    city_id: props.app.locationInfo.city_id,
+    city_id: app.locationInfo.city_id,
     district_id: "",
     date: "",
     film_id: "",
     lat: "",
     lng: "",
     type: "",
-    user_id: props.app.userInfo?props.app.userInfo.user_id:''
+    user_id: app.userInfo?app.userInfo.user_id:''
   })
   let [city_district_list, set_city_district_list] = useState([]);
+
+  let [film_name,setFilmName] = useState('');
+
   
 
   useEffect(()=>{
     getList(true);
     getDistrictList();
+    if(route.params && route.params.film_id){
+      getFilmDetail()
+    }else{
+      setNavigation()
+    }
   },[])
+
+  
+  const setNavigation = useCallback((film_name?:any)=>{
+    navigation.setOptions({
+      headerTitle:film_name,
+      // headerLeft:'',
+      headerTransparent: false,
+      headerStyle: { 
+        backgroundColor: colorScheme=='dark'?'#000':Theme.primaryColor
+      },
+      headerRight:()=>{
+        return <Ionicons 
+        name={'search'}
+        style={{paddingRight:10}}
+        size={25} 
+        color={'#ccc'}
+        onPress={()=>{
+          navigation.navigate({
+            name: "CitySearchPage",
+          });
+        }}/>
+      },
+      
+    });
+  },[film_name]);
+
+  const getFilmDetail = useCallback(async ()=>{
+    console.log('有参数吗？',route)
+    if((route.params && !route.params.film_id) || !route.params) return;
+    let film_detail_result = await get_film_detail({
+      film_id: route.params && route.params.film_id,
+    });
+    console.log('有参数吗？film_detail_result',film_detail_result.film_name)
+    setFilmName(film_detail_result.film_name);
+    setNavigation(film_detail_result.film_name);
+  },[]);
 
   const onLoadMore = ()=>{
     if(isLoading || isFinallyPage) return;
@@ -66,7 +113,6 @@ const Cineam = (props:any) => {
     getList(true)
   }
   const onRefresh = ()=>{
-    // setFinallyPage(false);
     fetchOptions.page = 1;
     setFetchOptions(fetchOptions);
     getList(false)
@@ -74,9 +120,7 @@ const Cineam = (props:any) => {
 
   async function getList(isLoading:boolean){
     isLoading && setLoading(true);
-    // console.log('fetchOptions---',fetchOptions)
     let result:any = await get_cinema_list(fetchOptions,'');
-    // console.log('影院------》〉》〉',result);
     let _list = [];
     if(fetchOptions.page==1){
       _list = result.rows;
@@ -103,7 +147,7 @@ const Cineam = (props:any) => {
     // }
     let result = await get_city_district_list({
       // city_id:_cookiesInfo && _cookiesInfo.city_id ? _cookiesInfo.city_id : city_id,
-      city_id:props.app.locationInfo.city_id,
+      city_id:app.locationInfo.city_id,
     });
     result.rows.unshift({
       first_letter: null,
@@ -119,44 +163,22 @@ const Cineam = (props:any) => {
 
 
   return (<View style={styles.container}>
-    {/* <NavigationBar 
-      style={{
-        zIndex:1
-      }}
-      position=''
-      title='影院'
-      leftView={
-        <TouchableHighlight
-          onPress={()=>{
-            // navigation.navigate({
-            //   path: "/citys",
-            // });
-          }}>
-            <View 
-            style={{flexDirection:'row',alignItems:'center',backgroundColor:'transparent'}}>
-              <Text>{props.app.locationInfo.city_name}</Text>
-              <Ionicons 
-              name={'chevron-down-outline'} 
-              size={20} 
-              style={{marginTop:-2}}
-              color={colorScheme=='dark'?'#fff':'#000'} />
-            </View>
-        </TouchableHighlight>
-      }
-      rightView={
-        <TouchableHighlight
-          onPress={()=>{
-            // navigation.navigate({
-            //   path: "/cinema/search",
-            // });
-            refDropdownMenu.current.onHiddenMenu()
-          }}>
-          <Ionicons 
-          name={'search-outline'} 
-          size={20} 
-          color={colorScheme === 'dark' ? '#fff' : '#000'}/>
-        </TouchableHighlight>
-      }/> */}
+    {
+      (route.params && route.params.film_id) && <View style={{paddingHorizontal:5}}>
+        <ScrollView
+        horizontal={true}
+        style={{}}
+        showsHorizontalScrollIndicator={false}
+        stickyHeaderIndices={[]}>
+          <Txt>2022-07-01</Txt>
+          <Txt>2022-07-01</Txt>
+          <Txt>2022-07-01</Txt>
+          <Txt>2022-06-01</Txt>
+          <Txt>2022-06-01</Txt>
+          <Txt>2022-09-01</Txt>
+        </ScrollView>
+      </View>
+    }
     <DropdownMenu 
     ref={refDropdownMenu}
     list={city_district_list}
@@ -317,4 +339,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject("app")(observer(Cineam));
+export default inject("app")(observer(Cinema));

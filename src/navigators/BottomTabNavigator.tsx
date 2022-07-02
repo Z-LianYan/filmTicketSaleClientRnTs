@@ -8,8 +8,6 @@ import {Text, View, Image,useColorScheme,TouchableHighlight,TouchableOpacity} fr
 import { NavigationContainer } from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import MinePage from '../views/Mine/index';
-import LoginPage from '../views/Login/index';
 import { 
   FIlM_ICON,
   FIlM_ACTIVE_ICON, 
@@ -25,20 +23,50 @@ import {
   Theme
 } from '../component/teaset/index';
 
-import router from './router';
 import MyTabBar from '../component/TabBar';
+import HomePage from '../views/Home/index';
+import CinemaPage from '../views/Cinema/index';
+import MinePage from '../views/Mine/index';
+const routes=[
+  {
+    component: HomePage, 
+    name: "HomePage", 
+    options: {
+      // tabBarBadge:1,
+      title:'电影',
+      headerShown:false,//是否隐藏头部导航
+    } 
+  },
+  { 
+    component: CinemaPage, 
+    name:"CinemaPage",
+    options:{
+      // tabBarBadge:1,
+      title:'影院',
+    }
+  },
+  { 
+    component: MinePage, 
+    name: "MinePage", 
+    options: {
+      // tabBarBadge:3,
+      title:'我的',
+      headerShown:false,//是否隐藏头部导航
+    } 
+  }
+]
+
 
 const Tab = createBottomTabNavigator();
 
 function tabBarScreen(props:any){
-  return router.map((item)=>{
+  return routes.map((item)=>{
     return <Tab.Screen 
     key={item.name} 
     name={item.name}
     component={item.component} 
     options={{
       ...item.options,
-      // tabBarBadge:item.name=='HomePage'?props.home.count:props.app.tabBarBadge
     }}/>
   })
 }
@@ -59,7 +87,7 @@ function BottomTabNavigator(props:any) {
       //     iconName = focused
       //       ? FIlM_ACTIVE_ICON
       //       : FIlM_ICON;
-      //   } else if (route.name === 'CineamPage') {
+      //   } else if (route.name === 'CinemaPage') {
       //     iconName = focused ? CINEMA_ACTIVE_ICON : CINEMA_ICON;
       //   }else if (route.name === 'MinePage') {
       //     iconName = focused ? MINE_ACTIVE_ICON : MINE_ICON;

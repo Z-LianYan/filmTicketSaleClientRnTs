@@ -57,13 +57,7 @@ import { get_film_hot } from '../api/film';
 const TabBar = ({
    state, descriptors, navigation,app
 }:any) => {
-    
   const colorScheme = useColorScheme();
-  // let navigation:any = useNavigation();
-  // let currentRoute = navigation.getCurrentRoute();
-  // const [groupValues, setGroupValues] = useState(['0']);
-  // const whiteList = ['HomePage','CineamPage','MinePage'];
-  // const [currentRoute,setCurrentRoute] = useState('')
   useEffect(()=>{
   })
 
@@ -91,7 +85,7 @@ const TabBar = ({
       iconName = isFocused
         ? FIlM_ACTIVE_ICON
         : FIlM_ICON;
-    } else if (route.name === 'CineamPage') {
+    } else if (route.name === 'CinemaPage') {
       iconName = isFocused ? CINEMA_ACTIVE_ICON : CINEMA_ICON;
     }else if (route.name === 'MinePage') {
       iconName = isFocused ? MINE_ACTIVE_ICON : MINE_ICON;

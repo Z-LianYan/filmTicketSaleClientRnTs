@@ -78,9 +78,9 @@ const DropdownMenu = ({
         <View style={styles.dropdownMenuItem}>
           <Text style={styles.title} onPress={()=>{
             setShowMenu(!showMenu);
-            if(!showMenu && showMenu2){
+            // if(!showMenu && showMenu2){
               setShowMenu2(false);
-            }
+            // }
             
           }}>
             {title}
@@ -95,9 +95,9 @@ const DropdownMenu = ({
           app.userInfo && <View style={styles.dropdownMenuItem}>
             <Text style={styles.title} onPress={()=>{
               setShowMenu2(!showMenu2);
-              if(showMenu && !showMenu2){
+              // if(showMenu && !showMenu2){
                 setShowMenu(false);
-              }
+              // }
             }}>
               {title2}
               <Ionicons
