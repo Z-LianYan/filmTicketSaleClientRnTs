@@ -92,7 +92,7 @@ const HeaderBar = ({
       {
         <Ionicons 
         name={'chevron-back'} 
-        size={25} 
+        size={30} 
         color={colorScheme === 'dark' ? '#fff' : '#fff'} 
         onPress={()=>{
           onBack ? onBack(): navigation.goBack();

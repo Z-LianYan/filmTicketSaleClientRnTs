@@ -264,7 +264,9 @@ const CommentPage = ({app,navigation,route}:any) => {
     <View style={{alignItems:'center',marginTop:20,paddingHorizontal:25}}>
       <Button 
       title="发布" 
-      type="primary" style={{width:'100%'}}
+      type="primary" 
+      style={{width:'100%'}}
+      size='lg'
       onPress={()=>{
         addComment()
       }}></Button>

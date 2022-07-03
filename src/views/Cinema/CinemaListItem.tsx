@@ -39,7 +39,9 @@ const CinemaListItem = ({
   separator = true,
 }:propsType)=>{ 
   const colorScheme = useColorScheme();
-  return <TouchableHighlight>
+  return <TouchableHighlight onPress={()=>{
+    onPress && onPress();
+  }}>
     <View>
       <View style={styles.cinemaItemWrapper}>
         <View style={styles.left_box}>

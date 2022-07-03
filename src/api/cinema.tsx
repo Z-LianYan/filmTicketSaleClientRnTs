@@ -11,7 +11,7 @@ export function get_cinema_list(params:{}, txt = '努力加载中...') {
           break;
         default:
           Toast.fail(res.message);
-          reject(res.data);
+          reject(res);
           break;
       }
     });

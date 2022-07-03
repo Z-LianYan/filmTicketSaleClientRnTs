@@ -29,10 +29,12 @@ import NavigationBar from '../../component/NavigationBar';
 import BottomLoading from '../../component/BottomLoading';
 import CinemaListItem from './CinemaListItem';
 
-import { get_cinema_list } from '../../api/cinema';
+import { get_cinema_list,get_film_in_schedule_dates } from '../../api/cinema';
 import { get_city_district_list } from '../../api/citys';
 import { get_film_detail } from "../../api/film";
 import DropdownMenu from '../../component/DropdownMenu';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import dayjs from 'dayjs';
 
 const Cinema = ({app,navigation,route}:any) => {
   const refDropdownMenu:{current:any} = useRef()
@@ -52,23 +54,41 @@ const Cinema = ({app,navigation,route}:any) => {
     lat: "",
     lng: "",
     type: "",
-    user_id: app.userInfo?app.userInfo.user_id:''
+    user_id: app.userInfo ? app.userInfo.user_id:''
   })
   let [city_district_list, set_city_district_list] = useState([]);
+  let [dateList, setDateList] = useState([]);
 
-  let [film_name,setFilmName] = useState('');
+  // let [film_name,setFilmName] = useState('');
 
   
 
   useEffect(()=>{
-    getList(true);
+
     getDistrictList();
     if(route.params && route.params.film_id){
-      getFilmDetail()
+      getFilmInScheduleDates();
+      getFilmDetail();
     }else{
-      setNavigation()
+      setNavigation('影院');
+      getList(true);
     }
-  },[])
+  },[]);
+  async function getFilmInScheduleDates() {
+    let result:any = await get_film_in_schedule_dates({
+      city_id:app.locationInfo.city_id,
+      film_id: route.params && route.params.film_id,
+    });
+    if (!result || !result.rows.length) return navigation.goBack(); //无排片日期时返回
+    fetchOptions.date = result.rows[0];
+    fetchOptions.film_id = route.params && route.params.film_id;
+
+    setFetchOptions({
+      ...fetchOptions
+    })
+    setDateList(result.rows);
+    onRefresh();
+  }
 
   
   const setNavigation = useCallback((film_name?:any)=>{
@@ -87,22 +107,19 @@ const Cinema = ({app,navigation,route}:any) => {
         color={'#ccc'}
         onPress={()=>{
           navigation.navigate({
-            name: "CitySearchPage",
+            name: "CinemaSearch",
           });
         }}/>
       },
       
     });
-  },[film_name]);
+  },[]);
 
   const getFilmDetail = useCallback(async ()=>{
-    console.log('有参数吗？',route)
     if((route.params && !route.params.film_id) || !route.params) return;
     let film_detail_result = await get_film_detail({
       film_id: route.params && route.params.film_id,
     });
-    console.log('有参数吗？film_detail_result',film_detail_result.film_name)
-    setFilmName(film_detail_result.film_name);
     setNavigation(film_detail_result.film_name);
   },[]);
 
@@ -120,7 +137,13 @@ const Cinema = ({app,navigation,route}:any) => {
 
   async function getList(isLoading:boolean){
     isLoading && setLoading(true);
-    let result:any = await get_cinema_list(fetchOptions,'');
+    let result:any = await get_cinema_list({
+      ...fetchOptions,
+      user_id:app.userInfo ? app.userInfo.user_id:'',
+      city_id: app.locationInfo.city_id,
+      lat: app.locationInfo.lat,
+      lng: app.locationInfo.lng
+    },'');
     let _list = [];
     if(fetchOptions.page==1){
       _list = result.rows;
@@ -139,14 +162,7 @@ const Cinema = ({app,navigation,route}:any) => {
   }
 
   async function getDistrictList() {
-    // let { city_id } = props.locationInfo;
-    // let _cookies = Cookies.get("locationInfo");
-    // let _cookiesInfo = null;
-    // if (_cookies) {
-    //   _cookiesInfo = JSON.parse(_cookies);
-    // }
     let result = await get_city_district_list({
-      // city_id:_cookiesInfo && _cookiesInfo.city_id ? _cookiesInfo.city_id : city_id,
       city_id:app.locationInfo.city_id,
     });
     result.rows.unshift({
@@ -161,21 +177,97 @@ const Cinema = ({app,navigation,route}:any) => {
   }
 
 
+  function handerDate(date:any) {
+    let today = dayjs().format("YYYY-MM-DD");
+    let tomorrow = dayjs().add(1, "day").format("YYYY-MM-DD");
+    let houtian = dayjs().add(2, "day").format("YYYY-MM-DD");
+    let cur_y = dayjs(date).format("YYYY");
+    let y = dayjs().format("YYYY");
+    switch (dayjs(date).format("YYYY-MM-DD")) {
+      case today:
+        return "今天" + dayjs(date).format("MM月DD日");
+      case tomorrow:
+        return "明天" + dayjs(date).format("MM月DD日");
+      case houtian:
+        return "后天" + dayjs(date).format("MM月DD日");
+      default:
+        return (
+          handleWeek(dayjs(date).day()) +
+          dayjs(date).format(cur_y == y ? "MM月DD日" : "YY年MM月DD日")
+        );
+    }
+  }
+  function handleWeek(day:any) {
+    switch (day) {
+      case 0:
+        return "周日";
+      case 1:
+        return "周一";
+      case 2:
+        return "周二";
+      case 3:
+        return "周三";
+      case 4:
+        return "周四";
+      case 5:
+        return "周五";
+      case 6:
+        return "周六";
+      default:
+        return "";
+    }
+  }
+
+
 
   return (<View style={styles.container}>
     {
-      (route.params && route.params.film_id) && <View style={{paddingHorizontal:5}}>
+      (route.params && route.params.film_id) && <View style={{
+        paddingHorizontal:5,
+        borderBottomColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4',
+        borderBottomWidth:1
+        }}>
         <ScrollView
         horizontal={true}
-        style={{}}
+        style={{
+          
+        }}
         showsHorizontalScrollIndicator={false}
         stickyHeaderIndices={[]}>
-          <Txt>2022-07-01</Txt>
-          <Txt>2022-07-01</Txt>
-          <Txt>2022-07-01</Txt>
-          <Txt>2022-06-01</Txt>
-          <Txt>2022-06-01</Txt>
-          <Txt>2022-09-01</Txt>
+          {
+            dateList.map((item,index)=><TouchableOpacity 
+            key={item+index+'1234'}  
+            style={{
+              alignItems:'center',
+              justifyContent:'center',
+              paddingHorizontal:10,
+              height:50,
+              position:'relative'
+            }}
+            onPress={()=>{
+              fetchOptions.date = item;
+              fetchOptions.page = 1;
+              setFetchOptions(fetchOptions);
+              getList(true);
+            }}>
+              <Txt 
+              style={{
+                color:item==fetchOptions.date?Theme.primaryColor:colorScheme=='dark'?'#fff':'#666',
+                textAlignVertical:'center',
+                fontWeight:'bold'
+              }}>{handerDate(item)}</Txt>
+              {
+                item==fetchOptions.date && <View style={{
+                  position:'absolute',
+                  bottom:0,
+                  width:'80%',
+                  height:2,
+                  backgroundColor:Theme.primaryColor
+                }}></View>
+              }
+            </TouchableOpacity>
+            )
+          }
         </ScrollView>
       </View>
     }
@@ -183,14 +275,12 @@ const Cinema = ({app,navigation,route}:any) => {
     ref={refDropdownMenu}
     list={city_district_list}
     onTypeChange={(type:string)=>{
-      console.log('12345678',type);
       fetchOptions.type = type;
       fetchOptions.page = 1;
       setFetchOptions(fetchOptions);
       getList(true)
     }}
     districtChange={(id:any)=>{
-      console.log('id----',id);
       fetchOptions.district_id = id;
       fetchOptions.page = 1;
       setFetchOptions(fetchOptions);
@@ -232,15 +322,15 @@ const Cinema = ({app,navigation,route}:any) => {
             label={item.address}
             distance={item.distance}
             onPress={() => {
-              // this.props.history.push({
-              //   pathname: `/cinema/detail`,
-              //   state: {
-              //     cinema_id: item.cinema_id,
-              //     film_id: params && params.film_id,
-              //     date: fetchOptions.date,
-              //   },
-              // });
-              console.log('onPress')
+
+              navigation.navigate({
+                name: 'CinemaDetailPage',
+                params: {
+                  cinema_id: item.cinema_id,
+                  film_id: app.params && app.params.film_id,
+                  date: fetchOptions.date,
+                },
+              });
             }}
           />
         })

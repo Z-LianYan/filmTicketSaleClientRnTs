@@ -30,7 +30,8 @@ import CommentList from '../views/CommentList/index';
 import CommentPage from '../views/Comment/index';
 import CommentCompletePage from '../views/CommentComplete/index';
 import CinemaPageStack from '../views/Cinema/index';
-import CitySearchPage from '../views/CitySearch/index';
+import CinemaSearch from '../views/CinemaSearch/index';
+import CinemaDetailPage from '../views/CinemaDetail/index';
 
 
 
@@ -128,8 +129,17 @@ const routes=[
         } 
     },
     { 
-        component: CitySearchPage, 
-        name:"CitySearchPage",
+        component: CinemaSearch, 
+        name:"CinemaSearch",
+        options: {
+            headerShown:true,
+            title:'',
+            // headerTransparent:true
+        } 
+    },
+    { 
+        component: CinemaDetailPage, 
+        name:"CinemaDetailPage",
         options: {
             headerShown:true,
             title:'',
