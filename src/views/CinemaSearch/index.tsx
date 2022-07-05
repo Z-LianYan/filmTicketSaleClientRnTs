@@ -81,11 +81,12 @@ const CinemaSearch = ({app,navigation,route}:any) => {
         editable={true}//是否可编辑
         keyboardAppearance={colorScheme}//'default', 'light', 'dark'
         size='lg'
-        multiline={true}
+        // multiline={true}
         value={searchValue}
         onSubmitEditing={(e:any)=>{
           // console.log('onSubmitEditing',e.nativeEvent.text)
           // onToRecharge()
+          onRefresh()
         }}
         onChangeText={(text:any) => {
           console.log('text',text);

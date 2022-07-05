@@ -169,7 +169,11 @@
           <View 
           style={styles.nicknameScore}>
             <View 
-            style={styles.nickname}
+            style={{
+              ...styles.nickname,
+              maxWidth: 115,
+              // flex:1
+            }}
             className="nickname">
               <View
                 style={{
