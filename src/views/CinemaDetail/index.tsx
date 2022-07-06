@@ -10,7 +10,9 @@ import {
   TouchableHighlight,
   View as Viw,
   Text as Txt,
-  Linking
+  Linking,
+  Image,
+  Dimensions
 } from 'react-native';
 import { observer, inject } from 'mobx-react'
 
@@ -44,7 +46,7 @@ import ServerDetial from './ServerDetial';
 
 
 
-
+var ScreenWidth = Dimensions.get('window').width;
 const CinemaDetailPage = ({app,navigation,route}:any) => {
   const colorScheme = useColorScheme();
 
@@ -68,12 +70,20 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
   
   
 
-  const setNavigatioin = useCallback((cinemaName)=>{
+  const setNavigatioin = useCallback((cinemaName?:string,headerTransparent = true,color='#fff')=>{
     navigation.setOptions({
       title: <Txt>{cinemaName}</Txt>,
-      // headerLeft:'',
+      headerLeft:()=>{
+        return <Ionicons 
+        name={'chevron-back'} 
+        size={30} 
+        color={colorScheme === 'dark' ? '#fff' : color} 
+        onPress={()=>{
+          navigation.goBack();
+        }}/>
+      },
       // headerTitle:<Text>123</Text>,
-      headerTransparent: false,
+      headerTransparent: headerTransparent,
       // headerStyle: { 
       //   backgroundColor: Theme.primaryColor,
       //   borderBottomWidth:1,
@@ -86,12 +96,12 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
   const getCinemaDetail = useCallback(async()=>{
     // let { history } = this.props;
     // let { location } = history;
-    console.log('route.params---',route.params);
+    // console.log('route.params---',route.params);
     let result:any = await get_cinema_detail({
       cinema_id: route.params && route.params.cinema_id,
       isHasFilmList: true,
     });
-    console.log('result===>',result);
+    // console.log('result===>',result);
     if (result && result.filmList && !result.filmList.length) return navigation.goBack(); //当前选择的影院无排片返回上一页
     if (route.params && route.params.film_id && route.params.date) {
       if (result.filmList[0].film_id == route.params.film_id) {
@@ -108,7 +118,8 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
 
     setActiveBgImg((result.filmList && result.filmList.length) ? result.filmList[0].poster_img:'');
 
-    setNavigatioin(result && result.name);
+    // setNavigatioin(result && result.name);
+    setNavigatioin('',true,'#000');
     setCinemaDetail(result);
     let film = result.filmList[0];
     if(film && film.show_date && film.show_date.length){
@@ -150,7 +161,22 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
         getCinemaDetail();
       }} />
     }
-    onMomentumScrollEnd={(event:any)=>{}}>
+    onMomentumScrollEnd={(event:any)=>{}}
+    onScroll={(event)=>{
+      const offSetY = event.nativeEvent.contentOffset.y; // 获取滑动的距离
+      const contentSizeHeight = event.nativeEvent.contentSize.height; // scrollView  contentSize 高度
+      const oriageScrollHeight = event.nativeEvent.layoutMeasurement.height; // scrollView高度
+      // console.log('onMomentumScrollEnd',offSetY,oriageScrollHeight,contentSizeHeight)
+      if (offSetY + oriageScrollHeight >= contentSizeHeight - 300) {
+        
+      }
+      if(offSetY>=100){
+        console.log('offSetY',offSetY);
+        setNavigatioin(cinemaDetail && cinemaDetail.name,false)
+      }else{
+        setNavigatioin('',true)
+      }
+    }}>
 
       <Text style={styles.cinemaDetailName}>
         {cinemaDetail && cinemaDetail.name}
@@ -212,6 +238,47 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
         }}/>
       </View>
 
+      <View style={{paddingHorizontal:0,backgroundColor:'#606266',paddingBottom:10,position:'relative',height:170}}>
+        <ScrollView
+        horizontal={true}
+        style={{paddingHorizontal:0,height:170}}
+        contentContainerStyle={{alignItems:'flex-end'}}
+        showsHorizontalScrollIndicator={false}
+        stickyHeaderIndices={[]}
+        onScroll={(event)=>{
+          console.log('onScroll',event.nativeEvent.contentOffset);
+        }}>
+          <Viw style={{width:ScreenWidth/2,height:170}}></Viw>
+          {
+            filmList && filmList.map((item:any,index:number)=>{
+              let halfScreenWidth = ScreenWidth/2;
+              item.minWidth = halfScreenWidth + ((90+10) * (index));
+              item.maxWidth = halfScreenWidth + ((90+10) * (index+1));
+              return <Image 
+              resizeMode='cover' 
+              key={index+'filmList'}
+              style={{
+                width:90,
+                height:index==2?150:130,
+                marginRight:((index+1)==filmList.length)?0:10,
+                borderWidth:index==2?1:0,
+                borderColor:index==2?'#fff':'transparent'
+              }}
+              source={{uri: item.poster_img }} />
+            })
+          }
+          <Viw style={{width:ScreenWidth/2,height:170}}></Viw>
+        </ScrollView>
+        <Viw style={{
+          position:'absolute',
+          left:ScreenWidth/2-10,
+          borderWidth:10,
+          borderColor:'transparent',
+          borderBottomColor:'#fff',
+          bottom:0
+        }}></Viw>
+      </View>
+
       {/* {
         list.map((item:any,index)=>{
           return <CinemaListItem
@@ -235,6 +302,8 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
         })
       } */}
 
+      <View style={{height:5000}}></View>
+
 
       <ServerDetial 
       app={app} 
@@ -250,7 +319,7 @@ const styles = StyleSheet.create({
   },
   cinemaDetailName:{
     textAlign:'center',
-    marginTop:10,
+    marginTop:20,
     fontSize:18
   },
   cinemaDetailServer:{
