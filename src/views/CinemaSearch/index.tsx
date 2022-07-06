@@ -69,7 +69,7 @@ const CinemaSearch = ({app,navigation,route}:any) => {
     navigation.setOptions({
       title: <Viw style={{width:ScreenWidth-150}}>
         <Input 
-        placeholder={`输入影城名称`} 
+        placeholder={`搜索影城名称`} 
         autoFocus={true}
         style={{
           backgroundColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4',
@@ -259,6 +259,7 @@ const CinemaSearch = ({app,navigation,route}:any) => {
         })
       }
       <BottomLoading
+      emptyText="暂无数据哦"
       isLoading={isLoading}
       isFinallyPage={isFinallyPage}
       hasContent={list.length?true:false}/>

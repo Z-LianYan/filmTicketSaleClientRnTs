@@ -10,7 +10,8 @@ import {
   TouchableHighlight,
   View as Viw,
   Text as Txt,
-  Linking
+  Linking,
+  Image
 } from 'react-native';
 import { observer, inject } from 'mobx-react'
 
@@ -40,7 +41,6 @@ import { get_cinema_detail, get_date_schedule } from "../../api/cinema";
 import { useCallbackState } from "../../utils/useCallbackState";
 
 import ServerDetial from './ServerDetial';
-
 
 
 
@@ -212,29 +212,31 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
         }}/>
       </View>
 
-      {/* {
-        list.map((item:any,index)=>{
-          return <CinemaListItem
-            key={index}
-            title={item.cinema_name}
-            value={item.min_low_sale_price}
-            label={item.address}
-            distance={item.distance}
-            onPress={() => {
 
-              navigation.navigate({
-                name: 'CinemaDetailPage',
-                params: {
-                  cinema_id: item.cinema_id,
-                  film_id: app.params && app.params.film_id,
-                  date: fetchOptions.date,
-                },
-              });
-            }}
-          />
-        })
-      } */}
+      <View style={{paddingHorizontal:0}}>
+        <ScrollView
+        horizontal={true}
+        style={{paddingHorizontal:0}}
+        showsHorizontalScrollIndicator={false}
+        stickyHeaderIndices={[]}>
+          {
+            filmList &&  filmList.map((item,index)=>{
+              return <Image 
+              key={index+'filmList'}
+              resizeMode='cover' 
+              style={{
+                ...styles.filmImage,
+                marginRight:((index+1)==filmList.length)?0:10
+              }} 
+              source={{uri: item.poster_img }} />
+            })
+          }
+          
+        </ScrollView>
+      </View>
 
+
+     
 
       <ServerDetial 
       app={app} 
@@ -305,7 +307,14 @@ const styles = StyleSheet.create({
   },
   cinemaAddrRightIcon:{
     paddingRight:10
+  },
+
+  filmImage:{
+    width:90,
+    height:130,
+    
   }
+
 });
 
 export default inject("app")(observer(CinemaDetailPage));
