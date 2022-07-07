@@ -19,6 +19,7 @@ import { observer, inject } from 'mobx-react'
 import { useNavigation } from '@react-navigation/core';
 import { View,Text} from '../../component/Themed';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useHeaderHeight } from '@react-navigation/elements';
 import { 
   Button,
   Carousel,
@@ -43,6 +44,9 @@ import { useCallbackState } from "../../utils/useCallbackState";
 
 import ServerDetial from './ServerDetial';
 import SlideView from './SlideView';
+import HeaderBar from "../../component/HeaderBar";
+import dayjs from "dayjs";
+import { any } from 'prop-types';
 
 
 
@@ -58,14 +62,18 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
   const [isSkeleton,setIsSkeleton] = useState<boolean>(true);
   const [activeDateKey,setActiveDateKey] = useState<number>(0);
   const [activeBgImg,setActiveBgImg] = useState<string>('');
+  const [isShowTitle,setShowTitle] = useState<boolean>(false);
   const [refreshing, setRefreshing] = React.useState(false);
   const serverDetialRef:{current:any} = useRef();
+  const scrollViewDateRef:{current:any} = useRef();
+
+  const headerHeight = useHeaderHeight();
   
   
   // const [activeFilmIndex,setActiveFilmIndex] = useState<number>(0);
 
   useEffect(()=>{
-    // setNavigatioin();
+    setNavigatioin()
     getCinemaDetail();
 
   },[]);
@@ -74,33 +82,23 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
   
   
 
-  const setNavigatioin = useCallback((cinemaName?:string,headerTransparent = true,color='#fff')=>{
+  const setNavigatioin = useCallback((showLeftArrow=true)=>{
     navigation.setOptions({
-      title: <Txt>{cinemaName}</Txt>,
+      title: '',
       headerLeft:()=>{
-        return <Ionicons 
+        return showLeftArrow?<Ionicons 
         name={'chevron-back'} 
         size={30} 
-        color={colorScheme === 'dark' ? '#fff' : color} 
+        color={colorScheme === 'dark' ? '#fff' : '#000'} 
         onPress={()=>{
           navigation.goBack();
-        }}/>
+        }}/>:<Txt></Txt>
       },
-      // headerTitle:<Text>123</Text>,
-      headerTransparent: headerTransparent,
-      // headerStyle: { 
-      //   backgroundColor: Theme.primaryColor,
-      //   borderBottomWidth:1,
-      //   borderBottomColor:colorScheme=='dark'?'#1a1b1c':Theme.primaryColor
-      // },
-      
+      headerTransparent: true
     })
   },[]);
 
   const getCinemaDetail = useCallback(async()=>{
-    // let { history } = this.props;
-    // let { location } = history;
-    // console.log('route.params---',route.params);
     let result:any = await get_cinema_detail({
       cinema_id: route.params && route.params.cinema_id,
       isHasFilmList: true,
@@ -115,15 +113,12 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
         }
       }
     }
-    
-
     setFilmDetail(result.filmList[0]);
     setFilmList(result.filmList);
 
     setActiveBgImg((result.filmList && result.filmList.length) ? result.filmList[0].poster_img:'');
 
-    // setNavigatioin(result && result.name);
-    setNavigatioin('',true,'#000');
+    // setNavigatioin('',true,'#000');
     setCinemaDetail(result);
     let film = result.filmList[0];
     if(film && film.show_date && film.show_date.length){
@@ -136,20 +131,18 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
   },[]);
 
   const getDateScheduleList = useCallback(async(cinema_id,film_id,date)=>{
-    // console.log('0000======>',cinema_id,film_id,date)
     setScheduleList([]);
     let result:any = await get_date_schedule({
       cinema_id: cinema_id,
       film_id: film_id,
       date: date,
     });
-    // console.log('排片列表====》',result);
     setScheduleList(result);
     setIsSkeleton(false);
   },[])
   
   return (<ScrollView
-    stickyHeaderIndices={[]}
+    stickyHeaderIndices={[0]}
     style={{
       ...styles.container,
       backgroundColor:colorScheme=='dark'?'#000':'#fff'
@@ -170,17 +163,22 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
       const offSetY = event.nativeEvent.contentOffset.y; // 获取滑动的距离
       const contentSizeHeight = event.nativeEvent.contentSize.height; // scrollView  contentSize 高度
       const oriageScrollHeight = event.nativeEvent.layoutMeasurement.height; // scrollView高度
-      // console.log('onMomentumScrollEnd',offSetY,oriageScrollHeight,contentSizeHeight)
       if (offSetY + oriageScrollHeight >= contentSizeHeight - 300) {
-        
       }
-      if(offSetY>=100){
-        console.log('offSetY',offSetY);
-        setNavigatioin(cinemaDetail && cinemaDetail.name,false)
+      if(offSetY>=10){
+        setShowTitle(true);
+        setNavigatioin(false)
       }else{
-        setNavigatioin('',true)
+        setShowTitle(false);
+        setNavigatioin(true)
       }
     }}>
+
+      {
+        isShowTitle?<HeaderBar 
+        title={cinemaDetail && cinemaDetail.name} 
+        headerHeight={headerHeight}/>:<View style={{height:headerHeight}}></View>
+      }
 
       <Text style={styles.cinemaDetailName}>
         {cinemaDetail && cinemaDetail.name}
@@ -252,6 +250,63 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
         list={filmList}/>
       }
 
+      <View style={styles.filmNameJuqing}>
+        <View style={styles.filmNameJuqingLeft}>
+          <View  style={styles.filmNameJuqingLeftTop}>
+            <Text style={styles.filmName}>{filmDetail && filmDetail.film_name}</Text>
+            <Text style={styles.filmNameScore}>{filmDetail && filmDetail.grade}分</Text>
+          </View>
+          
+            {filmDetail && filmDetail.category_names ? <Text 
+            style={styles.filmNameJuqingLeftBottom} 
+            numberOfLines={1}>
+                {filmDetail.category_names} | {filmDetail.runtime}分钟 |{" "}
+                {filmDetail.actors}
+            </Text> : null}
+          
+        </View>
+        <Ionicons 
+        name={'chevron-forward'} 
+        style={styles.cinemaAddrLeftIcon}
+        size={25} 
+        color={colorScheme === 'dark' ? '#fff' : '#666'}/> 
+      </View>
+
+
+      <ScrollView
+      horizontal={true}
+      ref={scrollViewDateRef}
+      onScrollEndDrag={(event)=>{
+        console.log('onScrollEndDrag')
+        // handleScrollTo(event)
+      }}
+      style={{
+        paddingHorizontal:0,
+        borderBottomColor:'#ccc',
+        borderBottomWidth:1,
+        paddingVertical:10,
+        paddingRight:10,
+        paddingLeft:10
+      }}
+      contentContainerStyle={{alignItems:'flex-end'}}
+      showsHorizontalScrollIndicator={false}
+      stickyHeaderIndices={[]}
+      onContentSizeChange={(contentWidth, contentHeight)=>{
+        scrollViewDateRef.current.scrollTo({ x: 100, y: 0, animated: true });
+      }}>
+        {filmDetail &&
+            filmDetail.show_date &&
+            filmDetail.show_date.map((date:string, index:number) => {
+              return (
+                <Text 
+                style={{color:activeDateKey==index?Theme.primaryColor:'#666'}}
+                key={index}
+                >{handerDate(date)}</Text>
+              );
+            })}
+
+      </ScrollView>
+
       
 
       <View style={{height:5000}}></View>
@@ -264,6 +319,36 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
       ref={serverDetialRef}/>
       
     </ScrollView>);
+
+
+    function handerDate(date:string) {
+      let cur_y = dayjs(date).format("YYYY");
+      let y = dayjs().format("YYYY");
+      return (
+        handleWeek(dayjs(date).day()) +
+        dayjs(date).format(cur_y == y ? "MM月DD日" : "YY年MM月DD日")
+      );
+    }
+    function handleWeek(day:any) {
+      switch (day) {
+        case 0:
+          return "周日";
+        case 1:
+          return "周一";
+        case 2:
+          return "周二";
+        case 3:
+          return "周三";
+        case 4:
+          return "周四";
+        case 5:
+          return "周五";
+        case 6:
+          return "周六";
+        default:
+          return "";
+      }
+    }
 };
 
 const styles = StyleSheet.create({
@@ -273,8 +358,9 @@ const styles = StyleSheet.create({
   },
   cinemaDetailName:{
     textAlign:'center',
-    marginTop:20,
-    fontSize:18
+    marginTop:10,
+    fontSize:18,
+    fontWeight:'bold'
   },
   cinemaDetailServer:{
     flexDirection:'row',
@@ -296,18 +382,15 @@ const styles = StyleSheet.create({
     marginBottom:2,
     position:'relative',
     marginRight:3,
-    fontSize:13
+    fontSize:13,
+    color:'#ffb232'
   },
   serverArrowRight:{
-    // position:'absolute',
-    // right:0,
-    // top:'50%'
   },
   cinemaAddrBox:{
     flexDirection:'row',
     borderTopWidth:1,
     borderBottomWidth:1,
-    // paddingVertical:10,
     alignItems:'center',
     height:50,
     marginTop:10
@@ -334,6 +417,33 @@ const styles = StyleSheet.create({
     width:90,
     height:130,
     
+  },
+  filmNameJuqing:{
+    flexDirection:'row',
+    alignItems:'center',
+    padding:10,
+    paddingTop:20
+  },
+  filmNameJuqingLeft:{
+    flex:1
+  },
+  filmNameJuqingLeftTop:{
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'center'
+  },
+  filmName:{
+    fontSize:17,
+    // fontWeight:'bold',
+  },
+  filmNameScore:{
+    fontSize:15,
+    marginLeft:5,
+    color:'#ffb232'
+  },
+  filmNameJuqingLeftBottom:{
+    marginTop:10,
+    color:'#797d82'
   }
 
 });

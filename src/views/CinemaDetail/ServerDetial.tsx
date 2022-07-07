@@ -168,10 +168,7 @@ const ReplyCommentModal = ({
     flexDirection:'row',
     alignItems:'center',
     justifyContent:'flex-end',
-    paddingRight:10,
-    // borderColor:'#ffb232',
-    // borderWidth:1,
-    // height:20
+    paddingRight:10
   },
   serverLabel:{
     paddingHorizontal:3,
@@ -181,7 +178,8 @@ const ReplyCommentModal = ({
     position:'relative',
     marginRight:3,
     fontSize:13,
-    height:20
+    height:20,
+    color:'#ffb232'
   },
   serverContent:{
     flex:1

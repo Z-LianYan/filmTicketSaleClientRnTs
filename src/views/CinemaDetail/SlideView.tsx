@@ -51,14 +51,16 @@ const SlideView = ({
 }:any,ref:any) => {
   const colorScheme = useColorScheme();
   const [activeIndex,setActiveIndex] = useState<number>(0);
+  const [scrollDisabel,setScrollDisabel] = useState<boolean>(false);
+  const [timer,setTimer] = useState<any>('');
 
   const scrollViewRef:{current:any} = useRef();
-
+  
   
   
   useEffect(()=>{
     setActiveIndex(_activeIndex)
-  },[activeIndex])
+  },[])
 
  
 
@@ -67,32 +69,47 @@ const SlideView = ({
     
   }));
 
+  const handleScrollTo = useCallback((event:any)=>{
+
+    if(scrollDisabel) return;
+    const x = event.nativeEvent.contentOffset.x;
+    const len = Math.floor(x/100);
+    
+    if((x%100)===0){
+      let ln = len?(len-1):0
+      setActiveIndex(ln)
+      scrollViewRef.current.scrollTo({ x: ln*100 + 45, y: 0, animated: true });
+    }else{
+      setActiveIndex(len);
+      scrollViewRef.current.scrollTo({ x: (len)*100 + 45, y: 0, animated: true });
+    }
+    setScrollDisabel(false)
+  },[])
+
   return <View style={{paddingHorizontal:0,backgroundColor:'#606266',paddingBottom:10,position:'relative',height:170}}>
       <ScrollView
       horizontal={true}
       ref={scrollViewRef}
       onScrollEndDrag={(event)=>{
-        console.log('onScrollEndDrag===>',event.nativeEvent.contentOffset.x)
-        const x = event.nativeEvent.contentOffset.x;
-        // if(x>(activeIndex*100)){
-        //   scrollViewRef.current.scrollTo({ x: (100 * (list.length>(activeIndex+1)?activeIndex:(list.length-1))) + 45, y: 0, animated: true });
-        // }
+        console.log('onScrollEndDrag')
+        // handleScrollTo(event)
       }}
       style={{paddingHorizontal:0,height:170}}
       contentContainerStyle={{alignItems:'flex-end'}}
       showsHorizontalScrollIndicator={false}
       stickyHeaderIndices={[]}
-      endFillColor='red'
-      onScroll={(event)=>{
-        console.log('onScroll',event.nativeEvent.contentOffset.x);
-        
-      }}
+      // endFillColor='red'
+      // onScroll={(event)=>{
+      // }}
       onLayout={(event)=>{
-        // console.log('onLayout-------->',event.nativeEvent.layout.x)
       }}
       onContentSizeChange={(contentWidth, contentHeight)=>{
-        console.log('contentWidth, contentHeight-------->',contentWidth, contentHeight)
         scrollViewRef.current.scrollTo({ x: (100 * (list.length>(activeIndex+1)?activeIndex:(list.length-1))) + 45, y: 0, animated: true });
+      }}
+      onMomentumScrollEnd={(event:any)=>{
+        console.log('7777==>onMomentumScrollEnd')
+        handleScrollTo(event)
+
       }}>
         <Viw style={{width:ScreenWidth/2,height:170}}></Viw>
         {
@@ -101,10 +118,20 @@ const SlideView = ({
             key={index+'filmList'}
             activeOpacity={0.9}
             onPress={()=>{
-              // console.log('scrollViewRef===>',scrollViewRef);
-              scrollViewRef.current.scrollTo({ x: index*100+45, y: 0, animated: true });
+              console.log('scrollViewRef===>',timer);
+              timer && clearTimeout(timer);
+              setScrollDisabel(true)
+              scrollViewRef.current.scrollTo({ 
+                x: index*100+45, 
+                y: 0,
+                animated: true 
+              });
               setActiveIndex(index)
-              onChange && onChange(index)
+              onChange && onChange(index);
+              let _timer = setTimeout(() => {
+                setScrollDisabel(false)
+              }, 2000);
+              setTimer(timer);
             }}
             style={{
               width:90,
