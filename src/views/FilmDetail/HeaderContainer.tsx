@@ -302,18 +302,22 @@ const styles = StyleSheet.create({
     marginLeft:10
   },
   filmName:{
-    marginBottom:15
+    marginBottom:15,
+    fontSize:25
   },
   categoryNamesPlayTypeName:{
     flexDirection:'row',
   },
   categoryNames:{
+    fontSize:16
   },
   playTypeName:{
-    paddingLeft:8
+    paddingLeft:8,
+    fontSize:16
   },
   areaRuntime:{
-    marginTop:5
+    marginTop:5,
+    fontSize:16
   },
   showTime:{
     marginTop:5

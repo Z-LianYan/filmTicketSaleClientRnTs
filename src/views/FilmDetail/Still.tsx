@@ -84,7 +84,7 @@ const StillCompnent = ({detail,app}:any) => {
   return <Viw style={styles.actionsContainer}>
     <ImageViewer ref={refImageViewer}/>
     <CustomListRow 
-    accessory="indicator" 
+    accessory="none" 
     bottomSeparator="full" //full,indent,none
     title={'剧照'}
     style={{marginBottom:10}}

@@ -53,7 +53,6 @@ export function get_banner(params) {
 }
 
 export function get_film_detail(params) {
-  console.log('77777===>', params);
   return new Promise((resolve, reject) => {
     HttpUtils.get(Api.GET_FILM_DETAIL, params, '').then(res => {
       switch (res.error) {

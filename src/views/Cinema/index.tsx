@@ -9,7 +9,9 @@ import {
   RefreshControl,
   TouchableHighlight,
   View as Viw,
-  Text as Txt
+  Text as Txt,
+  Dimensions,
+  TouchableOpacity
 } from 'react-native';
 import { observer, inject } from 'mobx-react'
 
@@ -33,8 +35,8 @@ import { get_cinema_list,get_film_in_schedule_dates } from '../../api/cinema';
 import { get_city_district_list } from '../../api/citys';
 import { get_film_detail } from "../../api/film";
 import DropdownMenu from '../../component/DropdownMenu';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import dayjs from 'dayjs';
+const ScreenWidth = Dimensions.get('window').width;
 
 const Cinema = ({app,navigation,route}:any) => {
   const refDropdownMenu:{current:any} = useRef()
@@ -58,7 +60,9 @@ const Cinema = ({app,navigation,route}:any) => {
   })
   let [city_district_list, set_city_district_list] = useState([]);
   let [dateList, setDateList] = useState([]);
-
+  const scrollViewRef:{current:any} = useRef();
+  const [tabObj,setTabObj] = useState<any>({});
+  const [scrollW,setScrollW] = useState(0);
   // let [film_name,setFilmName] = useState('');
 
   
@@ -218,6 +222,23 @@ const Cinema = ({app,navigation,route}:any) => {
     }
   }
 
+  function setIndex(index:number) {
+    //兼容错误
+    if (!scrollViewRef) return;
+    //拿到当前项的位置数据
+    let layout = tabObj[index];
+    if(!layout) return;
+    let rx = ScreenWidth / 2;
+    //公式
+    let sx = layout.x - rx + layout.width / 2;
+    //如果还不需要移动,原地待着
+    if (sx < 0) sx = 0;
+    //移动位置
+    sx < scrollW - ScreenWidth && scrollViewRef && scrollViewRef.current && scrollViewRef.current.scrollTo({ x: sx, animated: true });
+    //结尾部分直接移动到底
+    sx >= scrollW - ScreenWidth && scrollViewRef && scrollViewRef.current && scrollViewRef.current.scrollToEnd({ animated: true });
+  }
+
 
 
   return (<View style={styles.container}>
@@ -228,6 +249,7 @@ const Cinema = ({app,navigation,route}:any) => {
         borderBottomWidth:1
         }}>
         <ScrollView
+        ref={scrollViewRef}
         horizontal={true}
         style={{
           
@@ -249,6 +271,20 @@ const Cinema = ({app,navigation,route}:any) => {
               fetchOptions.page = 1;
               setFetchOptions(fetchOptions);
               getList(true);
+              setIndex(index)
+            }}
+            onLayout={(event:any)=>{
+              const { x, y, width, height } = event.nativeEvent.layout;
+              tabObj[index] = {
+                x, 
+                y, 
+                width, 
+                height
+              }
+              setTabObj({
+                ...tabObj
+              });
+              setScrollW(scrollW+width);
             }}>
               <Txt 
               style={{
@@ -322,12 +358,11 @@ const Cinema = ({app,navigation,route}:any) => {
             label={item.address}
             distance={item.distance}
             onPress={() => {
-
               navigation.navigate({
                 name: 'CinemaDetailPage',
                 params: {
                   cinema_id: item.cinema_id,
-                  film_id: app.params && app.params.film_id,
+                  film_id: route.params && route.params.film_id,
                   date: fetchOptions.date,
                 },
               });

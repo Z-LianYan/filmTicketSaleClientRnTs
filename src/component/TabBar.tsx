@@ -135,7 +135,9 @@ const TabBar = ({
           style={{width:20,height:20,tintColor:isFocused? (colorScheme=='dark'?Theme.primaryColor:'#fff'):(colorScheme=='dark'?'#fff':'#000')}}
           source={iconName}
         />
-        <Text style={{ color: isFocused? (colorScheme=='dark'?Theme.primaryColor:'#fff'):(colorScheme=='dark'?'#fff':'#000') }}>
+        <Text style={{ 
+          color: isFocused? (colorScheme=='dark'?Theme.primaryColor:'#fff'):(colorScheme=='dark'?'#fff':'#000') 
+        }}>
           {label}
         </Text>
         

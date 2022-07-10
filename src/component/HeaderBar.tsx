@@ -58,7 +58,7 @@ type TypeProps = {
 const HeaderBar = ({
   title,
   style,
-  backgroundColor=Theme.primaryColor,
+  backgroundColor='',
   position,
   leftView=true,
   rightView,
@@ -76,6 +76,7 @@ const HeaderBar = ({
     ...styles.headerContainer,
     ...style,
     height:headerHeight,
+    backgroundColor:colorScheme=='dark'?'#000':Theme.primaryColor
   }
   if(backgroundColor){
     headerContainerObj['backgroundColor'] = backgroundColor;
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
 
   },
   title:{
-    fontSize:18,
+    fontSize:20,
     color:'#fff'
   },
   rightView:{

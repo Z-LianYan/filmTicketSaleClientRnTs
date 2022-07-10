@@ -39,7 +39,9 @@ const CinemaListItem = ({
   separator = true,
 }:propsType)=>{ 
   const colorScheme = useColorScheme();
-  return <TouchableHighlight onPress={()=>{
+  return <TouchableHighlight 
+  underlayColor={''}
+  onPress={()=>{
     onPress && onPress();
   }}>
     <View>

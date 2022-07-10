@@ -540,7 +540,11 @@ const CommentArea = ({app,route,film_detail=null,getFilmDetail}:any,ref:any) => 
     {
       commentlist && commentlist.length?<TouchableOpacity 
       activeOpacity={1} 
-      style={styles.showCommentBtnWrapper}
+      style={{
+        ...styles.showCommentBtnWrapper,
+        borderTopColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4',
+        borderBottomColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4'
+      }}
       onPress={() => {
         navigation.navigate({
           name: "CommentListPage",
@@ -589,9 +593,9 @@ const styles = StyleSheet.create({
   showCommentBtnWrapper:{
     height: 50,
     borderTopWidth: 0.5,
-    borderTopColor: '#ccc',
+    // borderTopColor: '#ccc',
     borderBottomWidth:0.5,
-    borderBottomColor: '#ccc',
+    // borderBottomColor: '#ccc',
     justifyContent:'center',
     alignItems:'center'
   },

@@ -57,9 +57,8 @@ const FilmListItem = ({
   if(btnColor){
     buttonStyle['borderColor'] = btnColor;
   }
-  return <TouchableHighlight 
+  return <TouchableOpacity 
   activeOpacity={1} 
-  underlayColor=''
   onPress={()=>{
     onPress && onPress()
   }}>
@@ -106,7 +105,7 @@ const FilmListItem = ({
       }}></View> : null}
     </View>
   
-  </TouchableHighlight>
+  </TouchableOpacity>
 }
 export default FilmListItem;
 const styles = StyleSheet.create({

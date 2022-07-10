@@ -39,7 +39,7 @@ import {
     borderBottomWidth:1
   }} 
    style={{flex: 1}} 
-   type='sheet'//sheet,carousel
+   type='sheet'//carousel,carousel
    activeIndex={activeTab}
    onChange={(val:any)=>{
      setActiveTab(val);

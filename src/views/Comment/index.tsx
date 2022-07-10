@@ -155,8 +155,8 @@ const CommentPage = ({app,navigation,route}:any) => {
       headerBackground: () => (
         <HeaderBar 
         title={<Viw>
-            <Txt style={{color:'#000',textAlign:'center'}}>我的评价</Txt>
-            <Txt style={{textAlign:'center',color:'#fff'}}>{title}</Txt>
+            <Txt style={{color:'#000',textAlign:'center',fontSize:18}}>我的评价</Txt>
+            <Txt style={{textAlign:'center',color:'#fff',fontSize:13}}>{title}</Txt>
           </Viw>} 
         headerHeight={headerHeight}
         // rightView={

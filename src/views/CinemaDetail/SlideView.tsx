@@ -39,77 +39,74 @@ import React, { useState,useEffect, useRef,useCallback,useImperativeHandle,forwa
    Toast
 } from '../../component/teaset/index';
 
+import * as _ from 'lodash'
+import { any } from 'prop-types';
+
 // var ScreenHeight = Dimensions.get('window').height;
 var ScreenWidth = Dimensions.get('window').width;
 type TypeProps = {
    
 }
 const SlideView = ({
-  _activeIndex=0,
+  active_index=0,
   list=[],
   onChange
 }:any,ref:any) => {
   const colorScheme = useColorScheme();
   const [activeIndex,setActiveIndex] = useState<number>(0);
-  const [scrollDisabel,setScrollDisabel] = useState<boolean>(false);
-  const [timer,setTimer] = useState<any>('');
-
   const scrollViewRef:{current:any} = useRef();
   
-  
-  
   useEffect(()=>{
-    setActiveIndex(_activeIndex)
-  },[])
-
- 
+    setActiveIndex(active_index)
+  },[active_index])
 
   // 把父组件需要调用的方法暴露出来
   useImperativeHandle(ref, () => ({
     
   }));
-
-  const handleScrollTo = useCallback((event:any)=>{
-
-    if(scrollDisabel) return;
+  function _handleScrollTo(event:any){
     const x = event.nativeEvent.contentOffset.x;
     const len = Math.floor(x/100);
-    
-    if((x%100)===0){
-      let ln = len?(len-1):0
-      setActiveIndex(ln)
+    if((x%100)===0 || len<0){
+      let ln = len>0?(len-1):0;
+      if(activeIndex!=ln){
+        onChange && onChange(ln);
+      } 
+      setActiveIndex(ln);
       scrollViewRef.current.scrollTo({ x: ln*100 + 45, y: 0, animated: true });
     }else{
-      setActiveIndex(len);
-      scrollViewRef.current.scrollTo({ x: (len)*100 + 45, y: 0, animated: true });
+      let ln = len==list.length?(len-1):len;
+      if(activeIndex!=ln) {
+        onChange && onChange(ln);
+      }
+      setActiveIndex(ln);
+      scrollViewRef.current.scrollTo({ x: (ln)*100 + 45, y: 0, animated: true });
     }
-    setScrollDisabel(false)
-  },[])
+  }
 
+  const handleScrollTo = useCallback(_.debounce((event:any)=>{
+    _handleScrollTo(event);
+  }, 50, { leading: false, trailing: true }),[activeIndex,list])//这 list 必须要设置不然 父组件上 滑动第一个时 onChange 打印 filmList为空数组
+
+  
   return <View style={{paddingHorizontal:0,backgroundColor:'#606266',paddingBottom:10,position:'relative',height:170}}>
       <ScrollView
       horizontal={true}
       ref={scrollViewRef}
       onScrollEndDrag={(event)=>{
-        console.log('onScrollEndDrag')
-        // handleScrollTo(event)
+        Platform.OS=='ios' && _handleScrollTo(event)
       }}
       style={{paddingHorizontal:0,height:170}}
       contentContainerStyle={{alignItems:'flex-end'}}
       showsHorizontalScrollIndicator={false}
       stickyHeaderIndices={[]}
-      // endFillColor='red'
-      // onScroll={(event)=>{
-      // }}
-      onLayout={(event)=>{
-      }}
+      scrollEnabled={true}
       onContentSizeChange={(contentWidth, contentHeight)=>{
         scrollViewRef.current.scrollTo({ x: (100 * (list.length>(activeIndex+1)?activeIndex:(list.length-1))) + 45, y: 0, animated: true });
       }}
       onMomentumScrollEnd={(event:any)=>{
-        console.log('7777==>onMomentumScrollEnd')
-        handleScrollTo(event)
-
+        event.persist()
+        if(Platform.OS!='ios') handleScrollTo(event);
       }}>
         <Viw style={{width:ScreenWidth/2,height:170}}></Viw>
         {
@@ -118,20 +115,16 @@ const SlideView = ({
             key={index+'filmList'}
             activeOpacity={0.9}
             onPress={()=>{
-              console.log('scrollViewRef===>',timer);
-              timer && clearTimeout(timer);
-              setScrollDisabel(true)
               scrollViewRef.current.scrollTo({ 
                 x: index*100+45, 
                 y: 0,
                 animated: true 
               });
-              setActiveIndex(index)
-              onChange && onChange(index);
-              let _timer = setTimeout(() => {
-                setScrollDisabel(false)
-              }, 2000);
-              setTimer(timer);
+              setActiveIndex(index);
+              if(activeIndex!=index) {
+                onChange && onChange(index);
+              }
+              
             }}
             style={{
               width:90,
@@ -159,7 +152,7 @@ const SlideView = ({
         borderWidth:10,
         borderColor:'transparent',
         borderBottomColor:colorScheme=='dark'?'#000':'#fff',
-        bottom:0
+        bottom:-1
       }}></Viw>
     </View>;
   };

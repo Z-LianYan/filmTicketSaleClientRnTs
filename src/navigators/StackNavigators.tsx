@@ -32,6 +32,7 @@ import CommentCompletePage from '../views/CommentComplete/index';
 import CinemaPageStack from '../views/Cinema/index';
 import CinemaSearch from '../views/CinemaSearch/index';
 import CinemaDetailPage from '../views/CinemaDetail/index';
+import SelectSeatPage from '../views/SelectSeat/index';
 
 
 
@@ -140,6 +141,15 @@ const routes=[
     { 
         component: CinemaDetailPage, 
         name:"CinemaDetailPage",
+        options: {
+            headerShown:true,
+            title:'',
+            // headerTransparent:true
+        } 
+    },
+    { 
+        component: SelectSeatPage, 
+        name:"SelectSeatPage",
         options: {
             headerShown:true,
             title:'',

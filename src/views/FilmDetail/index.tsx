@@ -118,7 +118,7 @@ const FilmDetail = ({app,navigation,route}:any) => {
     //   cache: true,
     //   key: 'unique_key',
     // })
-    console.log('color_result----',result);
+    // console.log('color_result----',result);
     
   },[])
   
@@ -188,25 +188,24 @@ const FilmDetail = ({app,navigation,route}:any) => {
 
     </ScrollView>
 
-    <Button
-      style={styles.selectSeatBuyTicket}
-      title={'选座购票'}
-      type="primary"
-      size="lg"
-      disabled={submiting}
-      onPress={() => {
-        // onEditUserInfo();
-        console.log('CinemaPageStack',detail.id,detail.film_name);
-
-        navigation.navigate({
-          name: "CinemaPageStack",
-          params:{
-            film_id: detail.id,
-            film_name: detail.film_name
-          }
-        });
-      }}
-    />
+    {
+      route.params && route.params.isNotCanSelectSeatBuy?null:(detail && detail.hasSchedule)?<Button
+        style={styles.selectSeatBuyTicket}
+        title={'选座购票'}
+        type="primary"
+        size="lg"
+        disabled={submiting}
+        onPress={() => {
+          navigation.navigate({
+            name: "CinemaPageStack",
+            params:{
+              film_id: detail.id,
+              film_name: detail.film_name
+            }
+          });
+        }}
+      />:null
+    }
 
     {
       isSkeleton && <View style={{
