@@ -316,7 +316,7 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
                   navigation.navigate({
                     name:'SelectSeatPage',
                     params:{
-                      shedule_id:item.id
+                      schedule_id:item.id
                     }
                   })
                 } else {
@@ -330,11 +330,6 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
         })
       }
       
-
-      <View style={{height:5000}}></View>
-
-
-     
 
       <ServerDetial 
       app={app} 

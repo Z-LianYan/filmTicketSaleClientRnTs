@@ -77,7 +77,7 @@ const SlideView = (item:any = {},ref:any) => {
   </View>
   <View style={styles.rightBox}>
     <Text style={styles.rightBoxPrice}><Text style={{
-      fontSize:10,color:Theme.primaryColor,marginRight:10}}>¥</Text>{item.price}</Text>
+      fontSize:11,color:Theme.primaryColor}}>¥ </Text>{item.price}</Text>
     <Button
       type="primary"
       style={styles.rightBoxBtn}

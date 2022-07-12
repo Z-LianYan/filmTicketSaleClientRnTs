@@ -271,7 +271,7 @@ const Cinema = ({app,navigation,route}:any) => {
               fetchOptions.page = 1;
               setFetchOptions(fetchOptions);
               getList(true);
-              setIndex(index)
+              setIndex(index);
             }}
             onLayout={(event:any)=>{
               const { x, y, width, height } = event.nativeEvent.layout;
