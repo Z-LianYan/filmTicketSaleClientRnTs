@@ -26,26 +26,31 @@ import {
   Drawer,
   ActionSheet,
   TransformView,
+  Overlay
 } from '../../component/teaset/index';
 
-import NavigationBar from '../../component/NavigationBar';
-import BottomLoading from '../../component/BottomLoading';
-import DropdownMenu from '../../component/DropdownMenu';
+// import NavigationBar from '../../component/NavigationBar';
+// import BottomLoading from '../../component/BottomLoading';
+import BottomWrapper from './BottomWrapper';
 import dayjs from 'dayjs';
 
 import { get_schedule_info, get_seat } from "../../api/selectSeat";
 
-
-
 const SelectSeat = ({app,navigation,route}:any) => {
   // const refDropdownMenu:{current:any} = useRef()
   const colorScheme = useColorScheme();
-  const [scheduleInfo, setScheduleInfo] = useState(null);
+  const [scheduleInfo, setScheduleInfo] = useState<any>(null);
   const [scheduleList, setScheduleList] = useState<any[]>([]);
   const [selectedSchedule, setSelectedSchedule] = useState<any>(null);
   const [hallDetail, setHallDetail] = useState<any>(null);
   const [seatList, setSeatList] = useState<any[]>([]);
-  const [selectedSeat, setSelectedSeat] = useState<any[]>([]);
+  const [selectedSeat, setSelectedSeat] = useState<any[]>([
+    {
+      row_id:1,
+      column_id:1,
+      is_section:0
+    }
+  ]);
   const [seat_real_rows, set_seat_real_rows] = useState<any[]>([]);
   
   useEffect(()=>{
@@ -100,7 +105,6 @@ const SelectSeat = ({app,navigation,route}:any) => {
     let seat = result.seat;
     setHallDetail(result);
     setSeatList(seat);
-    setSelectedSeat([]);
 
     let seat_real_rows = [];
     let obj = {};
@@ -116,7 +120,11 @@ const SelectSeat = ({app,navigation,route}:any) => {
     set_seat_real_rows(seat_real_rows);
   },[])
   
-  return <ScrollView
+  return <View style={{
+    ...styles.container,
+    backgroundColor:colorScheme=='dark'?'#000':'#f4f4f4'
+  }}>
+    <ScrollView
     stickyHeaderIndices={[]}>
       <TransformView
         style={{
@@ -128,6 +136,9 @@ const SelectSeat = ({app,navigation,route}:any) => {
         }}
         minScale={0.5}
         maxScale={2}
+        onTransforming={(e:any)=>{
+          console.log('onTransforming==>',e,e.translateY)
+        }}
       >
         <View style={{position:'absolute',height:20,width:20,backgroundColor:'#ccc'}}>
 
@@ -137,11 +148,33 @@ const SelectSeat = ({app,navigation,route}:any) => {
         resizeMode='cover' 
         source={{uri:'https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png'}} />
       </TransformView>
-      <Text>SelectSeat</Text>
-    </ScrollView>;
+    </ScrollView>
+    <BottomWrapper 
+    app={app}
+    navigation={navigation}
+    route={route}
+    scheduleInfo={scheduleInfo}
+    scheduleList={scheduleList}
+    selectedSchedule={selectedSchedule}
+    setSelectedSchedule={setSelectedSchedule}
+    getSeatList={getSeatList}
+    selectedSeat = {selectedSeat}
+    setSelectedSeat = {(selected_seat:any)=>{
+      setSelectedSeat([
+        ...selected_seat
+      ])
+    }}
+    />
+    
+  </View>;
+
+  
 };
 
 const styles = StyleSheet.create({
+  container:{
+    flex:1
+  },
 });
 
 export default inject("app")(observer(SelectSeat));

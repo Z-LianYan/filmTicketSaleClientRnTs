@@ -138,7 +138,7 @@
    const colorScheme = useColorScheme();
    const [isShowUnfold,setIsShowUnfold] = useState(true);
    const navigation:any = useNavigation();
-   const [_overlay,setOverlay] = useState<any>(null);
+  //  const [_overlay,setOverlay] = useState<any>(null);
    
    useEffect(()=>{
    })
@@ -209,7 +209,6 @@
             color={colorScheme=='dark'?'#fff':'#000'}
             onPress={()=>{
               let ol = Overlay.show(overlayView(colorScheme,actionsOption,(val:string)=>{
-                
                 if(val==='取消'){
                   Overlay.hide(ol);
                   return;
@@ -225,8 +224,6 @@
                 Overlay.hide(ol);
 
               }));
-
-              setOverlay(ol);
             }}/>
           )}
         </View>
