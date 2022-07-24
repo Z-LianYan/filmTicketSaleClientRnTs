@@ -11,7 +11,8 @@ import {
   View as Viw,
   Text as Txt,
   TouchableOpacity,
-  Image
+  Image,
+  PanResponder
 } from 'react-native';
 import { observer, inject } from 'mobx-react'
 
@@ -25,16 +26,37 @@ import {
   Label,
   Drawer,
   ActionSheet,
-  TransformView,
+  // TransformView,
   Overlay
 } from '../../component/teaset/index';
+
+// import TransformView from './TransformView';
+
+
 
 // import NavigationBar from '../../component/NavigationBar';
 // import BottomLoading from '../../component/BottomLoading';
 import BottomWrapper from './BottomWrapper';
+import SectionPriceWrapper from './SectionPriceWrapper';
+import SeatListContainer from './SeatListContainer';
 import dayjs from 'dayjs';
 
+
 import { get_schedule_info, get_seat } from "../../api/selectSeat";
+import { any } from 'prop-types';
+
+// import { 
+//   SEAT_ALREADY_SALE,
+//   SEAT_DISABLE,
+//   SEAT_NO_SELECTED,
+//   SEAT_SCREEN,
+//   SEAT_SECTION_A,
+//   SEAT_SECTION_B,
+//   SEAT_SECTION_C,
+//   SEAT_SECTION_D,
+//   SEAT_SECTION_E,
+//   SEAT_SELECTED
+// } from "../../assets/image/index";
 
 const SelectSeat = ({app,navigation,route}:any) => {
   // const refDropdownMenu:{current:any} = useRef()
@@ -53,9 +75,13 @@ const SelectSeat = ({app,navigation,route}:any) => {
   ]);
   const [seat_real_rows, set_seat_real_rows] = useState<any[]>([]);
   
+  
   useEffect(()=>{
     getCinemaDetail();
+    
   },[]);
+
+  
   
   
   const setNavigation = useCallback((cinema_name?:any)=>{
@@ -122,33 +148,59 @@ const SelectSeat = ({app,navigation,route}:any) => {
   
   return <View style={{
     ...styles.container,
-    backgroundColor:colorScheme=='dark'?'#000':'#f4f4f4'
+    backgroundColor:colorScheme=='dark'?'#000':'#eee'
   }}>
-    <ScrollView
-    stickyHeaderIndices={[]}>
-      <TransformView
-        style={{
-          backgroundColor: '#fff', 
-          flex: 1, 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          position:'relative'
-        }}
-        minScale={0.5}
-        maxScale={2}
-        onTransforming={(e:any)=>{
-          console.log('onTransforming==>',e,e.translateY)
-        }}
-      >
-        <View style={{position:'absolute',height:20,width:20,backgroundColor:'#ccc'}}>
 
-        </View>
-        <Image 
-        style={{width: 375, height: 300}} 
-        resizeMode='cover' 
-        source={{uri:'https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png'}} />
-      </TransformView>
-    </ScrollView>
+    <SectionPriceWrapper selectedSchedule={selectedSchedule}/>
+
+   
+
+   
+    
+
+    <SeatListContainer
+      style={{
+        // backgroundColor:colorScheme=='dark'?'#000':'#eee',
+        // flex: 1, 
+        // alignItems: 'center', 
+        // justifyContent: 'center',
+        // position:'relative'
+      }}
+      minScale={0.5}
+      maxScale={2}
+      onTransforming={(translateX:number, translateY:number, scale:number)=>{
+        // console.log('onTransforming==>',translateX, translateY, scale)
+      }}
+    >
+      <View 
+      style={{
+        // position:'absolute',
+        // left:0,
+        // top:0,
+        width: 475, 
+        height: 300,
+        // backgroundColor:'#ccc',
+        borderWidth:1,
+        borderColor:'blue'
+      }}></View>
+    </SeatListContainer>
+
+    {/* {
+      pan_responder?<View 
+      style={{
+        width: 475, 
+        height: 300,
+        backgroundColor:'#ccc',
+        borderWidth:1,
+        borderColor:'blue'
+      }}
+      {...pan_responder.panHandlers}>
+
+      </View>:null
+    } */}
+
+
+
     <BottomWrapper 
     app={app}
     navigation={navigation}

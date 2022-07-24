@@ -20,9 +20,3 @@ class Home {
   }
 }
 export default  new Home()
-
-
-// ERROR  Error: MobX Provider: The set of provided stores has changed. 
-// See: https://github.com/mobxjs/mobx-react#the-set-of-provided-stores-has-changed-error
-
-// Seems like you're using an old API with gesture components, check out new Gestures system!

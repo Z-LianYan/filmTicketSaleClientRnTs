@@ -33,6 +33,7 @@ import CinemaPageStack from '../views/Cinema/index';
 import CinemaSearch from '../views/CinemaSearch/index';
 import CinemaDetailPage from '../views/CinemaDetail/index';
 import SelectSeatPage from '../views/SelectSeat/index';
+import BuyTicket from '../views/BuyTicket/index';
 
 
 
@@ -144,6 +145,15 @@ const routes=[
         options: {
             headerShown:true,
             title:'',
+            // headerTransparent:true
+        } 
+    },
+    { 
+        component: BuyTicket, 
+        name:"BuyTicket",
+        options: {
+            headerShown:true,
+            title:'支付订单',
             // headerTransparent:true
         } 
     },

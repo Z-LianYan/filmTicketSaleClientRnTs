@@ -33,6 +33,7 @@ import NavigationBar from '../../component/NavigationBar';
 import BottomLoading from '../../component/BottomLoading';
 import DropdownMenu from '../../component/DropdownMenu';
 import dayjs from 'dayjs';
+import { create_order } from "../../api/order";
 
 import { get_schedule_info, get_seat } from "../../api/selectSeat";
 import { 
@@ -58,16 +59,19 @@ let overlay_view = function(notices:any[]=[],colorScheme:any,onCancel:any){
     borderTopRightRadius:10,
     backgroundColor: colorScheme=='dark'?'#1a1b1c':'#fff',
   }}>
-
-    <Text style={{
-      textAlign:'center',
+    <Viw style={{
+      borderBottomWidth:1,
+      borderBottomColor:colorScheme=='dark'?'#202122':'#f4f4f4',
       paddingTop:20,
       paddingBottom:10,
-      fontSize:16,
-      fontWeight:'bold',
-      borderBottomWidth:1,
-      borderBottomColor:'#f4f4f4'
-    }}>观影小贴士</Text>
+    }}>
+      <Text style={{
+        textAlign:'center',
+        fontSize:16,
+        fontWeight:'bold'
+      }}>观影小贴士</Text>
+    </Viw>
+    
     <ScrollView
     style={{
       maxHeight:300,
@@ -134,7 +138,11 @@ const BottomWrapper = ({
   useEffect(()=>{
   },[]);
   
-  return <View style={styles.bottomWrapper}>
+  return <View style={{
+    ...styles.bottomWrapper,
+    backgroundColor:colorScheme=='dark'?'#000':'#eee'
+
+  }}>
     {
       !showScheduleList && <Viw style={{flexDirection:'row',paddingVertical:10}}>
         <Viw  style={{flexDirection:'row',alignItems:'center',paddingRight:10}}>
@@ -186,7 +194,8 @@ const BottomWrapper = ({
     
     <View style={{
       ...styles.bottomContentBox,
-      backgroundColor:colorScheme=='dark'?'#1a1b1c':'#fff'
+      backgroundColor:colorScheme=='dark'?'#1a1b1c':'#fff',
+      // borderTopColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4'
     }}>
       <TouchableOpacity 
       activeOpacity={0.9} 
@@ -323,7 +332,54 @@ const BottomWrapper = ({
         }
       </ScrollView>
     </View>
+
+    
+    <Button
+      title={calcTotalPrice()+'元 确认选座'}
+      type="primary"
+      size="md"
+      style={styles.selectSeatBuyBtn}
+      disabled={selectedSeat.length ? false : true}
+      onPress={() => {
+        onCreateOreder();
+      }}
+    />
   </View>
+  async function onCreateOreder() {
+    try {
+      // let result:any = await create_order({
+      //   schedule_id: selectedSchedule.id,
+      //   buy_seat_ids: selectedSeat.map((item:any) => item.id).join(","),
+      // });
+      // console.log("生成订单", result);
+      // if (!result) return;
+      navigation.navigate({ name: 'BuyTicket', params:{
+        // order_id:result.order_id,
+        // isCancelOrder:true
+      }});
+    } catch (err:any) {
+      console.log("err", err.message);
+    }
+  }
+
+  function calcTotalPrice() {
+    // let { selectedSeat, selectedSchedule } = this.state;
+    if(!selectedSchedule) return 0;
+    let totalPrice = 0;
+    for (let i = 0; i < selectedSeat.length; i++) {
+      if (selectedSchedule.is_section == 1) {
+        for (let j = 0; j < selectedSchedule.sectionPrice.length; j++) {
+          let it = selectedSchedule.sectionPrice[j];
+          if (selectedSeat[i].section_id === it.section_id) {
+            totalPrice += Number(it.price);
+          }
+        }
+      } else {
+        totalPrice += Number(selectedSchedule.sale_price);
+      }
+    }
+    return totalPrice.toFixed(2);
+  }
 
   function handlerSectionPrice(sectionPrice:any) {
     let price = 0;
@@ -401,9 +457,9 @@ const styles = StyleSheet.create({
   },
   bottomWrapper:{
     alignItems:'center',
-    backgroundColor:'transparent',
-    padding:5,
-
+    // ≈≈
+    paddingBottom:15,
+    paddingHorizontal:5
   },
   topCell:{
     flexDirection:'row',
@@ -416,7 +472,8 @@ const styles = StyleSheet.create({
     
     width:'100%',
     borderRadius:5,
-    padding:10
+    padding:10,
+    // borderTopWidth:1
 
   },
   bottomContentSchedule:{
@@ -454,6 +511,10 @@ const styles = StyleSheet.create({
     marginTop:5,
     borderRadius:5,
     alignItems:'center'
+  },
+  selectSeatBuyBtn:{
+    marginTop:10,
+    width:'100%'
   }
 });
 
