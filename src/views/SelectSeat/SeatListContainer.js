@@ -458,6 +458,15 @@ export default class SeatListContainer extends Component {
     return containerStyle;
   }
 
+  buildContainerRowStyle() {
+    let {containerStyle} = this.props;
+    let {translateX, translateY, scale} = this.state;
+    containerStyle = [].concat({
+      transform: [{translateY: translateY}, {scale: scale}],
+    });
+    return containerStyle;
+  }
+
   onLayout(e) {
     this.viewLayout = e.nativeEvent.layout;
     this.props.onLayout && this.props.onLayout(e);
@@ -489,6 +498,7 @@ export default class SeatListContainer extends Component {
       onLayout,
       ...others
     } = this.props;
+
     return (
       <View
         {...others}
@@ -496,15 +506,18 @@ export default class SeatListContainer extends Component {
         onLayout={e => this.onLayout(e)}
         ref="view"
         {...this.panResponder.panHandlers}>
-        <Text
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: '50%',
-            zIndex: 1,
-          }}>
-          屏幕
-        </Text>
+        {/* <Animated.View
+          style={[this.buildContainerStyle(), {position: 'absolute', left: 0}]}>
+          <Text style={{height: 20, borderWidth: 1, borderColor: 'red'}}>
+            123
+          </Text>
+          <Text style={{height: 20, borderWidth: 1, borderColor: 'red'}}>
+            123
+          </Text>
+          <Text style={{height: 20, borderWidth: 1, borderColor: 'red'}}>
+            123
+          </Text>
+        </Animated.View> */}
         <Animated.View
           style={[this.buildContainerStyle()]}
           ref="containerView"

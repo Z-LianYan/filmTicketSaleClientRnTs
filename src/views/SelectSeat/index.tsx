@@ -30,7 +30,6 @@ import {
   Overlay
 } from '../../component/teaset/index';
 
-// import TransformView from './TransformView';
 
 
 
@@ -74,7 +73,9 @@ const SelectSeat = ({app,navigation,route}:any) => {
     }
   ]);
   const [seat_real_rows, set_seat_real_rows] = useState<any[]>([]);
-  
+  const [translateX, setTranslateX] = useState<number>(0);
+  const [translateY, setTranslateY] = useState<number>(0);
+  const [scale, setScale] = useState<number>(1);
   
   useEffect(()=>{
     getCinemaDetail();
@@ -156,34 +157,65 @@ const SelectSeat = ({app,navigation,route}:any) => {
    
 
    
+    <Viw style={{flexDirection:'row',justifyContent:'center'}}>
+      <Text style={{transform:[{translateX:translateX}]}}>屏幕</Text>
+    </Viw>
+    <Viw style={{flex:1,position:'relative'}}>
+      <Viw style={{
+        position:'absolute',
+        left:0,
+        zIndex:10,
+        transform:[{translateY:translateY},
+          // {scale:scale}
+        ],
+        borderWidth:1,borderColor:'yellow',
+
+      }}>
+        <Text style={{height:20,borderWidth:1,borderColor:'red'}}>123</Text>
+        <Text style={{height:20,borderWidth:1,borderColor:'red'}}>123</Text>
+        <Text style={{height:20,borderWidth:1,borderColor:'red'}}>123</Text>
+      </Viw>
+      <SeatListContainer
+        style={{
+          // backgroundColor:colorScheme=='dark'?'#000':'#eee',
+          // flex: 1, 
+          // alignItems: 'center', 
+          // justifyContent: 'center',
+          // position:'relative'
+        }}
+        minScale={0.5}
+        maxScale={1}
+        onTransforming={(translateX:number, translateY:number, scale:number)=>{
+          console.log('onTransforming==>',translateX, translateY, scale);
+          setTranslateX(translateX);
+          setTranslateY(translateY);
+          setScale(scale);
+        }}
+        onDidTransform={(translateX:number, translateY:number, scale:number)=>{
+          console.log('onDidTransform==>',translateX, translateY, scale);
+          setTranslateX(translateX);
+          setTranslateY(translateY);
+          setScale(scale);
+        }}
+      >
+        <Viw 
+        style={{
+          // position:'absolute',
+          // left:0,
+          // top:0,
+          width: 475, 
+          height: 300,
+          // backgroundColor:'#ccc',
+          borderWidth:1,
+          borderColor:'blue'
+        }}></Viw>
+      </SeatListContainer>
+      
+    </Viw>
+    
     
 
-    <SeatListContainer
-      style={{
-        // backgroundColor:colorScheme=='dark'?'#000':'#eee',
-        // flex: 1, 
-        // alignItems: 'center', 
-        // justifyContent: 'center',
-        // position:'relative'
-      }}
-      minScale={0.5}
-      maxScale={2}
-      onTransforming={(translateX:number, translateY:number, scale:number)=>{
-        // console.log('onTransforming==>',translateX, translateY, scale)
-      }}
-    >
-      <View 
-      style={{
-        // position:'absolute',
-        // left:0,
-        // top:0,
-        width: 475, 
-        height: 300,
-        // backgroundColor:'#ccc',
-        borderWidth:1,
-        borderColor:'blue'
-      }}></View>
-    </SeatListContainer>
+    
 
     {/* {
       pan_responder?<View 
