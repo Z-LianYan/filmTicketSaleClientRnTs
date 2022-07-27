@@ -453,7 +453,8 @@ const BottomWrapper = ({
 
 const styles = StyleSheet.create({
   container:{
-    flex:1
+    flex:1,
+    position:'absolute'
   },
   bottomWrapper:{
     alignItems:'center',

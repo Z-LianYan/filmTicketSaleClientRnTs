@@ -43,19 +43,20 @@ import dayjs from 'dayjs';
 
 import { get_schedule_info, get_seat } from "../../api/selectSeat";
 import { any } from 'prop-types';
+import { Center, Right } from '../../component/teaset/react-native-legacy-components/src/NavigatorBreadcrumbNavigationBarStyles.android';
 
-// import { 
-//   SEAT_ALREADY_SALE,
-//   SEAT_DISABLE,
-//   SEAT_NO_SELECTED,
-//   SEAT_SCREEN,
-//   SEAT_SECTION_A,
-//   SEAT_SECTION_B,
-//   SEAT_SECTION_C,
-//   SEAT_SECTION_D,
-//   SEAT_SECTION_E,
-//   SEAT_SELECTED
-// } from "../../assets/image/index";
+import { 
+  SEAT_ALREADY_SALE,
+  SEAT_DISABLE,
+  SEAT_NO_SELECTED,
+  SEAT_SCREEN,
+  SEAT_SECTION_A,
+  SEAT_SECTION_B,
+  SEAT_SECTION_C,
+  SEAT_SECTION_D,
+  SEAT_SECTION_E,
+  SEAT_SELECTED
+} from "../../assets/image/index";
 
 const SelectSeat = ({app,navigation,route}:any) => {
   // const refDropdownMenu:{current:any} = useRef()
@@ -76,6 +77,9 @@ const SelectSeat = ({app,navigation,route}:any) => {
   const [translateX, setTranslateX] = useState<number>(0);
   const [translateY, setTranslateY] = useState<number>(0);
   const [scale, setScale] = useState<number>(1);
+  const [seatWidth, setSeatWidth] = useState<number>(30);
+  const [seatHeight, setSeatHeight] = useState<number>(30);
+
   
   useEffect(()=>{
     getCinemaDetail();
@@ -163,36 +167,62 @@ const SelectSeat = ({app,navigation,route}:any) => {
     <Viw style={{flex:1,position:'relative'}}>
       <Viw style={{
         position:'absolute',
-        left:0,
-        zIndex:10,
+        left:5,
         transform:[{translateY:translateY},
           // {scale:scale}
         ],
-        borderWidth:1,borderColor:'yellow',
-
+        // borderWidth:1,
+        // borderColor:'yellow',
+        // backgroundColor:'#ccc',
+        height: hallDetail?hallDetail.seat_row_num * seatHeight:0,
+        width:15,
+        borderRadius:5,
+        // opacity:0.5
       }}>
-        <Text style={{height:20,borderWidth:1,borderColor:'red'}}>123</Text>
-        <Text style={{height:20,borderWidth:1,borderColor:'red'}}>123</Text>
-        <Text style={{height:20,borderWidth:1,borderColor:'red'}}>123</Text>
+          <Viw style={{
+            position:'absolute',
+            left:0,
+            right:0,
+            bottom:0,
+            top:0,
+            backgroundColor:'#ccc',
+            opacity:0.5,
+            borderRadius:5
+          }}></Viw>
+        {
+          seat_real_rows.map(item=>{
+            return <Text 
+            key={item.row_id+'seatrow'}
+            style={{
+              height:30,
+              lineHeight:30,
+              width:15,
+              textAlign:'center',
+              position:'absolute',
+              top:(item.row-1) * seatHeight,
+              color:'#fff'
+            }}>
+              {item.row_id}
+            </Text>
+          })
+        }
+        
       </Viw>
       <SeatListContainer
         style={{
-          // backgroundColor:colorScheme=='dark'?'#000':'#eee',
-          // flex: 1, 
-          // alignItems: 'center', 
-          // justifyContent: 'center',
-          // position:'relative'
+          width:'100%',
+          height:'100%'//需要给容器设置宽高，否则会有问题
         }}
         minScale={0.5}
         maxScale={1}
         onTransforming={(translateX:number, translateY:number, scale:number)=>{
-          console.log('onTransforming==>',translateX, translateY, scale);
+          // console.log('onTransforming==>',translateX, translateY, scale);
           setTranslateX(translateX);
           setTranslateY(translateY);
           setScale(scale);
         }}
         onDidTransform={(translateX:number, translateY:number, scale:number)=>{
-          console.log('onDidTransform==>',translateX, translateY, scale);
+          // console.log('onDidTransform==>',translateX, translateY, scale);
           setTranslateX(translateX);
           setTranslateY(translateY);
           setScale(scale);
@@ -203,12 +233,39 @@ const SelectSeat = ({app,navigation,route}:any) => {
           // position:'absolute',
           // left:0,
           // top:0,
-          width: 475, 
-          height: 300,
+          // width: 475, 
+          // height: 300,
           // backgroundColor:'#ccc',
           borderWidth:1,
-          borderColor:'blue'
-        }}></Viw>
+          borderColor:'blue',
+          width: hallDetail?hallDetail.seat_row_num * (seatWidth+10):0,
+          height: hallDetail?hallDetail.seat_column_num * (seatHeight+10):0,
+        }}>
+          {
+          seatList.map((item, index) => {
+            return <Image 
+            key={index+'seat'}
+            resizeMode='cover' 
+            style={{
+              width:seatWidth,
+              height:seatHeight,
+              position:'absolute',
+              top:(item.row-1) * seatHeight,
+              left:(item.column-1) * seatWidth
+            }} 
+            source={item.section_id == "a"
+              ? SEAT_SECTION_A
+              : item.section_id == "b"
+              ? SEAT_SECTION_B
+              : item.section_id == "c"
+              ? SEAT_SECTION_C
+              : item.section_id == "d"
+              ? SEAT_SECTION_D
+              : null
+            } />
+          })}
+          
+        </Viw>
       </SeatListContainer>
       
     </Viw>

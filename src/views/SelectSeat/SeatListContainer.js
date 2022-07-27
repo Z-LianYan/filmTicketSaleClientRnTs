@@ -502,7 +502,7 @@ export default class SeatListContainer extends Component {
     return (
       <View
         {...others}
-        style={[this.buildStyle(), {position: 'relative'}]}
+        style={[this.buildStyle(), {position: 'absolute', zIndex: -1000}]}
         onLayout={e => this.onLayout(e)}
         ref="view"
         {...this.panResponder.panHandlers}>

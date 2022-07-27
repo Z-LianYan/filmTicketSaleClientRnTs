@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
     paddingBottom:10,
     flexDirection:'row',
     alignItems: 'center',
+    zIndex:10
   },
   sectionItem:{
     flexDirection:'row',
