@@ -136,18 +136,18 @@ export default class SeatListContainer extends Component {
 
         let {x, y, width, height} = this.contentLayout;
         if (tension) {
-          if (x > this.initContentLayout.x) dx /= 3;
+          if (x > this.initContentLayout.x) dx + 20;
           else if (
             x + width <
             this.initContentLayout.x + this.initContentLayout.width
           )
-            dx /= 3;
-          if (y > this.initContentLayout.y) dy /= 3;
+            dx + 20;
+          if (y > this.initContentLayout.y) dy + 20;
           else if (
             y + height <
             this.initContentLayout.y + this.initContentLayout.height
           )
-            dy /= 3;
+            dy + 20;
         }
         this.dxSum += dx;
         this.dySum += dy;
@@ -502,22 +502,10 @@ export default class SeatListContainer extends Component {
     return (
       <View
         {...others}
-        style={[this.buildStyle(), {position: 'absolute', zIndex: -1000}]}
+        style={[this.buildStyle(), {position: 'absolute', zIndex: -1}]}
         onLayout={e => this.onLayout(e)}
         ref="view"
         {...this.panResponder.panHandlers}>
-        {/* <Animated.View
-          style={[this.buildContainerStyle(), {position: 'absolute', left: 0}]}>
-          <Text style={{height: 20, borderWidth: 1, borderColor: 'red'}}>
-            123
-          </Text>
-          <Text style={{height: 20, borderWidth: 1, borderColor: 'red'}}>
-            123
-          </Text>
-          <Text style={{height: 20, borderWidth: 1, borderColor: 'red'}}>
-            123
-          </Text>
-        </Animated.View> */}
         <Animated.View
           style={[this.buildContainerStyle()]}
           ref="containerView"

@@ -1,4 +1,4 @@
-import React,{useState,useEffect,useRef,useCallback} from 'react';
+import React,{useState,useEffect,useRef,useCallback,useImperativeHandle,forwardRef} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -132,12 +132,18 @@ const BottomWrapper = ({
   getSeatList,
   selectedSeat = [],
   setSelectedSeat
-}:any) => {
+}:any,ref:any) => {
   const colorScheme = useColorScheme();
   const [showScheduleList, setShowScheduleList] = useState<boolean>(false);
+  
   useEffect(()=>{
   },[]);
-  
+
+
+  // 把父组件需要调用的方法暴露出来
+  useImperativeHandle(ref, () => ({
+    setShowScheduleList
+  }));
   return <View style={{
     ...styles.bottomWrapper,
     backgroundColor:colorScheme=='dark'?'#000':'#eee'
@@ -268,10 +274,11 @@ const BottomWrapper = ({
                 borderWidth: (selectedSchedule && selectedSchedule.id == item.id)?1:0,
                 borderColor:Theme.primaryColor
               }}
-              onPress={()=>{
+              onPress={async ()=>{
                 if (selectedSchedule.id == item.id) return;
+                // setSelectedSchedule && setSelectedSchedule(item);
+                getSeatList && await getSeatList(item.id,item.hall_id);
                 setSelectedSchedule && setSelectedSchedule(item);
-                getSeatList && getSeatList(item.id,item.hall_id);
               }}>
                 <Text>{dayjs(item.start_runtime).format("HH:mm")}</Text>
                 <Text style={{color:'#bdc0c5',fontSize:12}}>
@@ -519,4 +526,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject("app")(observer(BottomWrapper));
+export default inject("app")(observer(forwardRef(BottomWrapper)));

@@ -12,7 +12,9 @@ import {
   Text as Txt,
   TouchableOpacity,
   Image,
-  PanResponder
+  PanResponder,
+  TouchableWithoutFeedback,
+  Platform
 } from 'react-native';
 import { observer, inject } from 'mobx-react'
 
@@ -27,7 +29,8 @@ import {
   Drawer,
   ActionSheet,
   // TransformView,
-  Overlay
+  Overlay,
+  Toast
 } from '../../component/teaset/index';
 
 
@@ -66,20 +69,16 @@ const SelectSeat = ({app,navigation,route}:any) => {
   const [selectedSchedule, setSelectedSchedule] = useState<any>(null);
   const [hallDetail, setHallDetail] = useState<any>(null);
   const [seatList, setSeatList] = useState<any[]>([]);
-  const [selectedSeat, setSelectedSeat] = useState<any[]>([
-    {
-      row_id:1,
-      column_id:1,
-      is_section:0
-    }
-  ]);
+  const [selectedSeat, setSelectedSeat] = useState<any[]>([]);
   const [seat_real_rows, set_seat_real_rows] = useState<any[]>([]);
   const [translateX, setTranslateX] = useState<number>(0);
   const [translateY, setTranslateY] = useState<number>(0);
   const [scale, setScale] = useState<number>(1);
   const [seatWidth, setSeatWidth] = useState<number>(30);
   const [seatHeight, setSeatHeight] = useState<number>(30);
-
+  const [topSpace, setTopSpace] = useState<number>(50);
+  const bottomWrapperRef:{current:any} = useRef();
+  
   
   useEffect(()=>{
     getCinemaDetail();
@@ -137,6 +136,13 @@ const SelectSeat = ({app,navigation,route}:any) => {
     setHallDetail(result);
     setSeatList(seat);
 
+    //重置左侧行数以及顶部的屏幕位置
+    setTranslateX(0);
+    setTranslateY(0);
+    setScale(1);
+
+    setSelectedSeat([]);
+
     let seat_real_rows = [];
     let obj = {};
     for (let item of seat) {
@@ -157,26 +163,41 @@ const SelectSeat = ({app,navigation,route}:any) => {
   }}>
 
     <SectionPriceWrapper selectedSchedule={selectedSchedule}/>
-
-   
-
-   
-    <Viw style={{flexDirection:'row',justifyContent:'center'}}>
-      <Text style={{transform:[{translateX:translateX}]}}>屏幕</Text>
-    </Viw>
+    
     <Viw style={{flex:1,position:'relative'}}>
-      <Viw style={{
+      <Viw style={{flexDirection:'row',justifyContent:'center'}}>
+        <Viw 
+          style={{
+            transform:[{translateX:translateX}],
+            alignItems:'center'
+          }}>
+          <Image 
+          resizeMode='contain' 
+          style={{
+            width:150,
+            height:15
+          }} 
+          source={SEAT_SCREEN} />
+          <Txt style={{color:'#666'}}>
+            {selectedSchedule && (selectedSchedule.hall_name + "/" + selectedSchedule.hall_type_name)}
+          </Txt>
+        </Viw>
+      </Viw>
+
+      <Viw 
+      style={{
         position:'absolute',
         left:5,
-        transform:[{translateY:translateY},
-          // {scale:scale}
-        ],
+        transform:[{translateY:translateY},{scale:scale}],
         // borderWidth:1,
         // borderColor:'yellow',
         // backgroundColor:'#ccc',
-        height: hallDetail?hallDetail.seat_row_num * seatHeight:0,
-        width:15,
+        height: hallDetail?hallDetail.seat_row_num * (seatHeight+10)-10:0,
+        width:20,
         borderRadius:5,
+        top:topSpace,
+        // top:topSpace*scale,
+        alignItems:'center'
         // opacity:0.5
       }}>
           <Viw style={{
@@ -196,10 +217,12 @@ const SelectSeat = ({app,navigation,route}:any) => {
             style={{
               height:30,
               lineHeight:30,
-              width:15,
+              // width:15,
               textAlign:'center',
               position:'absolute',
-              top:(item.row-1) * seatHeight,
+              // borderColor:'yellow',
+              // backgroundColor:'yellow', 
+              top:(item.row-1) * (seatHeight+10),
               color:'#fff'
             }}>
               {item.row_id}
@@ -208,89 +231,140 @@ const SelectSeat = ({app,navigation,route}:any) => {
         }
         
       </Viw>
+      
       <SeatListContainer
+        key={selectedSchedule && selectedSchedule.id}
         style={{
           width:'100%',
-          height:'100%'//需要给容器设置宽高，否则会有问题
+          height:'100%',//需要给容器设置宽高，否则会有问题
+          // zIndex:100000000
         }}
         minScale={0.5}
-        maxScale={1}
+        maxScale={1.5}
         onTransforming={(translateX:number, translateY:number, scale:number)=>{
-          // console.log('onTransforming==>',translateX, translateY, scale);
           setTranslateX(translateX);
           setTranslateY(translateY);
           setScale(scale);
         }}
         onDidTransform={(translateX:number, translateY:number, scale:number)=>{
-          // console.log('onDidTransform==>',translateX, translateY, scale);
           setTranslateX(translateX);
           setTranslateY(translateY);
           setScale(scale);
         }}
       >
+        <Viw style={{height:topSpace}}></Viw>
         <Viw 
         style={{
-          // position:'absolute',
-          // left:0,
-          // top:0,
-          // width: 475, 
-          // height: 300,
-          // backgroundColor:'#ccc',
-          borderWidth:1,
-          borderColor:'blue',
-          width: hallDetail?hallDetail.seat_row_num * (seatWidth+10):0,
-          height: hallDetail?hallDetail.seat_column_num * (seatHeight+10):0,
+          width: hallDetail?(hallDetail.seat_column_num+2) * (seatWidth+10)-10:0,
+          height: hallDetail?hallDetail.seat_row_num * (seatHeight+10)-10:0,
+          position:'relative',
+          // zIndex:100000000
         }}>
           {
           seatList.map((item, index) => {
-            return <Image 
-            key={index+'seat'}
-            resizeMode='cover' 
+            return <TouchableOpacity
+            key={index+'seat12345'}
+            // activeOpacity={0.5}
             style={{
               width:seatWidth,
               height:seatHeight,
               position:'absolute',
-              top:(item.row-1) * seatHeight,
-              left:(item.column-1) * seatWidth
-            }} 
-            source={item.section_id == "a"
-              ? SEAT_SECTION_A
-              : item.section_id == "b"
-              ? SEAT_SECTION_B
-              : item.section_id == "c"
-              ? SEAT_SECTION_C
-              : item.section_id == "d"
-              ? SEAT_SECTION_D
-              : null
-            } />
+              top:(item.row-1) * (seatHeight+10),
+              left:(item.column) * (seatWidth+10)
+            }}
+            onPressOut={()=>{
+              console.log('真的flag====》');
+
+              setTimeout(()=>{},800)
+              //disabled 0可选 1不可选 2无座
+              if (
+                item.disabled !== 0 ||
+                hallDetail.already_sale_seat.includes(item.id)
+              ) return;
+              console.log('真的flag====》1')
+              let seats = selectedSeat.map((im) => im.id);
+              if (
+                selectedSeat.length >= selectedSchedule.buy_max &&
+                selectedSchedule.buy_max &&
+                !seats.includes(item.id)
+              ) {
+                return Toast.message(`1次最多购买${selectedSchedule.buy_max}张`);
+              }
+              console.log('真的flag====》2')
+              let flag = true;
+              // this.setState({
+              //   isShowScheduleList: false,
+              // });
+              bottomWrapperRef.current.setShowScheduleList(false)
+              for (let i = 0; i < selectedSeat.length; i++) {
+                if (selectedSeat[i].id === item.id) {
+                  selectedSeat.splice(i, 1);
+                  setSelectedSeat([
+                    ...selectedSeat
+                  ])
+                  flag = false;
+                }
+              }
+              if (flag) {
+                console.log('真的flag')
+                selectedSeat.push(item);
+                // this.setState({
+                //   selectedSeat: selectedSeat,
+                // });
+                setSelectedSeat([
+                  ...selectedSeat
+                ])
+              }
+            }}>
+              <Image 
+              resizeMode='cover' 
+              style={{
+                width:'100%',
+                height:'100%',
+                // position:'absolute',
+                // zIndex:10000000
+              }}
+              source={
+                hallDetail &&  hallDetail.already_sale_seat.includes(item.id)
+                  ? SEAT_ALREADY_SALE
+                  : item.disabled == 0
+                  ? handleSelectedSeat(item)
+                    ? SEAT_SELECTED
+                    : selectedSchedule.is_section == 1
+                    ? item.section_id == "a"
+                      ? SEAT_SECTION_A
+                      : item.section_id == "b"
+                      ? SEAT_SECTION_B
+                      : item.section_id == "c"
+                      ? SEAT_SECTION_C
+                      : item.section_id == "d"
+                      ? SEAT_SECTION_D
+                      : SEAT_NO_SELECTED
+                    : SEAT_NO_SELECTED
+                  : item.disabled == 1
+                  ? SEAT_DISABLE
+                  : null
+              } 
+              />
+            </TouchableOpacity>
           })}
-          
+          <Viw style={{
+            position:'absolute',
+            top:0,
+            bottom:0,
+            left:'50%',
+            borderLeftColor:'#ccc',
+            borderLeftWidth:0.5,
+            borderStyle:Platform.OS === 'ios'?'solid':'dashed'
+          }}></Viw>
         </Viw>
+        <Viw style={{height:topSpace}}></Viw>
       </SeatListContainer>
       
     </Viw>
-    
-    
-
-    
-
-    {/* {
-      pan_responder?<View 
-      style={{
-        width: 475, 
-        height: 300,
-        backgroundColor:'#ccc',
-        borderWidth:1,
-        borderColor:'blue'
-      }}
-      {...pan_responder.panHandlers}>
-
-      </View>:null
-    } */}
-
-
 
     <BottomWrapper 
+    ref={bottomWrapperRef}
     app={app}
     navigation={navigation}
     route={route}
@@ -309,8 +383,17 @@ const SelectSeat = ({app,navigation,route}:any) => {
     
   </View>;
 
-  
+  function handleSelectedSeat(item:any){
+    let flag = false;
+    for (let i = 0; i < selectedSeat.length; i++) {
+      if (selectedSeat[i].id === item.id) {
+        flag = true;
+      }
+    }
+    return flag;
+  }
 };
+
 
 const styles = StyleSheet.create({
   container:{
