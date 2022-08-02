@@ -45,8 +45,6 @@ import dayjs from 'dayjs';
 
 
 import { get_schedule_info, get_seat } from "../../api/selectSeat";
-import { any } from 'prop-types';
-import { Center, Right } from '../../component/teaset/react-native-legacy-components/src/NavigatorBreadcrumbNavigationBarStyles.android';
 
 import { 
   SEAT_ALREADY_SALE,
@@ -382,6 +380,8 @@ const SelectSeat = ({app,navigation,route}:any) => {
     />
     
   </View>;
+
+  
 
   function handleSelectedSeat(item:any){
     let flag = false;
