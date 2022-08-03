@@ -14,7 +14,9 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   Alert,
-  Dimensions
+  Dimensions,
+  View as Viw,
+  Text as Txt,
 } from 'react-native';
 
 import { 
@@ -35,13 +37,14 @@ import {
   Toast,
   Input
 } from '../../component/teaset/index';
-import PropTypes, { number } from 'prop-types';
+import PropTypes, { any, number } from 'prop-types';
 import { get_film_hot } from '../../api/film';
 import CustomListRow from '../../component/CustomListRow';
 import NavigationBar from '../../component/NavigationBar';
 import { login_out } from "../../api/user";
 
 import service from '../../utils/request';
+import dayjs from 'dayjs';
 
 import {
   create_order,
@@ -74,17 +77,13 @@ const BuyTicket = ({app,navigation,route}:any) => {
       let result:any = await get_buy_ticket_detail({
         order_id: params && params.order_id,
       });
-      // this.setState({
-      //   isSkeleton: false,
-      //   orderDetail: result,
-      // });
+      console.log('result===>',result);
       setIsSkeleton(false)
       setOrderDetail(result);
 
       set_expire_time(result.expireTime)
 
-      // this.setState({ expire_time: result.expireTime });
-      onSetInterval();
+      // onSetInterval();
     } catch (err:any) {
       if (err.error == 400) {
         setTimeout(() => {
@@ -197,20 +196,168 @@ const BuyTicket = ({app,navigation,route}:any) => {
     //     });
     if (result) app.setUserInfo(result);
   }
+
+  function arrLabel(){
+    if(!orderDetail) return;
+    let arr_label = [
+      <Txt key={"abc"}>
+        {orderDetail.hall_name}
+      </Txt>,
+    ];
+    if (orderDetail.select_seats) {
+      orderDetail.select_seats.map((item:any, index:number) => {
+        if (orderDetail.is_section == 1) {
+          arr_label.push(
+            <Txt style={{color:'#e9ea95'}} key={index + "s"}>
+              {index == 0 ? "" :" | "} {item.section_name}
+            </Txt>
+          );
+          item.seatList.map((it:any, idx:number) => {
+            arr_label.push(
+              <Txt key={idx + "se" + index}>
+                {it.row_id}排{it.column_id}座
+              </Txt>
+            );
+          });
+        } else {
+          arr_label.push(
+            <Txt key={index + "se"}>
+              {item.row_id}排{item.column_id}座
+            </Txt>
+          );
+        }
+      });
+    }
+    return arr_label;
+  }
   
 
   return <View style={styles.container}>
-    <Text onPress={()=>{
-      onGoToPay()
-    }}>BuyTicket</Text>
+    <Viw style={styles.headBox}>
+      {
+        orderDetail && orderDetail.poster_img && <Image 
+        resizeMode='cover'
+        style={styles.headBoxImage}
+        source={{uri:orderDetail.poster_img}}/>
+      }
+      <Viw style={styles.headBoxRight}>
+        <Viw style={styles.headBoxRightFilmNameWrapper}>
+          <Txt 
+          numberOfLines={1}
+          style={styles.filmName}>
+            {orderDetail && orderDetail.film_name}
+          </Txt>
+          {
+            orderDetail && <Txt style={styles.numPrice}>
+            {orderDetail.ticket_count}张{" "}
+            原价 ¥{orderDetail.origin_price}
+          </Txt>
+          }
+        </Viw>
+        {
+          orderDetail && <Txt style={styles.timeLanguage}>
+            {handerDate(orderDetail.start_runtime)}{' '}
+            {dayjs(orderDetail.start_runtime).format("HH:mm")} {' '}
+            {' (' + orderDetail.language + orderDetail.play_type_name + ')'}
+          </Txt>
+        }
+        <Txt style={styles.cinemaName}>
+          {orderDetail && orderDetail.cinema_name}
+        </Txt>
+        <Txt style={styles.cinemaName}>
+          {arrLabel()}
+        </Txt>
+      </Viw>
+    </Viw>
 
   </View>;
+
+  function handerDate(date:any) {
+    let today = dayjs().format("YYYY-MM-DD");
+    let tomorrow = dayjs().add(1, "day").format("YYYY-MM-DD");
+    let houtian = dayjs().add(2, "day").format("YYYY-MM-DD");
+    let cur_y = dayjs(date).format("YYYY");
+    let y = dayjs().format("YYYY");
+    switch (dayjs(date).format("YYYY-MM-DD")) {
+      case today:
+        return "今天" + dayjs(date).format("M月D日");
+      case tomorrow:
+        return "明天" + dayjs(date).format("M月D日");
+      case houtian:
+        return "后天" + dayjs(date).format("M月D日");
+      default:
+        return (
+          handleWeek(dayjs(date).day()) +
+          dayjs(date).format(cur_y == y ? "M月D日" : "YY年M月D日")
+        );
+    }
+  }
+
+  function handleWeek(day:any) {
+    switch (day) {
+      case 0:
+        return "周日";
+      case 1:
+        return "周一";
+      case 2:
+        return "周二";
+      case 3:
+        return "周三";
+      case 4:
+        return "周四";
+      case 5:
+        return "周五";
+      case 6:
+        return "周六";
+      default:
+        return "";
+    }
+  }
 };
 
 const styles = StyleSheet.create({
   container:{
+    flex:1,
+  },
+  headBox:{
+    paddingHorizontal:12,
+    paddingTop:12,
+    paddingBottom:50,
+    backgroundColor:Theme.primaryColor,
+    flexDirection:'row',
+  },
+  headBoxImage:{
+    width:72,
+    height:100,
+    marginRight:10
+  },
+  headBoxRight:{
     flex:1
   },
+  headBoxRightFilmNameWrapper:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center',
+    marginBottom:10
+  },
+  filmName:{
+    color:'#fff',
+    fontSize:20,
+    flex:1
+  },
+  numPrice:{
+    fontSize:12,
+    width:100,
+    color:'#fff',
+    textAlign:'right'
+  },
+  timeLanguage:{
+    // fontSize:14,
+    color:'#fff',
+  },
+  cinemaName:{
+    color:'#fff',
+  }
   
 });
 
