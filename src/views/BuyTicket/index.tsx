@@ -35,7 +35,8 @@ import {
   Theme,
   ListRow,
   Toast,
-  Input
+  Input,
+  Overlay
 } from '../../component/teaset/index';
 import PropTypes, { any, number } from 'prop-types';
 import { get_film_hot } from '../../api/film';
@@ -53,9 +54,89 @@ import {
   get_buy_ticket_detail,
 } from "../../api/order";
 import { get_user_info } from "../../api/user";
-
-
 var ScreenObj = Dimensions.get('window');
+
+
+let overlay_view = function(orderDetail:any=null,colorScheme:any,onCancel:any){
+  return <Overlay.PullView 
+  side='bottom'
+  modal={false}
+  containerStyle={{
+    borderTopLeftRadius:10,
+    borderTopRightRadius:10,
+    backgroundColor: colorScheme=='dark'?'#1a1b1c':'#fff',
+  }}>
+    <Viw style={{
+      borderBottomWidth:1,
+      borderBottomColor:colorScheme=='dark'?'#202122':'#f4f4f4',
+      paddingTop:20,
+      paddingBottom:10,
+      // flexDirection:'row',
+      // alignItems:'center',
+      // justifyContent:'space-between'
+      position:'relative'
+    }}>
+      <Text style={{
+        textAlign:'center',
+        fontSize:16,
+        fontWeight:'bold'
+      }}>价格明细</Text>
+      <Ionicons 
+      name={'close-sharp'}
+      size={30} 
+      color={colorScheme=='dark'?'#fff':'#000'}
+      style={{
+        position:'absolute',
+        right:10,
+        top:10
+      }}
+      onPress={()=>{
+        onCancel && onCancel();
+      }}/>
+    </Viw>
+    
+    <ScrollView
+    style={{
+      maxHeight:300,
+      backgroundColor: colorScheme=='dark'?'#1a1b1c':'#fff',
+      // paddingHorizontal:20,
+      paddingTop:5
+    }}
+    showsHorizontalScrollIndicator={false}
+    stickyHeaderIndices={[]}>
+      {
+        orderDetail && <CustomListRow 
+        accessory="none"
+        // topSeparator='full'
+        bottomSeparator="indent" 
+        backgroundColor={colorScheme=='dark'?'#1a1b1c':'#fff'}
+        title={'电影票'} 
+        detail={orderDetail.ticket_count + "张"} />
+      }
+      {
+        orderDetail && <CustomListRow 
+        accessory="none"
+        // topSeparator='full'
+        backgroundColor={colorScheme=='dark'?'#1a1b1c':'#fff'}
+        bottomSeparator="indent" 
+        title={'原价'} 
+        detail={
+              '含服务费'+orderDetail.premium+'元/张 ' + ' ' +orderDetail.price+'元'
+        } />
+      }
+      
+    </ScrollView>
+    <View style={{
+      height:10,
+      backgroundColor: colorScheme=='dark'?'#1a1b1c':'#fff',
+    }}></View>
+  <View style={{
+    height:10,
+    backgroundColor: colorScheme=='dark'?'#1a1b1c':'#fff',
+  }}></View>
+</Overlay.PullView>
+};
+
 
 const BuyTicket = ({app,navigation,route}:any) => {
   const colorScheme = useColorScheme();
@@ -68,6 +149,22 @@ const BuyTicket = ({app,navigation,route}:any) => {
   
   useEffect(()=>{
     getOrderDetail();
+
+    return ()=>{
+      let { params } = route;
+      console.log('销毁了====》')
+        /**
+       * isCancelOrder 是否取消订单 为true取消订单 （从确认选座是进来时返回需要取消订单）
+       */
+      if (
+        orderDetail.order_id &&
+        params && params.isCancelOrder && !isNotCancelOrder
+      ) {
+        //取消订单
+        cancle_order({ order_id: orderDetail.order_id });
+      }
+      clearInterval(timerSetInterVal);
+    }
   },[]);
 
   async function getOrderDetail() {
@@ -83,7 +180,8 @@ const BuyTicket = ({app,navigation,route}:any) => {
 
       set_expire_time(result.expireTime)
 
-      // onSetInterval();
+      onSetInterval(result.expireTime);
+
     } catch (err:any) {
       if (err.error == 400) {
         setTimeout(() => {
@@ -110,30 +208,27 @@ const BuyTicket = ({app,navigation,route}:any) => {
         //   style: "cancel"
         // },
         { text: "确定", onPress: async () => {
-          console.log('123456')
           setIsNotCancelOrder(true)
-          // navigation.goBack()
+          navigation.goBack()
         } }
       ]
     );
     
   }
-  function onSetInterval() {
-    let timer = setInterval(() => {
-      // let { expire_time } = this.state;
-      if (expire_time <= 0) {
+  function onSetInterval(time:number) {
+    let timer = setTimeout(() => {
+      if (time <= 0) {
         onDialog();
         clearInterval(timer);
       } else {
-        expire_time -= 1;
-        // this.setState({ expire_time: expire_time });
-        set_expire_time(expire_time);
+        time -= 1;
+        onSetInterval(time);
+        set_expire_time(time);
       }
     }, 1000);
-    setTimerSetInterVal(timer);
+    setTimerSetInterVal(timer)
   }
   function handleMinute() {
-    // let { expire_time } = this.state;
     let m = Math.floor(expire_time / 60);
     let s = expire_time % 60;
     return m + ":" + (s > 9 ? s : "0" + s);
@@ -230,10 +325,48 @@ const BuyTicket = ({app,navigation,route}:any) => {
     }
     return arr_label;
   }
+
   
 
-  return <View style={styles.container}>
-    <Viw style={styles.headBox}>
+  return <View style={{
+      ...styles.container
+    }}>
+    <Viw 
+    style={{
+      position:'absolute',
+      right:0,
+      top:50,
+      zIndex:100,
+      backgroundColor:colorScheme=='dark'?'#000':'#ccc',
+      paddingHorizontal:8,
+      paddingVertical:3,
+      borderTopLeftRadius:10,
+      borderBottomLeftRadius:10,
+    }}>
+      <Txt 
+      style={{
+        color:colorScheme=='dark'?'#fff':'#fff',
+        // backgroundColor:colorScheme=='dark'?'#000':'#ccc',
+        // paddingHorizontal:8,å
+        // paddingVertical:3,
+        // borderRadius:50
+      }}>
+        <Ionicons 
+        name={'time-outline'}
+        size={16} 
+        color={colorScheme=='dark'?'#fff':'#fff'}
+        style={{marginLeft:20}}/>
+        {' '}
+        <Txt style={{marginLeft:40,fontSize:16}}>
+          {handleMinute()}
+        </Txt>
+      </Txt>
+    </Viw>
+    
+    <Viw style={{
+      ...styles.headBox,
+      backgroundColor:colorScheme=='dark'?'#1a1b1c':Theme.primaryColor
+    }}>
       {
         orderDetail && orderDetail.poster_img && <Image 
         resizeMode='cover'
@@ -268,6 +401,65 @@ const BuyTicket = ({app,navigation,route}:any) => {
           {arrLabel()}
         </Txt>
       </Viw>
+    </Viw>
+
+    <Viw style={styles.bottomContentBox}>
+      <Viw style={{
+        ...styles.bottomContentBoxTop,
+        backgroundColor:colorScheme=='dark'?'#000':'#fff',
+      }}></Viw>
+      <CustomListRow 
+      accessory="none"
+      topSeparator='full'
+      bottomSeparator="indent" 
+      title={'抵用券'} 
+      detail={'无可用'} />
+      {
+        orderDetail && <CustomListRow 
+        accessory="none"
+        bottomSeparator="full" 
+        title={''} 
+        detail={"票价小计 ¥" + orderDetail.price} />
+      }
+
+      <View style={{
+        ...styles.bottomBox,
+        borderTopColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4'
+      }}>
+        {
+          orderDetail && <Text style={styles.bottomBoxLeft}>
+            ¥{orderDetail.price}
+          </Text>
+        }
+        <Viw style={styles.bottomBoxRight}>
+          <Text 
+          style={styles.detailText} 
+          onPress={()=>{
+            let ol = Overlay.show(overlay_view(orderDetail,colorScheme,()=>{
+              Overlay.hide(ol);
+            }));
+          }}>
+            明细
+            <Ionicons 
+            name={'chevron-down-outline'}
+            size={14} 
+            color={colorScheme=='dark'?'#fff':'#000'}
+            style={{marginLeft:20}}/>
+          </Text>
+          
+          <Button
+          title={'确认支付'}
+          type="primary"
+          size="md"
+          style={{}}
+          disabled={false}
+          onPress={() => {
+            setIsNotCancelOrder(true);
+            onGoToPay();
+          }}
+        />
+        </Viw>
+      </View>
     </Viw>
 
   </View>;
@@ -323,7 +515,7 @@ const styles = StyleSheet.create({
     paddingHorizontal:12,
     paddingTop:12,
     paddingBottom:50,
-    backgroundColor:Theme.primaryColor,
+    // backgroundColor:Theme.primaryColor,
     flexDirection:'row',
   },
   headBoxImage:{
@@ -357,6 +549,45 @@ const styles = StyleSheet.create({
   },
   cinemaName:{
     color:'#fff',
+  },
+
+  bottomContentBox:{
+    flex:1,
+    position:'relative'
+  },
+  bottomContentBoxTop:{
+    position:'absolute',
+    left:0,
+    right:0,
+    top:-20,
+    height:20,
+    // transform:[{translateY: -30}],
+    borderTopLeftRadius:20,
+    borderTopRightRadius:20
+  },
+  bottomBox:{
+    position:'absolute',
+    bottom:0,
+    left:0,
+    right:0,
+    padding:10,
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-between',
+    borderTopWidth:1
+  },
+  bottomBoxLeft:{
+    color:Theme.primaryColor,
+    fontWeight:'bold'
+  },
+  bottomBoxRight:{
+    flexDirection:'row',
+    alignItems:'center'
+  },
+  detailText:{
+    display:'flex',
+    justifyContent:'center',
+    marginRight:10
   }
   
 });

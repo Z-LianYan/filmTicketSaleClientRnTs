@@ -203,30 +203,32 @@ const BottomWrapper = ({
       backgroundColor:colorScheme=='dark'?'#1a1b1c':'#fff',
       // borderTopColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4'
     }}>
-      <TouchableOpacity 
-      activeOpacity={0.9} 
-      style={{
-        ...styles.topCell,
-        borderBottomColor:colorScheme=='dark'?'#272525':'#f4f4f4'
-      }}
-      onPress={()=>{
-        let ol = Overlay.show(overlay_view((scheduleInfo && scheduleInfo.notices)?scheduleInfo.notices:[],colorScheme,()=>{
-          Overlay.hide(ol);
-        }));
-      }}>
-        <Ionicons 
-        name={'volume-high-sharp'}
-        size={16} 
-        color={colorScheme=='dark'?Theme.primaryColor:Theme.primaryColor}/>
-        <Text style={{fontSize:16}}>
-          {scheduleInfo && scheduleInfo.notices.length}个通知
+      {
+        (scheduleInfo && scheduleInfo.notices && scheduleInfo.notices.length) ? <TouchableOpacity 
+        activeOpacity={0.9} 
+        style={{
+          ...styles.topCell,
+          borderBottomColor:colorScheme=='dark'?'#272525':'#f4f4f4'
+        }}
+        onPress={()=>{
+          let ol = Overlay.show(overlay_view((scheduleInfo && scheduleInfo.notices)?scheduleInfo.notices:[],colorScheme,()=>{
+            Overlay.hide(ol);
+          }));
+        }}>
           <Ionicons 
-          name={'chevron-forward'}
+          name={'volume-high-sharp'}
           size={16} 
-          color={colorScheme=='dark'?'#fff':'#000'}/>
-        </Text>
-        
-      </TouchableOpacity>
+          color={colorScheme=='dark'?Theme.primaryColor:Theme.primaryColor}/>
+          <Text style={{fontSize:16}}>
+            {scheduleInfo && scheduleInfo.notices.length}个通知
+            <Ionicons 
+            name={'chevron-forward'}
+            size={16} 
+            color={colorScheme=='dark'?'#fff':'#000'}/>
+          </Text>
+          
+        </TouchableOpacity>:null
+      }
       <Viw style={{
         ...styles.bottomContentSchedule,
         borderBottomColor:colorScheme=='dark'?'#272525':'#f4f4f4'
