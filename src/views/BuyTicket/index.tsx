@@ -150,22 +150,66 @@ const BuyTicket = ({app,navigation,route}:any) => {
   useEffect(()=>{
     getOrderDetail();
 
+    navigation.addListener('beforeRemove', (e:any) => {
+      console.log('e====>',e)
+
+      // Prevent default behavior of leaving the screen
+      e.preventDefault();
+
+      // Prompt the user before leaving the screen
+      Alert.alert(
+        '确定离开吗？',
+        '离开后当前订单将自动取消！',
+        [
+          { text: "再想想", style: 'cancel', onPress: () => {} },
+          {
+            text: '确定离开',
+            style: 'destructive',
+            // If the user confirmed, then we dispatch the action we blocked earlier
+            // This will continue the action that had triggered the removal of the screen
+            onPress: async () => {
+              let { params } = route;
+              if (
+                orderDetail.order_id &&
+                params && params.isCancelOrder && !isNotCancelOrder
+              ) {
+
+                console.log('取消订单')
+                //取消订单
+                await cancle_order({ order_id: orderDetail.order_id });
+
+
+              }
+              clearInterval(timerSetInterVal);
+              
+              navigation.dispatch(e.data.action)
+
+            },
+          },
+        ]
+      );
+    })
+
+
+
+
     return ()=>{
-      let { params } = route;
+      // let { params } = route;
       console.log('销毁了====》')
         /**
        * isCancelOrder 是否取消订单 为true取消订单 （从确认选座是进来时返回需要取消订单）
        */
-      if (
-        orderDetail.order_id &&
-        params && params.isCancelOrder && !isNotCancelOrder
-      ) {
-        //取消订单
-        cancle_order({ order_id: orderDetail.order_id });
-      }
+      // if (
+      //   orderDetail.order_id &&
+      //   params && params.isCancelOrder && !isNotCancelOrder
+      // ) {
+      //   //取消订单
+      //   cancle_order({ order_id: orderDetail.order_id });
+      // }
       clearInterval(timerSetInterVal);
+      
     }
-  },[]);
+  },[navigation]);
 
   async function getOrderDetail() {
     // let { history, location, match } = this.props;
@@ -408,12 +452,12 @@ const BuyTicket = ({app,navigation,route}:any) => {
         ...styles.bottomContentBoxTop,
         backgroundColor:colorScheme=='dark'?'#000':'#fff',
       }}></Viw>
-      <CustomListRow 
+      {/* <CustomListRow 
       accessory="none"
       topSeparator='full'
       bottomSeparator="indent" 
       title={'抵用券'} 
-      detail={'无可用'} />
+      detail={'无可用'} /> */}
       {
         orderDetail && <CustomListRow 
         accessory="none"
