@@ -34,6 +34,7 @@ import CinemaSearch from '../views/CinemaSearch/index';
 import CinemaDetailPage from '../views/CinemaDetail/index';
 import SelectSeatPage from '../views/SelectSeat/index';
 import BuyTicket from '../views/BuyTicket/index';
+import OrderDetailPage from '../views/OrderDetail/index';
 
 
 
@@ -160,6 +161,15 @@ const routes=[
     { 
         component: SelectSeatPage, 
         name:"SelectSeatPage",
+        options: {
+            headerShown:true,
+            title:'',
+            // headerTransparent:true
+        } 
+    },
+    { 
+        component: OrderDetailPage, 
+        name:"OrderDetailPage",
         options: {
             headerShown:true,
             title:'',
