@@ -198,35 +198,23 @@ export default class ContentCom extends Component<Props,State> {
                 try{
                   // 取消订单
                   await cancle_order({ order_id: orderDetail.order_id });
-                  clearInterval(this.state.timerSetInterVal);
-                  navigation.dispatch(e.data.action);
-                  overlayPullView && Overlay.hide(overlayPullView);
+                  
                 }catch(err){
-                  clearInterval(this.state.timerSetInterVal);
-                  navigation.dispatch(e.data.action);
-                  overlayPullView && Overlay.hide(overlayPullView);
+                  
                 }
-                 
               };
+              clearInterval(this.state.timerSetInterVal);//清除定时器
+              this.setState({expire_time:0});
               navigation.dispatch(e.data.action);
+              overlayPullView && Overlay.hide(overlayPullView);
             },
           },
         ]
       );
     })
   }
-  async componentWillUnmount(){
+  async componentWillUnmount(){//只有反回的时候才能执行销毁（跳转不会销毁组件的）
     console.log('组件销毁前----》〉》〉');
-    // let { params } = this.props.route;
-    // let { orderDetail,isNotCancelOrder,overlayPullView } = this.state;
-    // if (orderDetail && orderDetail.order_id && params && params.isCancelOrder && !isNotCancelOrder) {
-    // console.log('取消订单----》〉》〉');
-      
-    //   // 取消订单
-    //   await cancle_order({ order_id: orderDetail.order_id });
-    //   clearInterval(this.state.timerSetInterVal);
-    //   overlayPullView && Overlay.hide(overlayPullView); 
-    // };
   }
 
   async getOrderDetail() {
@@ -332,6 +320,7 @@ export default class ContentCom extends Component<Props,State> {
             console.log('pay_result====>',pay_result);
             if (pay_result) this.getUserInfo();
             clearInterval(this.state.timerSetInterVal);
+            this.setState({expire_time:0})
             setTimeout(() => {
               navigation.navigate({
                 name:"OrderDetailPage",
@@ -348,9 +337,9 @@ export default class ContentCom extends Component<Props,State> {
                 [
                   { text: "前往充值", 
                     onPress: async () => {
-                      navigation.navigate({
-                        name:'Recharge'
-                      })
+                      this.setState({expire_time:0})
+                      clearInterval(this.state.timerSetInterVal);//清除定时器
+                      navigation.replace('Recharge');
                     } 
                   }
                 ]
@@ -387,7 +376,7 @@ export default class ContentCom extends Component<Props,State> {
           item.seatList.map((it:any, idx:number) => {
             arr_label.push(
               <Txt key={idx + "se" + index}>
-                {it.row_id}排{it.column_id}座
+                {' '} {it.row_id}排{it.column_id}座 {' '}
               </Txt>
             );
           });

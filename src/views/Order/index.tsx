@@ -38,7 +38,7 @@ var ScreenWidth = Dimensions.get('window').width;
 // import DropdownMenu from '../../component/DropdownMenu';
 import TabViews from './Tabs';
 
-const OrderPage = ({navigation}:any) => {
+const OrderPage = ({navigation,route}:any) => {
   const refDropdownMenu:{current:any} = useRef()
   const colorScheme = useColorScheme();
   // let navigation = useNavigation();
@@ -167,7 +167,10 @@ const OrderPage = ({navigation}:any) => {
       }}>
         {
           list.map((item:any,index)=>{
-            return <OrderListItem item={item} key={index}/>
+            return <OrderListItem 
+            item={item} 
+            navigation={navigation}
+            key={index}/>
           })
         }
         <BottomLoading

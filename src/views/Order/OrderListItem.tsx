@@ -23,23 +23,60 @@ import {
   Text
 } from '../../component/Themed';
 type propsType = {
+  navigation:any,
   item?:any,
   // separator:boolean
 }
 const CinemaListItem = ({
+  navigation,
   item = {},
   // separator = true
 }:propsType)=>{ 
   const colorScheme = useColorScheme();
-  return <View style={styles.itemContainer}>
-      <TouchableHighlight>
+  let [expire_time, set_expire_time] = useState(0);
+  useEffect(() => {
+    if (item.expireTime <= 0) return;
+    setTimeout(() => {
+      item.expireTime -= 1;
+      set_expire_time(item.expireTime);
+    }, 1000);
+    // onSetInterval()
+    return () => {};
+  });
+
+  // function onSetInterval(){
+  //   console.log('123456-------->>>>222',item.expireTime)
+  //   let timer = setInterval(()=>{
+  //     console.log('123456-------->>>>',item.expireTime)
+  //     if(item.expireTime<=0) {
+  //       // clearInterval(timer)
+  //     }else{
+  //       item.expireTime -= 1;
+  //       set_expire_time(item.expireTime);
+  //     };
+  //   },1000)
+  // }
+
+  return <View style={{
+    ...styles.itemContainer,
+    borderColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4'
+  }}>
+      <TouchableHighlight 
+      onPress={()=>{
+        navigation.navigate({
+          name:"OrderDetailPage",
+          params:{
+            order_id: item && item.order_id
+          }
+        });
+      }}>
         <View style={{
           ...styles.itemContent,
-          borderColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4'
+          // borderColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4'
         }}>
           <View style={styles.topWrapper}>
             <Text>{item.film_name}</Text>
-            <Text style={styles.topWrapperRight}>{item.status_text}</Text>
+            <Text style={styles.topWrapperRight}>{item.status_text}{expire_time}</Text>
           </View>
           <View style={styles.bottomWrapper}>
             <Image 
@@ -62,22 +99,61 @@ const CinemaListItem = ({
           ...styles.separator,
           backgroundColor: colorScheme=='dark'?'#1a1b1c':'#eee'
         }}></View> : null} */}
+
+
+        <View style={styles.commentBtn}>
+          {item.status == 2 && !item.comment_content ? (
+            <Button
+              title={'写影评'}
+              type="primary"
+              size="md"
+              style={{width:80,height:40,marginBottom:10,marginRight:10,backgroundColor:'transparent'}}
+              disabled={false}
+              onPress={() => {
+                navigation.navigate({
+                  name: "CommentPage",
+                  params: {
+                    film_id: item.film_id
+                  },
+                });
+              }}
+            />
+          ) : null}
+          {item.status == 0 && expire_time ? (
+            <Button
+              title={'付款'}
+              type="primary"
+              size="md"
+              style={{width:80,height:40,marginBottom:10,marginRight:10}}
+              disabled={false}
+              onPress={() => {
+                navigation.navigate({
+                  name:'BuyTicket',
+                  params:{
+                    order_id:item.order_id
+                  }
+                })
+              }}
+            />
+          ) : null}
+        </View>
+
+
+    
     </View>
   
 }
 export default CinemaListItem;
 const styles = StyleSheet.create({
   itemContainer:{
-    padding:12,
+    // padding:12,
+    margin:12,
+    borderRadius:8,
+    borderWidth:1,
   },
   itemContent:{
     padding:8,
-    // flexDirection:'row',
-    // color: '#797d82',
-    // backgroundColor:'#463d3d',
-    borderRadius:8,
-    borderWidth:1,
-    // borderColor:'#fff'
+    borderRadius:8
   },
   topWrapper:{
     flex:1,
@@ -105,5 +181,10 @@ const styles = StyleSheet.create({
   },
   bottomWrapperRightValue:{
     color:'#666'
+  },
+
+  commentBtn:{
+    flexDirection:'row',
+    justifyContent:'flex-end'
   }
 });

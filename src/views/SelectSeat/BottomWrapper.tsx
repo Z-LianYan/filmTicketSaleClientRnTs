@@ -369,29 +369,17 @@ const BottomWrapper = ({
         name:'BuyTicket',
         params:{
           order_id:result.order_id,
-          isCancelOrder: true
+          isCancelOrder: true//跳转过去返回时是可以关闭订单的
         }
       })
-    } catch (err:any) {
+      
+    } catch (err:any) {//如果预订失败
       console.log("err", err.message);
+      setSelectedSeat([]);//清空当前选中的座位
+      getSeatList && await getSeatList(selectedSchedule.id,selectedSchedule.hall_id);//刷新当前影厅座位列表
     }
   }
-  // async function onCreateOreder() {
-  //   try {
-  //     // let result:any = await create_order({
-  //     //   schedule_id: selectedSchedule.id,
-  //     //   buy_seat_ids: selectedSeat.map((item:any) => item.id).join(","),
-  //     // });
-  //     // console.log("生成订单", result);
-  //     // if (!result) return;
-  //     navigation.navigate({ name: 'BuyTicket', params:{
-  //       // order_id:result.order_id,
-  //       // isCancelOrder:true
-  //     }});
-  //   } catch (err:any) {
-  //     console.log("err", err.message);
-  //   }
-  // }
+  
 
   function calcTotalPrice() {
     // let { selectedSeat, selectedSchedule } = this.state;
