@@ -36,30 +36,27 @@ const CinemaListItem = ({
 }:propsType)=>{ 
   const colorScheme = useColorScheme();
   let [expire_time, set_expire_time] = useState(0);
-  // const savedUseRef:{current:any} = useRef();
+  let refTime:{current:any} = useRef();
   useEffect(() => {
-    let time = item.expireTime || 0;
-    let timer  = setInterval(()=>{
-      if(time<=0) {
-        clearInterval(timer);
+    if(!item.expireTime || item.expireTime<=0) return;
+    refTime.current  = setTimeout(()=>{
+      if(item.expireTime<=0) {
+        clearTimeout(refTime.current);
       }else{
-        time -= 1;
-        set_expire_time(time)
+        item.expireTime -= 1;
+        set_expire_time(item.expireTime)
       }
     },1000);
     return () => {
-      clearInterval(timer);
+      clearTimeout(refTime.current);
     };
-  },[]);
+  });
 
-  const onExpireTime = useCallback(()=>{
-    let val = 11;
-    setTimeout(() => {
-      console.log('3秒后')
-      val = 123
-    }, 3000);
-    return val
-  },[])
+  const handleMinute = useCallback(()=>{
+    let m = Math.floor(expire_time / 60);
+    let s = expire_time % 60;
+    return m + ":" + (s > 9 ? s : "0" + s);
+  },[expire_time])
 
   return <View style={{
     ...styles.itemContainer,
@@ -81,7 +78,20 @@ const CinemaListItem = ({
         }}>
           <View style={styles.topWrapper}>
             <Text>{item.film_name}</Text>
-            <Text style={styles.topWrapperRight}>{item.status_text}{expire_time}</Text>
+            <Text 
+            style={styles.topWrapperRight}>
+              {/* {item.status_text} */}
+
+              {
+                item.status == 2 && item.comment_content
+                ? "已评价"
+                : item.status == 0 && expire_time > 0
+                ? item.status_text + ", " + handleMinute()
+                : item.status == 0
+                ? "支付超时"
+                : item.status_text
+              }
+            </Text>
           </View>
           <View style={styles.bottomWrapper}>
             <Image 
@@ -193,6 +203,7 @@ const styles = StyleSheet.create({
 
   commentBtn:{
     flexDirection:'row',
-    justifyContent:'flex-end'
+    justifyContent:'flex-end',
+    borderRadius:8
   }
 });

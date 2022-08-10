@@ -171,6 +171,17 @@ const OrderPage = ({navigation,route}:any) => {
       }}>
         {
           list.map((item:any,index:number)=>{
+            // if(item.status == 0 && item.expireTime){
+            //   return <OrderListItem 
+            //   item={item} 
+            //   navigation={navigation}
+            //   key={index+'OrderListItem'}/>
+            // }else{
+            //   return <OrderListItem 
+            //   item={item} 
+            //   navigation={navigation}
+            //   key={index+'OrderListItem'}/>
+            // }
             return <OrderListItem 
             item={item} 
             navigation={navigation}
