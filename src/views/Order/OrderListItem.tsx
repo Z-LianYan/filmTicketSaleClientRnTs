@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect, useCallback,useRef } from 'react';
  import { useNavigation } from '@react-navigation/core';
  import { observer, inject } from 'mobx-react'
  import {
@@ -22,6 +22,8 @@ import {
   View,
   Text
 } from '../../component/Themed';
+
+
 type propsType = {
   navigation:any,
   item?:any,
@@ -34,34 +36,37 @@ const CinemaListItem = ({
 }:propsType)=>{ 
   const colorScheme = useColorScheme();
   let [expire_time, set_expire_time] = useState(0);
+  // const savedUseRef:{current:any} = useRef();
   useEffect(() => {
-    if (item.expireTime <= 0) return;
-    setTimeout(() => {
-      item.expireTime -= 1;
-      set_expire_time(item.expireTime);
-    }, 1000);
-    // onSetInterval()
-    return () => {};
-  });
+    let time = item.expireTime || 0;
+    let timer  = setInterval(()=>{
+      if(time<=0) {
+        clearInterval(timer);
+      }else{
+        time -= 1;
+        set_expire_time(time)
+      }
+    },1000);
+    return () => {
+      clearInterval(timer);
+    };
+  },[]);
 
-  // function onSetInterval(){
-  //   console.log('123456-------->>>>222',item.expireTime)
-  //   let timer = setInterval(()=>{
-  //     console.log('123456-------->>>>',item.expireTime)
-  //     if(item.expireTime<=0) {
-  //       // clearInterval(timer)
-  //     }else{
-  //       item.expireTime -= 1;
-  //       set_expire_time(item.expireTime);
-  //     };
-  //   },1000)
-  // }
+  const onExpireTime = useCallback(()=>{
+    let val = 11;
+    setTimeout(() => {
+      console.log('3秒后')
+      val = 123
+    }, 3000);
+    return val
+  },[])
 
   return <View style={{
     ...styles.itemContainer,
     borderColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4'
   }}>
       <TouchableHighlight 
+      underlayColor={''}
       onPress={()=>{
         navigation.navigate({
           name:"OrderDetailPage",
@@ -107,6 +112,9 @@ const CinemaListItem = ({
               title={'写影评'}
               type="primary"
               size="md"
+              titleStyle={{
+                color:Theme.primaryColor
+              }}
               style={{width:80,height:40,marginBottom:10,marginRight:10,backgroundColor:'transparent'}}
               disabled={false}
               onPress={() => {

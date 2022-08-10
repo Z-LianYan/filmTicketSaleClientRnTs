@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Dimensions,
-  useColorScheme
+  useColorScheme,
+  View as Viw,
+  Text as Txt
 } from 'react-native';
 import { 
   Carousel,
@@ -35,13 +37,13 @@ const BottomLoading = ({
   emptyText?:string
 })=>{
   const colorScheme = useColorScheme();
-  return <View>
-    {isLoading?<View style={{
+  return <Viw>
+    {isLoading?<Viw style={{
       height:50,
-      justifyContent:'center'
+      justifyContent:'center',
       }}>
         <ActivityIndicator/>
-      </View>:hasContent?(isFinallyPage?<Text 
+      </Viw>:hasContent?(isFinallyPage?<Text 
       style={{
         color:Theme.toastIconTintColor,
         height:50,
@@ -52,7 +54,7 @@ const BottomLoading = ({
         height:50,
         lineHeight:50,
         textAlign:'center'
-      }}>上拉加载更多</Text>):<View style={{
+      }}>上拉加载更多</Text>):<Viw style={{
         height:150,
         alignItems:'center',
         justifyContent:'center'
@@ -66,9 +68,9 @@ const BottomLoading = ({
         color:'#ccc',
         textAlign:'center'
       }}>{emptyText}</Text>
-    </View>
+    </Viw>
     }
-  </View>
+  </Viw>
 }
 export default BottomLoading;
  

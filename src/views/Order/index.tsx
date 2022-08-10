@@ -43,7 +43,7 @@ const OrderPage = ({navigation,route}:any) => {
   const colorScheme = useColorScheme();
   // let navigation = useNavigation();
   const [refreshing, setRefreshing] = React.useState(false);
-  let [list,setList] = useState([])
+  let [list,setList] = useState<any>([])
   let [isLoading,setLoading] = useState(false);
   let [isFinallyPage,setFinallyPage] = useState(false);
   let [keywords,setKeywords] = useState('');
@@ -102,7 +102,10 @@ const OrderPage = ({navigation,route}:any) => {
   }
   
 
-  return (<View style={styles.container}>
+  return (<View style={{
+    ...styles.container,
+    backgroundColor:colorScheme=='dark'?'#000':'#f4f4f4'
+  }}>
     {/* <NavigationBar 
       style={{
         zIndex:1
@@ -137,7 +140,8 @@ const OrderPage = ({navigation,route}:any) => {
         }}
       />
       }/> */}
-      <TabViews active='1' onChange={(status)=>{
+      <TabViews active='' onChange={(status)=>{
+        setList([]);
         fetchOptions.page = 1;
         fetchOptions.status = status;
         setFetchOptions(fetchOptions);
@@ -166,11 +170,11 @@ const OrderPage = ({navigation,route}:any) => {
         }
       }}>
         {
-          list.map((item:any,index)=>{
+          list.map((item:any,index:number)=>{
             return <OrderListItem 
             item={item} 
             navigation={navigation}
-            key={index}/>
+            key={index+'OrderListItem'}/>
           })
         }
         <BottomLoading
