@@ -176,8 +176,16 @@ export default class ContentCom extends Component<Props,State> {
     // let { expire_time } = this.state;
     this.getOrderDetail()
     navigation.addListener('beforeRemove', (e:any) => {
-      let { expire_time } = this.state;
+      let { expire_time,orderDetail,isNotCancelOrder,overlayPullView } = this.state;
+      let { params } = this.props.route;
       if(expire_time<=0) return;
+      if(!params.isCancelOrder){//如果是从订单列表点进来是没有 isCancelOrder 传这个参数的，不需要关闭订单。
+        clearInterval(this.state.timerSetInterVal);//清除定时器
+        this.setState({expire_time:0});
+        navigation.dispatch(e.data.action);
+        overlayPullView && Overlay.hide(overlayPullView);
+        return;
+      }
       // Prevent default behavior of leaving the screen
       e.preventDefault();
       // Prompt the user before leaving the screen
@@ -192,8 +200,7 @@ export default class ContentCom extends Component<Props,State> {
             // If the user confirmed, then we dispatch the action we blocked earlier
             // This will continue the action that had triggered the removal of the screen
             onPress: async () => {
-              let { params } = this.props.route;
-              let { orderDetail,isNotCancelOrder,overlayPullView } = this.state;
+              
               if (orderDetail && orderDetail.order_id && params && params.isCancelOrder && !isNotCancelOrder) {
                 try{
                   // 取消订单
@@ -322,14 +329,15 @@ export default class ContentCom extends Component<Props,State> {
             clearInterval(this.state.timerSetInterVal);
             this.setState({expire_time:0})
             setTimeout(() => {
-              navigation.navigate({
-                name:"OrderDetailPage",
-                params:{
-                  order_id:pay_result.order_id
-                }
+              navigation.replace("OrderDetailPage",{
+                order_id:pay_result.order_id
               });
             }, 800);
           } catch (err:any) {
+            // console.log('err',err);
+            if(err.error==400){
+              navigation.goBack();
+            }
             if (err.error == "noBalance") {
               Alert.alert(
                 err.message,
@@ -361,7 +369,7 @@ export default class ContentCom extends Component<Props,State> {
     let { orderDetail } = this.state;
     if(!orderDetail) return;
     let arr_label = [
-      <Txt key={"abc"}>
+      <Txt key={"abc"} style={{color:'yellow'}}>
         {orderDetail.hall_name}
       </Txt>,
     ];
@@ -370,7 +378,7 @@ export default class ContentCom extends Component<Props,State> {
         if (orderDetail.is_section == 1) {
           arr_label.push(
             <Txt style={{color:'#e9ea95'}} key={index + "s"}>
-              {index == 0 ? "" :" | "} {item.section_name}
+            {' '}  {index == 0 ? "" :" | "} {item.section_name}
             </Txt>
           );
           item.seatList.map((it:any, idx:number) => {
@@ -383,7 +391,7 @@ export default class ContentCom extends Component<Props,State> {
         } else {
           arr_label.push(
             <Txt key={index + "se"}>
-              {item.row_id}排{item.column_id}座
+            {' '} {item.row_id}排{item.column_id}座
             </Txt>
           );
         }

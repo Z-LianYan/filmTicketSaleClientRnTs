@@ -31,11 +31,11 @@ type propsType = {
 }
 const CinemaListItem = ({
   navigation,
-  item = {},
-  // separator = true
+  item = {}
 }:propsType)=>{ 
   const colorScheme = useColorScheme();
   let [expire_time, set_expire_time] = useState(0);
+  let [timeoutStart, setTimeoutStart] = useState<boolean>(false);
   let refTime:{current:any} = useRef();
   useEffect(() => {
     if(!item.expireTime || item.expireTime<=0) return;
@@ -46,6 +46,7 @@ const CinemaListItem = ({
         item.expireTime -= 1;
         set_expire_time(item.expireTime)
       }
+      setTimeoutStart(true)
     },1000);
     return () => {
       clearTimeout(refTime.current);
@@ -80,16 +81,13 @@ const CinemaListItem = ({
             <Text>{item.film_name}</Text>
             <Text 
             style={styles.topWrapperRight}>
-              {/* {item.status_text} */}
-
               {
                 item.status == 2 && item.comment_content
                 ? "已评价"
-                : item.status == 0 && expire_time > 0
-                ? item.status_text + ", " + handleMinute()
-                : item.status == 0
-                ? "支付超时"
-                : item.status_text
+                : item.status == 0 
+                ? timeoutStart  
+                ? expire_time > 0
+                ? item.status_text + ", " + handleMinute() : "支付超时" : item.status_text: item.status_text
               }
             </Text>
           </View>
@@ -109,52 +107,46 @@ const CinemaListItem = ({
           </View>
         </View>
       </TouchableHighlight>
-      
-      {/* {separator ? <View style={{
-          ...styles.separator,
-          backgroundColor: colorScheme=='dark'?'#1a1b1c':'#eee'
-        }}></View> : null} */}
 
-
-        <View style={styles.commentBtn}>
-          {item.status == 2 && !item.comment_content ? (
-            <Button
-              title={'写影评'}
-              type="primary"
-              size="md"
-              titleStyle={{
-                color:Theme.primaryColor
-              }}
-              style={{width:80,height:40,marginBottom:10,marginRight:10,backgroundColor:'transparent'}}
-              disabled={false}
-              onPress={() => {
-                navigation.navigate({
-                  name: "CommentPage",
-                  params: {
-                    film_id: item.film_id
-                  },
-                });
-              }}
-            />
-          ) : null}
-          {item.status == 0 && expire_time ? (
-            <Button
-              title={'付款'}
-              type="primary"
-              size="md"
-              style={{width:80,height:40,marginBottom:10,marginRight:10}}
-              disabled={false}
-              onPress={() => {
-                navigation.navigate({
-                  name:'BuyTicket',
-                  params:{
-                    order_id:item.order_id
-                  }
-                })
-              }}
-            />
-          ) : null}
-        </View>
+      <View style={styles.commentBtn}>
+        {item.status == 2 && !item.comment_content ? (
+          <Button
+            title={'写影评'}
+            type="primary"
+            size="md"
+            titleStyle={{
+              color:Theme.primaryColor
+            }}
+            style={{width:80,height:40,marginBottom:10,marginRight:10,backgroundColor:'transparent'}}
+            disabled={false}
+            onPress={() => {
+              navigation.navigate({
+                name: "CommentPage",
+                params: {
+                  film_id: item.film_id
+                },
+              });
+            }}
+          />
+        ) : null}
+        {item.status == 0 && expire_time ? (
+          <Button
+            title={'付款'}
+            type="primary"
+            size="md"
+            style={{width:80,height:40,marginBottom:10,marginRight:10}}
+            disabled={false}
+            onPress={() => {
+              navigation.navigate({
+                name:'BuyTicket',
+                params:{
+                  order_id:item.order_id
+                }
+              })
+            }}
+          />
+        ) : null}
+      </View>
 
 
     
