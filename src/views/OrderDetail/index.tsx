@@ -18,6 +18,7 @@ import {
   View as Viw,
   Text as Txt,
   RefreshControl,
+  Linking,
 } from 'react-native';
 
 import { 
@@ -47,6 +48,7 @@ import { login_out } from "../../api/user";
 
 import service from '../../utils/request';
 import dayjs from 'dayjs';
+import Qrcode from './Qrcode';
 
 import {
   create_order,
@@ -163,25 +165,9 @@ const OrderDetail = ({app,navigation,route}:any) => {
     });
   },[]);
   function handlerTitle(orderDetail:any) {
-    // let { orderDetail } = this.state;
     let { start_runtime } = orderDetail;
-    console.log('orderDetail====>',orderDetail);
     if (!start_runtime) return;
-
-    console.log('start_runtime====>😂',start_runtime);
-    // return dayjs(dayjs('2022-02-08 15:24').valueOf()).fromNow()
-    // if()
-    return dayjs(start_runtime).format('YY年M月D日 HH点MM分') + " 开场"
-    // return (
-    //   dayjs(start_runtime).calendar(null, {
-    //     sameDay: "[今天] A h:mm ", // The same day ( Today at 2:30 AM )
-    //     nextDay: "[明天]", // The next day ( Tomorrow at 2:30 AM )
-    //     nextWeek: "[下周]", // The next week ( Sunday at 2:30 AM )
-    //     lastDay: "[昨天]", // The day before ( Yesterday at 2:30 AM )
-    //     lastWeek: "[上周] dddd", // Last week ( Last Monday at 2:30 AM )
-    //     sameElse: "YY年MM月DD日", // Everything else ( 7/10/2011 )
-    //   }) + "开场"
-    // );
+    return dayjs(start_runtime).format('YY年M月D日 HH点MM分') + " 开场";
   }
   const getOrderDetail = useCallback(async ()=>{
     let { params } = route;
@@ -228,10 +214,200 @@ const OrderDetail = ({app,navigation,route}:any) => {
       }} />
     }
     onMomentumScrollEnd={(event:any)=>{}}>
-    <View style>
+      <View style={styles.headerBox}>
+        <View style={{
+          ...styles.headerBoxBar,
+          backgroundColor:colorScheme=='dark'?'#000':'#494c2f'
+        }}>
+          <TouchableOpacity 
+          activeOpacity={0.8}
+          style={styles.headerBoxBarLeft}
+          onPress={()=>{
+            if (!orderDetail || !orderDetail.cinema_has_schedule) return;
+            navigation.navigate({
+              name: `CinemaDetailPage`,
+              params: {
+                cinema_id: orderDetail && orderDetail.cinema_id,
+              },
+            });
+          }}>
+            <Text 
+            numberOfLines={1} 
+            style={styles.headerBoxBarLeftTxt}>{orderDetail && orderDetail.cinema_name}</Text>
+            <Ionicons 
+            name={'md-chevron-forward-sharp'}
+            size={25} 
+            color={'#fff'}/>
+          </TouchableOpacity>
+          <Viw style={styles.headerBoxIcons}>
+            <Ionicons 
+            name={'location-outline'}
+            style={{marginLeft:20}}
+            size={20} 
+            color={'#fff'}/>
+            <Ionicons 
+            name={'md-call'}
+            style={{marginLeft:20}}
+            size={20} 
+            color={'#fff'}
+            onPress={()=>{
+              if(!orderDetail || !orderDetail.phone) return;
+              Linking.openURL(`tel:${orderDetail.phone}`)
+            }}/>
+          </Viw>
+          
+        </View>
+        <View style={{
+          ...styles.headerBoxCard,
+          backgroundColor:colorScheme=='dark'?'#1a1b1c':'#fff'
+        }}>
+          <Viw style={{
+            ...styles.circleBox,
+            position:'absolute',
+            top:-20,
+            left:'50%',
+            transform:[{translateX:-15}]
+          }}></Viw>
+          <Viw style={styles.headerBoxCardCinemaImage}>
+            <Viw style={styles.headerBoxCardCinemaImageLeft}>
+              {
+                orderDetail && <Text 
+                style={styles.headerBoxCardCinemaImageLeftFilmName}>
+                  {orderDetail.film_name}
+                </Text>
+              }
+              {
+                orderDetail && <Text>
+                  {orderDetail.language + orderDetail.play_type_name +' '+ orderDetail.ticket_count}张
+                </Text>
+              }
+            </Viw>
+            {
+              orderDetail && <Image 
+              resizeMode='cover' 
+              key={orderDetail.poster_img}
+              style={styles.headerBoxCardCinemaImageRight} 
+              source={{uri: orderDetail.poster_img }} />
+            }
+          </Viw>
+          <Viw style={styles.headerBoxCardTimeHall}>
+            {
+              orderDetail && <Viw style={{flexDirection:'row'}}>
+                <Text style={{color:'#ccc'}}>{handerDate(orderDetail.start_runtime)}</Text>
+                <Text style={{paddingLeft:50,color:'#ccc'}}>{orderDetail.hall_name}</Text>
+              </Viw>
+            }
+            {
+              orderDetail && <Viw style={{flexDirection:'row',marginTop:8}}>
+                <Text>
+                  {dayjs(orderDetail.start_runtime).format("HH:mm")}～
+                  {dayjs(orderDetail.start_runtime)
+                    .add(orderDetail.runtime, "minute")
+                    .format("HH:mm")}
+                </Text>
+                <Text style={{paddingLeft:20}}>{
+                  arrLabel()
+                }</Text>
+              </Viw>
+            }
+          </Viw>
+          
+          <Viw style={styles.seperatorWrapepr}>
+            <Viw style={{
+              ...styles.circleBox,
+              left:-30,
+            }}></Viw>
+            <Viw style={{
+              ...styles.seperatorWrapeprLine,
+              backgroundColor:colorScheme=='dark'?'#000':'#494c2f',
+            }}></Viw>
+            <Viw style={{
+              ...styles.circleBox,
+              right:-30,
+            }}></Viw>
+          </Viw>
 
-    </View>
+
+          <Qrcode />
+          
+
+
+        </View>
+      </View>
   </ScrollView>;
+
+  function arrLabel(){
+    // let { orderDetail } = this.state;
+    if(!orderDetail) return;
+    let arr_label:any = [];
+    if (orderDetail.select_seats) {
+      orderDetail.select_seats.map((item:any, index:number) => {
+        if (orderDetail.is_section == 1) {
+          arr_label.push(
+            <Txt style={{color:'#e9ea95'}} key={index + "s"}>
+            {' '}  {index == 0 ? "" :" | "} {item.section_name}
+            </Txt>
+          );
+          item.seatList.map((it:any, idx:number) => {
+            arr_label.push(
+              <Txt key={idx + "se" + index}>
+                {' '} {it.row_id}排{it.column_id}座 {' '}
+              </Txt>
+            );
+          });
+        } else {
+          arr_label.push(
+            <Txt key={index + "se"}>
+            {' '} {item.row_id}排{item.column_id}座
+            </Txt>
+          );
+        }
+      });
+    }
+    return arr_label;
+  }
+
+
+  function handerDate(date:any) {
+    let today = dayjs().format("YYYY-MM-DD");
+    let tomorrow = dayjs().add(1, "day").format("YYYY-MM-DD");
+    let houtian = dayjs().add(2, "day").format("YYYY-MM-DD");
+    let cur_y = dayjs(date).format("YYYY");
+    let y = dayjs().format("YYYY");
+    switch (dayjs(date).format("YYYY-MM-DD")) {
+      case today:
+        return "今天 " + dayjs(date).format("M月D日");
+      case tomorrow:
+        return "明天 " + dayjs(date).format("M月D日");
+      case houtian:
+        return "后天 " + dayjs(date).format("M月D日");
+      default:
+        return (
+          handleWeek(dayjs(date).day()) +
+          dayjs(date).format(cur_y == y ? "M月D日" : "YY年M月D日")
+        );
+    }
+  }
+  function handleWeek(day:number) {
+    switch (day) {
+      case 0:
+        return "周日 ";
+      case 1:
+        return "周一 ";
+      case 2:
+        return "周二 ";
+      case 3:
+        return "周三 ";
+      case 4:
+        return "周四 ";
+      case 5:
+        return "周五 ";
+      case 6:
+        return "周六 ";
+      default:
+        return "";
+    }
+  }
 
  
 };
@@ -240,7 +416,98 @@ const styles = StyleSheet.create({
   container:{
     flex:1,
   },
-  
+  headerBox:{
+    marginHorizontal: 10,
+    marginTop:10,
+  },
+  headerBoxBar:{
+    padding:10,
+    borderTopLeftRadius:10,
+    borderTopRightRadius:10,
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-between',
+    paddingBottom:20
+  },
+  headerBoxBarLeft:{
+    flex:1,
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-between',
+    borderRightWidth:1,
+    borderRightColor:'#fff',
+    // paddingRight:10,
+    paddingRight:10
+  },
+  headerBoxBarLeftTxt:{
+    fontSize:18,
+    color:'#fff'
+  },
+  headerBoxIcons:{
+    flexDirection:'row',
+    alignItems:'center'
+  },
+  headerBoxCard:{
+    // height:100,
+    // borderWidth:1,
+    // borderColor:'#ccc',
+    borderLeftColor:'#494c2f',
+    borderLeftWidth:1,
+    borderRightColor:'#494c2f',
+    borderRightWidth:1,
+    borderBottomColor:'#494c2f',
+    borderBottomWidth:1,
+    // borderTopLeftRadius:10,
+    borderRadius:10,
+    top:-10,
+    position:'relative',
+    overflow:'hidden',
+    padding:10,
+    
+  },
+  headerBoxCardCinemaImage:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center'
+  },
+  headerBoxCardCinemaImageLeft:{
+
+  },
+  headerBoxCardCinemaImageLeftFilmName:{
+    fontWeight:'bold'
+  },
+  headerBoxCardCinemaImageRight:{
+    width:75,
+    height:90,
+    borderRadius:10
+  },
+  headerBoxCardTimeHall:{
+    // paddingTop:50
+  },
+  circleBox:{
+    height:30,
+    width:30,
+    borderRadius:15,
+    backgroundColor:'#494c2f',
+  },
+  seperatorWrapepr:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    position:'relative',
+    marginVertical:15
+  },
+  seperatorWrapeprLine:{
+    position:'absolute',
+    left:0,
+    right:0,
+    top:'50%',
+    transform:[{translateY:-0.5}],
+    height:1,
+    zIndex:-1
+
+
+
+  }
 });
 
 export default inject("app")(observer(OrderDetail));

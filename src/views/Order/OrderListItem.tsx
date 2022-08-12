@@ -47,7 +47,7 @@ const CinemaListItem = ({
         set_expire_time(item.expireTime)
       }
       setTimeoutStart(true)
-    },1000);
+    },960);//由于组件的原因跳下一秒会变得慢一些所以以960毫米矫正
     return () => {
       clearTimeout(refTime.current);
     };
