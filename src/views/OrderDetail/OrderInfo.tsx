@@ -159,7 +159,7 @@ const OrderInfo = ({
         style={{color:Theme.primaryColor,marginRight:20}}>
           ¥{orderDetail.price}
         </Text>
-        <Text>({orderDetail.ticket_count}张电影票)</Text>
+        <Text style={{color:'#ccc'}}>({orderDetail.ticket_count}张电影票)</Text>
       </Viw>} />
       <CustomListRow 
       accessory="none"

@@ -90,7 +90,6 @@ const OrderDetail = ({app,navigation,route}:any) => {
     return dayjs(start_runtime).format('YY年M月D日 HH点MM分') + " 开场";
   }
   const getOrderDetail = useCallback(async ()=>{
-    setRefreshing(true);
     let { params } = route;
     // console.log("location", this.props, match.params.order_id);
     try {
@@ -132,6 +131,7 @@ const OrderDetail = ({app,navigation,route}:any) => {
       title="下拉刷新"//ios
       refreshing={refreshing} 
       onRefresh={()=>{
+        setRefreshing(true);
         getOrderDetail();
       }} />
     }
@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
     justifyContent:'space-between',
     paddingBottom:20,
     position:'absolute',
-    // top:-45,
+    top:3,
     left:0,
     right:0
   },

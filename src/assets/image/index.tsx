@@ -21,3 +21,6 @@ export const SEAT_SECTION_C = require('./selectSeat/sectionC.png');
 export const SEAT_SECTION_D = require('./selectSeat/sectionD.png');
 export const SEAT_SECTION_E = require('./selectSeat/sectionE.png');
 export const SEAT_SELECTED = require('./selectSeat/selected.png');
+
+export const ALREADY_EXPIRE = require('./already-expire.png');
+export const ALREADY_COMPLETE = require('./already-complete.png');

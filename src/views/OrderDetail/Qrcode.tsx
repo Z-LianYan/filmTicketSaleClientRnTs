@@ -24,12 +24,16 @@ import {
   View,
   Text
 } from '../../component/Themed';
-
+import QRCode from 'react-native-qrcode-svg';
+import { 
+  ALREADY_EXPIRE,
+  ALREADY_COMPLETE,
+} from '../../assets/image/index';
 
 type propsType = {
   orderDetail:any
 }
-const Qrcode = ({
+const QrcodeCom = ({
   orderDetail
 }:propsType)=>{ 
   const colorScheme = useColorScheme();
@@ -62,8 +66,24 @@ const Qrcode = ({
   }}>
       <Text style={styles.titleTxt}>取电影票</Text>
 
-      <Viw>
-        <Text style={styles.qrcodem}>二维码</Text>
+      <Viw style={{
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center'
+      }}>
+        <QRCode
+          value={orderDetail.verify_ticket_url}
+          backgroundColor={'transparent'}
+          color={colorScheme=='dark'? (orderDetail.order_status == 2 || (orderDetail.order_status == 1 && orderDetail.order_expire))?'#666':'#fff':(orderDetail.order_status == 2 || (orderDetail.order_status == 1 && orderDetail.order_expire))?'#ccc':'#000'}
+          size={150}
+          logo={
+            orderDetail.order_status == 2?
+            ALREADY_COMPLETE:orderDetail.order_status == 1 && orderDetail.order_expire ?ALREADY_EXPIRE:orderDetail.poster_img
+          }
+          logoSize={(orderDetail.order_status==1 && !orderDetail.order_expire)?30:60}
+          logoBackgroundColor='transparent'
+        />
+
       </Viw>
       <Viw style={{
         ...styles.verifyCode,
@@ -74,7 +94,7 @@ const Qrcode = ({
       </Viw>
   </Viw>;
 }
-export default Qrcode;
+export default QrcodeCom;
 const styles = StyleSheet.create({
   qrcodeContainer:{
   },

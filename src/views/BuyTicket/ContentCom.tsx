@@ -336,6 +336,8 @@ export default class ContentCom extends Component<Props,State> {
           } catch (err:any) {
             // console.log('err',err);
             if(err.error==400){
+              this.setState({expire_time:0})
+              clearInterval(this.state.timerSetInterVal);//清除定时器
               navigation.goBack();
             }
             if (err.error == "noBalance") {
@@ -345,6 +347,9 @@ export default class ContentCom extends Component<Props,State> {
                 [
                   { text: "前往充值", 
                     onPress: async () => {
+
+                      // 取消订单
+                      await cancle_order({ order_id: orderDetail.order_id });
                       this.setState({expire_time:0})
                       clearInterval(this.state.timerSetInterVal);//清除定时器
                       navigation.replace('Recharge');
