@@ -49,6 +49,7 @@ import { login_out } from "../../api/user";
 import service from '../../utils/request';
 import dayjs from 'dayjs';
 import Qrcode from './Qrcode';
+import OrderInfo from './OrderInfo';
 
 import {
   create_order,
@@ -60,87 +61,6 @@ import {
 import { get_user_info } from "../../api/user";
 var ScreenObj = Dimensions.get('window');
 
-
-
-let overlay_view = function(orderDetail:any=null,colorScheme:any,onCancel:any){
-  return <Overlay.PullView 
-  side='bottom'
-  modal={false}
-  containerStyle={{
-    borderTopLeftRadius:10,
-    borderTopRightRadius:10,
-    backgroundColor: colorScheme=='dark'?'#1a1b1c':'#fff',
-  }}>
-    <Viw style={{
-      borderBottomWidth:1,
-      borderBottomColor:colorScheme=='dark'?'#202122':'#f4f4f4',
-      paddingTop:20,
-      paddingBottom:10,
-      // flexDirection:'row',
-      // alignItems:'center',
-      // justifyContent:'space-between'
-      position:'relative'
-    }}>
-      <Text style={{
-        textAlign:'center',
-        fontSize:16,
-        fontWeight:'bold'
-      }}>价格明细</Text>
-      <Ionicons 
-      name={'close-sharp'}
-      size={30} 
-      color={colorScheme=='dark'?'#fff':'#000'}
-      style={{
-        position:'absolute',
-        right:10,
-        top:10
-      }}
-      onPress={()=>{
-        onCancel && onCancel();
-      }}/>
-    </Viw>
-    
-    <ScrollView
-    style={{
-      maxHeight:300,
-      backgroundColor: colorScheme=='dark'?'#1a1b1c':'#fff',
-      // paddingHorizontal:20,
-      paddingTop:5
-    }}
-    showsHorizontalScrollIndicator={false}
-    stickyHeaderIndices={[]}>
-      {
-        orderDetail && <CustomListRow 
-        accessory="none"
-        // topSeparator='full'
-        bottomSeparator="indent" 
-        backgroundColor={colorScheme=='dark'?'#1a1b1c':'#fff'}
-        title={'电影票'} 
-        detail={orderDetail.ticket_count + "张"} />
-      }
-      {
-        orderDetail && <CustomListRow 
-        accessory="none"
-        // topSeparator='full'
-        backgroundColor={colorScheme=='dark'?'#1a1b1c':'#fff'}
-        bottomSeparator="indent" 
-        title={'原价'} 
-        detail={
-              '含服务费'+orderDetail.premium+'元/张 ' + ' ' +orderDetail.price+'元'
-        } />
-      }
-      
-    </ScrollView>
-    <View style={{
-      height:10,
-      backgroundColor: colorScheme=='dark'?'#1a1b1c':'#fff',
-    }}></View>
-  <View style={{
-    height:10,
-    backgroundColor: colorScheme=='dark'?'#1a1b1c':'#fff',
-  }}></View>
-</Overlay.PullView>
-};
 
 
 const OrderDetail = ({app,navigation,route}:any) => {
@@ -170,6 +90,7 @@ const OrderDetail = ({app,navigation,route}:any) => {
     return dayjs(start_runtime).format('YY年M月D日 HH点MM分') + " 开场";
   }
   const getOrderDetail = useCallback(async ()=>{
+    setRefreshing(true);
     let { params } = route;
     // console.log("location", this.props, match.params.order_id);
     try {
@@ -180,7 +101,9 @@ const OrderDetail = ({app,navigation,route}:any) => {
       setIsSkeleton(false);
       setOrderDetail(result);
       setNavigation(result);
+      setRefreshing(false);
     } catch (err:any) {
+      setRefreshing(false);
       if (err.error == 401) {
         app.setUserInfo(null); //如果token认证过期 清空当前缓存的登录信息
         navigation.navigate({
@@ -197,10 +120,10 @@ const OrderDetail = ({app,navigation,route}:any) => {
   
   return <ScrollView
     bounces={false}//设置ios 上下拉回弹
-    stickyHeaderIndices={[0]}
+    stickyHeaderIndices={[]}
     style={{
       ...styles.container,
-      backgroundColor:colorScheme=='dark'?'#000':'#fff'
+      backgroundColor:colorScheme=='dark'?'#000':'#f4f4f4'
     }}
     refreshControl={
       <RefreshControl 
@@ -209,15 +132,14 @@ const OrderDetail = ({app,navigation,route}:any) => {
       title="下拉刷新"//ios
       refreshing={refreshing} 
       onRefresh={()=>{
-        setRefreshing(true);
-        
+        getOrderDetail();
       }} />
     }
     onMomentumScrollEnd={(event:any)=>{}}>
       <View style={styles.headerBox}>
         <View style={{
           ...styles.headerBoxBar,
-          backgroundColor:colorScheme=='dark'?'#000':'#494c2f'
+          backgroundColor:'#494c2f'
         }}>
           <TouchableOpacity 
           activeOpacity={0.8}
@@ -266,7 +188,7 @@ const OrderDetail = ({app,navigation,route}:any) => {
             position:'absolute',
             top:-20,
             left:'50%',
-            transform:[{translateX:-15}]
+            // transform:[{translateX:-15}]
           }}></Viw>
           <Viw style={styles.headerBoxCardCinemaImage}>
             <Viw style={styles.headerBoxCardCinemaImageLeft}>
@@ -319,7 +241,7 @@ const OrderDetail = ({app,navigation,route}:any) => {
             }}></Viw>
             <Viw style={{
               ...styles.seperatorWrapeprLine,
-              backgroundColor:colorScheme=='dark'?'#000':'#494c2f',
+              backgroundColor:'#494c2f',
             }}></Viw>
             <Viw style={{
               ...styles.circleBox,
@@ -328,12 +250,10 @@ const OrderDetail = ({app,navigation,route}:any) => {
           </Viw>
 
 
-          <Qrcode />
-          
-
-
+          {orderDetail && <Qrcode orderDetail={orderDetail}/>}
         </View>
       </View>
+      {orderDetail && <OrderInfo orderDetail={orderDetail}/>}
   </ScrollView>;
 
   function arrLabel(){
@@ -419,6 +339,8 @@ const styles = StyleSheet.create({
   headerBox:{
     marginHorizontal: 10,
     marginTop:10,
+    position:'relative',
+    paddingTop:50
   },
   headerBoxBar:{
     padding:10,
@@ -427,7 +349,11 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     alignItems:'center',
     justifyContent:'space-between',
-    paddingBottom:20
+    paddingBottom:20,
+    position:'absolute',
+    // top:-45,
+    left:0,
+    right:0
   },
   headerBoxBarLeft:{
     flex:1,
@@ -459,7 +385,7 @@ const styles = StyleSheet.create({
     borderBottomWidth:1,
     // borderTopLeftRadius:10,
     borderRadius:10,
-    top:-10,
+    // top:-10,
     position:'relative',
     overflow:'hidden',
     padding:10,
