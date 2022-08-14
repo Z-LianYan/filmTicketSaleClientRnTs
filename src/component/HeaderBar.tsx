@@ -23,8 +23,10 @@ import {
   Image,
   TouchableOpacity,
   View as Viw,
-  Text as Txt
+  Text as Txt,
+  NativeModules
 } from 'react-native';
+const { StatusBarManager } = NativeModules;
 
 import { 
   NavigationContainer,
@@ -76,7 +78,8 @@ const HeaderBar = ({
     ...styles.headerContainer,
     ...style,
     height:headerHeight,
-    backgroundColor:colorScheme=='dark'?'#000':Theme.primaryColor
+    backgroundColor:colorScheme=='dark'?'#000':Theme.primaryColor,
+    paddingTop:StatusBarManager.HEIGHT
   }
   if(backgroundColor){
     headerContainerObj['backgroundColor'] = backgroundColor;

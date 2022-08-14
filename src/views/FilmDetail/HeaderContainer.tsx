@@ -284,7 +284,8 @@ const HeaderContainer = ({detail,app,reSetDetail}:any) => {
 const styles = StyleSheet.create({
   headerContainer:{
     backgroundColor:'#533468',
-    paddingBottom:10
+    paddingBottom:10,
+    paddingTop:20
   },
   
   headerContainerTop:{

@@ -73,7 +73,7 @@ const _NavigationBar = ({
     statusBarColor={Theme.primaryColor}
     statusBarInsets={Platform.OS === 'ios' ? false : true} 
     statusBarStyle={'default'}
-    title={title?(typeof title === 'number'||'string'?<Text style={{fontSize:16}}>{title}</Text>:title):''}
+    title={title?(typeof title === 'number'||'string'?<Text style={{fontSize:16,color:'#fff'}}>{title}</Text>:title):''}
     style={{
       backgroundColor:backgroundColor?backgroundColor:colorScheme === 'dark' ? Theme.primaryColor : Theme.primaryColor,
       position:position?position:'relative',

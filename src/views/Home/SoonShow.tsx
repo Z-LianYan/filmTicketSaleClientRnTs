@@ -98,18 +98,16 @@ const SoonShow = ({
           btnColor="#ff8f1f"
           btnTxt={item.isPresale ? "预购" : ""}
           onPress={() => {
-            // this.props.history.push({
-            //   pathname: "/film/detail/" + item.id,
-            // });
+            navigation.navigate('FilmDetail',{film_id:item.id});
           }}
           onRightClick={() => {
-            // props.history.push({
-            //   pathname: `/film/cinema/${item.id}`,
-            //   // state: {
-            //   //   film_id: item.id,
-            //   //   film_name: item.film_name,
-            //   // },
-            // });
+            navigation.navigate({
+              name: "CinemaPageStack",
+              params:{
+                film_id: item.id,
+                film_name: item.film_name
+              }
+            });
           }}/>
         })
       }

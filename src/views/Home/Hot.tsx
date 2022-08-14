@@ -70,13 +70,13 @@ const Hot = ({
             navigation.navigate('FilmDetail',{film_id:item.film_id});
           }}
           onRightClick={() => {
-            // this.props.history.push({
-            //   pathname: `/film/cinema/${item.film_id}`,
-            // });
-
-            // navigation.navigate({
-            //   path: "/film/cinema/" + item.film_id,
-            // });
+            navigation.navigate({
+              name: "CinemaPageStack",
+              params:{
+                film_id: item.film_id,
+                film_name: item.film_name
+              }
+            });
           }}/>
         })
       }

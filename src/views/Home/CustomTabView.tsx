@@ -33,7 +33,7 @@ import {
    const [activeTab, setActiveTab] = React.useState(0);
    return <TabView 
    barStyle={{
-    backgroundColor:'transparent',
+    backgroundColor:colorScheme=='dark'?'#000':'#fff',
     fontSize:40,
     borderBottomColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4',
     borderBottomWidth:1

@@ -9,7 +9,9 @@ import {
   RefreshControl,
   TouchableHighlight,
   Dimensions,
-  Platform
+  Platform,
+  View as Viw,
+  Text as Txt
 } from 'react-native';
 import { observer, inject } from 'mobx-react'
 import { useNavigation } from '@react-navigation/core';
@@ -33,6 +35,7 @@ import { get_order_list } from "../../api/order";
 var ScreenWidth = Dimensions.get('window').width;
 import { get_city_list } from "../../api/citys";
 import CustomListRow from '../../component/CustomListRow';
+import ServerDetial from '../CinemaDetail/ServerDetial';
 
 
 const CitysPage = ({app,navigation,route}:any) => {
@@ -77,13 +80,18 @@ const CitysPage = ({app,navigation,route}:any) => {
     Z: [],
   });
   let [stickyHeaderIndices,setStickyHeaderIndices] = useState<any>([0]);
+  let [filterList,setFilterList] = useState<any>([]);
+
+  
 
   
   const onSetOptions = useCallback((title)=>{
     navigation.setOptions({
       title: '当前城市-'+title,
     });
-  },[])
+  },[]);
+
+  
 
   
   
@@ -95,26 +103,51 @@ const CitysPage = ({app,navigation,route}:any) => {
   
 
   const getCityList = useCallback(async ()=>{
-    let result = await get_city_list({});
-    let citys = result.rows;
-    // let hotList = result.hotList;
-    for (let i = 0; i < citys.length; i++) {
-      if (citys[i].id === 110100 || citys[i].id === 120100) {
-        //110100北京 120100天津
-        delete citys[i].children;
-        letter[citys[i].first_letter].push(citys[i]);
-      } else {
-        let children = citys[i].children;
-        for (let j = 0; j < children.length; j++) {
-          delete children[j].children;
-          letter[children[j].first_letter].push(children[j]);
+    if(!app.cityList){
+      let result = await get_city_list({});
+      let citys = result.rows;
+      for (let i = 0; i < citys.length; i++) {
+        if (citys[i].id === 110100 || citys[i].id === 120100) {
+          //110100北京 120100天津
+          delete citys[i].children;
+          letter[citys[i].first_letter].push(citys[i]);
+        } else {
+          let children = citys[i].children;
+          for (let j = 0; j < children.length; j++) {
+            delete children[j].children;
+            letter[children[j].first_letter].push(children[j]);
+          }
+        }
+      }
+      app.cityList = letter;
+      setLetter({
+        ...letter
+      });
+    }else{
+      setLetter({
+        ...app.cityList
+      });
+    }
+    
+    
+  },[]);
+
+  const searchChange = useCallback((val)=>{
+    console.log('val=======>>>>searchChange变了',val,app.cityList);
+    let filterList = [];
+    for (let key in app.cityList) {
+      for (let item of app.cityList[key]) {
+        if (item.name.includes(val) || item.pinyin.includes(val)) {
+          filterList.push(item);
         }
       }
     }
-    setLetter({
-      ...letter
-    });
-  },[]);
+    console.log('filterList===>>>val',val);
+    console.log('filterList===>>>',filterList)
+    setFilterList([
+      ...filterList
+    ]);
+  },[])
 
 
   function setLocationInfo(item:any, type?:string) {
@@ -146,7 +179,7 @@ const CitysPage = ({app,navigation,route}:any) => {
     );
   }
 
-  function renderList(){
+  const renderList = useCallback(()=>{
     let domArr:any = [];
     let letterArr:any = Object.keys(letter);
     letterArr.map((key:string,idx:number)=>{
@@ -175,7 +208,7 @@ const CitysPage = ({app,navigation,route}:any) => {
       };
     })
     return domArr;
-  }
+  },[])
   
 
   return (<View style={{
@@ -188,7 +221,7 @@ const CitysPage = ({app,navigation,route}:any) => {
       }}>
         <Input 
         placeholder={`搜索城市名称或拼音`} 
-        autoFocus={true}
+        autoFocus={false}
         style={{
           backgroundColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4',
           color:colorScheme=='dark'?'#fff':'#000',
@@ -202,8 +235,16 @@ const CitysPage = ({app,navigation,route}:any) => {
         // multiline={true}
         value={searchValue}
         onSubmitEditing={(e:any)=>{
+          searchChange(searchValue)
         }}
         onChangeText={(text:any) => {
+          console.log('text===>>',text)
+          if(!text){
+            setFilterList([]);
+            setLetter({
+              ...app.cityList
+            });
+          }
           setSearchValue(text);
         }}
         />
@@ -219,14 +260,49 @@ const CitysPage = ({app,navigation,route}:any) => {
         size="md"
         onPress={()=>{
           // onRefresh()
+          if(!searchValue){
+            setFilterList([]);
+            setLetter({
+              ...app.cityList
+            });
+          }else{
+            searchChange(searchValue);
+          }
+          
         }}/>
       </View>
+
+      
       
       <ScrollView
       bounces={false}//设置ios 上下拉回弹
       stickyHeaderIndices={stickyHeaderIndices}
       onMomentumScrollEnd={(event:any)=>{}}>
-        {renderList()}
+        {
+          filterList.length ? 
+          filterList.map((it:any, index:number) => {
+            return <CustomListRow 
+            key={index+'filterList'}
+            accessory="none"
+            bottomSeparator={(index+1==filterList.length)?'none':"full"} 
+            backgroundColor={colorScheme=='dark'?'#1a1b1c':'#fff'}
+            title={it.name} 
+            detail={""} 
+            onPress={()=>{
+              setLocationInfo(it);
+            }}/>
+          }):searchValue ?(
+            <Viw  style={{
+              height:300,
+              flexDirection:'row',
+              alignItems:'center',
+              justifyContent:'center'
+            }}>
+              {/* <img src={logo} alt="svg" /> */}
+              <Text style={{textAlign:'center',color:'#ccc'}}>没有找到匹配的城市</Text>
+            </Viw>
+          ): renderList()
+        }
       </ScrollView>
     </View>
   );

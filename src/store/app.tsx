@@ -47,6 +47,8 @@ class App {
     callBack && callBack();
   }
 
+  cityList = null
+
   
   
 }
