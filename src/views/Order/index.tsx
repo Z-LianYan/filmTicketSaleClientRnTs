@@ -25,6 +25,8 @@ import {
   Input,
   Toast
 } from '../../component/teaset/index';
+import { useHeaderHeight } from '@react-navigation/elements';
+
 
 import NavigationBar from '../../component/NavigationBar';
 import BottomLoading from '../../component/BottomLoading';
@@ -33,9 +35,7 @@ import OrderListItem from './OrderListItem';
 import { get_cinema_list } from '../../api/cinema';
 
 import { get_order_list } from "../../api/order";
-import { Left } from '../../component/teaset/react-native-legacy-components/src/NavigatorBreadcrumbNavigationBarStyles.android';
 var ScreenWidth = Dimensions.get('window').width;
-// import DropdownMenu from '../../component/DropdownMenu';
 import TabViews from './Tabs';
 
 const OrderPage = ({navigation,route}:any) => {
@@ -52,7 +52,8 @@ const OrderPage = ({navigation,route}:any) => {
     limit: 5,
     status: "",
     keywords: "",
-  })
+  });
+  const headerHeight = useHeaderHeight();
   
 
   useEffect(()=>{
@@ -106,7 +107,7 @@ const OrderPage = ({navigation,route}:any) => {
     ...styles.container,
     backgroundColor:colorScheme=='dark'?'#000':'#f4f4f4'
   }}>
-    {/* <NavigationBar 
+    <NavigationBar 
       style={{
         zIndex:1
       }}
@@ -139,7 +140,7 @@ const OrderPage = ({navigation,route}:any) => {
           getList(true);
         }}
       />
-      }/> */}
+      }/>
       <TabViews active='' onChange={(status)=>{
         setList([]);
         fetchOptions.page = 1;

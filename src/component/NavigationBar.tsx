@@ -64,9 +64,9 @@ const _NavigationBar = ({
     
   const colorScheme = useColorScheme();
   let navigation:any = useNavigation();
-  const [groupValues, setGroupValues] = useState(['0']);
+  // const [groupValues, setGroupValues] = useState(['0']);
 
-  useEffect(()=>{},[])
+  useEffect(()=>{},[title])
 
   return (<View style={{...style}}>
     <NavigationBar 
@@ -75,7 +75,7 @@ const _NavigationBar = ({
     statusBarStyle={'default'}
     title={title?(typeof title === 'number'||'string'?<Text style={{fontSize:16}}>{title}</Text>:title):''}
     style={{
-      backgroundColor:backgroundColor?backgroundColor:colorScheme === 'dark' ? 'blue' : Theme.primaryColor,
+      backgroundColor:backgroundColor?backgroundColor:colorScheme === 'dark' ? Theme.primaryColor : Theme.primaryColor,
       position:position?position:'relative',
     }}
     borderBottomColor={backgroundColor=='transparent'?'transparent':colorScheme=='dark'?Theme.navSeparatorDarkColor:Theme.primaryColor}
@@ -88,7 +88,7 @@ const _NavigationBar = ({
         <Ionicons 
         name={'chevron-back'} 
         size={25} 
-        color={colorScheme === 'dark' ? '#fff' : '#000'} 
+        color={colorScheme === 'dark' ? '#fff' : '#fff'} 
         onPress={()=>{
           onBack ? onBack(): navigation.goBack();
         }}/>

@@ -347,7 +347,6 @@ export default class ContentCom extends Component<Props,State> {
                 [
                   { text: "前往充值", 
                     onPress: async () => {
-
                       // 取消订单
                       await cancle_order({ order_id: orderDetail.order_id });
                       this.setState({expire_time:0})

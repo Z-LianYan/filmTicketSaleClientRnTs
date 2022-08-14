@@ -25,7 +25,7 @@ type propType = {
     }
   },[])
   async function getBannerList(){
-    let result = await get_banner();
+    let result:any = await get_banner();
     set_banner_list(result.rows);
   }
   

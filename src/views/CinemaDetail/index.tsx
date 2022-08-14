@@ -212,11 +212,6 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
         borderTopColor:colorScheme === 'dark' ?'#1a1b1c':'#f4f4f4',
         borderBottomColor:colorScheme === 'dark' ?'#1a1b1c':'#f4f4f4',
       }}>
-        {/* <Ionicons 
-        name={'location-outline'} 
-        style={styles.cinemaAddrLeftIcon}
-        size={25} 
-        color={colorScheme === 'dark' ? '#fff' : '#666'}/> */}
         <View style={{
           ...styles.cinemaAddrTextWrapper,
           borderRightColor:colorScheme === 'dark' ? '#1a1b1c' : '#f4f4f4',

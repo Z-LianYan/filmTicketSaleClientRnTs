@@ -101,7 +101,7 @@ const Cinema = ({app,navigation,route}:any) => {
       // headerLeft:'',
       headerTransparent: false,
       headerStyle: { 
-        backgroundColor: colorScheme=='dark'?'#000':Theme.primaryColor
+        backgroundColor: colorScheme=='dark'?Theme.primaryColor:Theme.primaryColor
       },
       headerRight:()=>{
         return <Ionicons 
@@ -121,7 +121,7 @@ const Cinema = ({app,navigation,route}:any) => {
 
   const getFilmDetail = useCallback(async ()=>{
     if((route.params && !route.params.film_id) || !route.params) return;
-    let film_detail_result = await get_film_detail({
+    let film_detail_result:any = await get_film_detail({
       film_id: route.params && route.params.film_id,
     });
     setNavigation(film_detail_result.film_name);

@@ -36,7 +36,7 @@ export function get_film_soon_show(params:any, loadTxt = '') {
   });
 }
 
-export function get_banner(params:any) {
+export function get_banner(params?:any) {
   return new Promise((resolve, reject) => {
     HttpUtils.get(Api.GET_BANNER, params, '努力加载中...').then((res:any) => {
       switch (res.error) {

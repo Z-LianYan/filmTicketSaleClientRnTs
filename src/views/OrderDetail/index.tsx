@@ -1,4 +1,4 @@
-import React, { useState,useEffect, useCallback } from 'react';
+import React, { useState,useEffect, useCallback, useRef } from 'react';
 import { useNavigation } from '@react-navigation/core';
 import { observer, inject } from 'mobx-react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -18,8 +18,9 @@ import {
   View as Viw,
   Text as Txt,
   RefreshControl,
-  Linking,
+  Linking
 } from 'react-native';
+// import { captureRef,captureScreen } from "react-native-view-shot";
 
 import { 
   NavigationContainer,
@@ -68,6 +69,7 @@ const OrderDetail = ({app,navigation,route}:any) => {
   let [refreshing,setRefreshing] = useState(false);
   let [isSkeleton,setIsSkeleton] = useState(false);
   let [orderDetail,setOrderDetail] = useState<any>(null);
+  let qrcodeDomRef:{current:any} = useRef<any>(null);
   useEffect(()=>{
     getOrderDetail();
     return ()=>{
@@ -136,7 +138,7 @@ const OrderDetail = ({app,navigation,route}:any) => {
       }} />
     }
     onMomentumScrollEnd={(event:any)=>{}}>
-      <View style={styles.headerBox}>
+      <Viw style={styles.headerBox} ref={qrcodeDomRef}>
         <View style={{
           ...styles.headerBoxBar,
           backgroundColor:'#494c2f'
@@ -252,7 +254,21 @@ const OrderDetail = ({app,navigation,route}:any) => {
 
           {orderDetail && <Qrcode orderDetail={orderDetail}/>}
         </View>
-      </View>
+      </Viw>
+      {/* <Viw style={{paddingHorizontal:10,marginTop:5}}>
+        <TouchableOpacity 
+        activeOpacity={0.8} 
+        style={{width:100,alignItems:'center'}}
+        onPress={()=>{
+          console.log('qrcodeDomRef.current',qrcodeDomRef.current)
+        }}>
+          <Ionicons 
+            name={'ios-download-outline'}
+            size={20} 
+            color={colorScheme=='dark'?'#fff':'#000'}/>
+          <Text>保存二维码</Text>
+        </TouchableOpacity>
+      </Viw> */}
       {orderDetail && <OrderInfo orderDetail={orderDetail}/>}
   </ScrollView>;
 

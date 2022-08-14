@@ -60,7 +60,7 @@ const Home = ({app}:any) => {
   const colorScheme = useColorScheme();
   const [refreshing, setRefreshing] = React.useState(false);
   const [activeTabIndex, setActiveTabIndex] = React.useState(0);
-  const [navigationBarBg, setNavigationBarBg] = React.useState('transparent');
+  const [navigationBarBg, setNavigationBarBg] = React.useState(Theme.primaryColor);
   const [navigationTitle, setNavigationTitle] = React.useState('');
 
   let [fetchOptionsHot,setFetchOptionsHot] = useState({
@@ -112,7 +112,7 @@ const Home = ({app}:any) => {
   }
   async function getSoonShowList(isLoading:boolean){
     isLoading && setSoonShowLoading(true);
-    let result = await get_film_soon_show(fetchOptionsSoonShow);
+    let result:any = await get_film_soon_show(fetchOptionsSoonShow);
     let _list = [];
     if(fetchOptionsSoonShow.page==1){
       _list = result.rows;
@@ -159,16 +159,15 @@ const Home = ({app}:any) => {
   }
 
   return (<View style={styles.container}>
-    {/* <NavigationBar 
+    <NavigationBar 
       style={{
         zIndex:1
       }}
       title={'电影'}
-      // backgroundColor={navigationBarBg}
       position=''
-      leftView={<RenderCityName/>}/> */}
+      leftView={<RenderCityName/>}/>
     <ScrollView
-    stickyHeaderIndices={[]}
+    stickyHeaderIndices={[1]}
     refreshControl={
       <RefreshControl 
       tintColor={Theme.primaryColor}//ios
@@ -192,11 +191,11 @@ const Home = ({app}:any) => {
         activeTabIndex===1 && onLoadMore();
       }
       if(offSetY>=100){
-        setNavigationBarBg('');
-        setNavigationTitle("电影");
+        // setNavigationBarBg('');
+        // setNavigationTitle("电影");
       }else{
-        setNavigationBarBg('transparent');
-        setNavigationTitle("");
+        // setNavigationBarBg(Theme.primaryColor);
+        // setNavigationTitle("");
       }
     }}
     onMomentumScrollEnd={(event:any)=>{}}>

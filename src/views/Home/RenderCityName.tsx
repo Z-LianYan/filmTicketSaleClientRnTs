@@ -23,17 +23,21 @@ import React, { useState } from 'react';
 //  import { get_film_hot } from '../../api/film';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import app from '../../store/app';
  
- const RenderCityName = (props?:any)=>{
+ const RenderCityName = ({app}:any)=>{
    let navigation:any = useNavigation();
    return <View style={styles.tagFilmName}>
     <View style={styles.tagFilmNameMask}></View>
     <TouchableOpacity style={styles.contentWrapper} onPress={()=>{
-      // navigation.navigate({
-      //   path: "citys",
-      // });
+      navigation.navigate({
+        name: "CitysPage",
+      });
     }}>
-      <Text style={styles.cityName}>广州</Text>
+      <Text 
+      style={styles.cityName} 
+      key={app.locationInfo.city_name}
+      numberOfLines={1}>{app.locationInfo.city_name}</Text>
       <Ionicons 
       name={'chevron-down-outline'} 
       size={20} 
@@ -86,7 +90,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
     flexDirection:'row',
    },
    cityName:{
-     color:'#fff'
+    maxWidth:50,
+    color:'#fff'
    },
    locationShowBox:{
      position: 'absolute',

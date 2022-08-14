@@ -35,6 +35,7 @@ import CinemaDetailPage from '../views/CinemaDetail/index';
 import SelectSeatPage from '../views/SelectSeat/index';
 import BuyTicket from '../views/BuyTicket/index';
 import OrderDetailPage from '../views/OrderDetail/index';
+import CitysPage from '../views/Citys/index';
 
 
 
@@ -74,7 +75,7 @@ const routes=[
         component: OrderPage, 
         name:"OrderPage",
         options: {
-            headerShown:true,
+            headerShown:false,
             title:'订单'
         } 
     },
@@ -173,6 +174,15 @@ const routes=[
         options: {
             headerShown:true,
             title:'',
+            // headerTransparent:true
+        } 
+    },
+    { 
+        component: CitysPage, 
+        name:"CitysPage",
+        options: {
+            headerShown:true,
+            title:'选择城市',
             // headerTransparent:true
         } 
     }

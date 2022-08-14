@@ -105,7 +105,7 @@ const CinemaSearch = ({app,navigation,route}:any) => {
       // },
       headerRight:()=>{
         return <Button 
-        style={{borderRadius:20,backgroundColor:'#00b578',borderColor:'#00b578'}} 
+        style={{borderRadius:20,backgroundColor:Theme.secondaryColor,borderColor:Theme.secondaryColor}} 
         titleStyle={{color:'#fff'}} 
         title="搜索" 
         size="md"
