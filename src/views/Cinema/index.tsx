@@ -37,8 +37,10 @@ import { get_film_detail } from "../../api/film";
 import DropdownMenu from '../../component/DropdownMenu';
 import dayjs from 'dayjs';
 const ScreenWidth = Dimensions.get('window').width;
+import { useFocusEffect } from '@react-navigation/native';
 
 const Cinema = ({app,navigation,route}:any) => {
+  const cacheCityId:{current:any} = useRef();
   const refDropdownMenu:{current:any} = useRef()
   const colorScheme = useColorScheme();
   // let navigation = useNavigation();
@@ -65,18 +67,43 @@ const Cinema = ({app,navigation,route}:any) => {
   const [scrollW,setScrollW] = useState(0);
   // let [film_name,setFilmName] = useState('');
 
+  useFocusEffect(
+    React.useCallback(() => {
+      if(app.locationInfo.city_id != cacheCityId.current){
+        cacheCityId.current = app.locationInfo.city_id;
+        console.log('1234567',app.locationInfo.city_id);
+        setFetchOptions({
+          ...fetchOptions,
+          type:'',
+          district_id:''
+        })
+        // onRefresh();
+        // getDistrictList();
+
+        getDistrictList();
+        if(route.params && route.params.film_id){
+          getFilmInScheduleDates();
+          getFilmDetail();
+        }else{
+          setNavigation('影院');
+          getList(true);
+        }
+      }
+    }, [])
+  );
+
   
 
   useEffect(()=>{
 
-    getDistrictList();
-    if(route.params && route.params.film_id){
-      getFilmInScheduleDates();
-      getFilmDetail();
-    }else{
-      setNavigation('影院');
-      getList(true);
-    }
+    // getDistrictList();
+    // if(route.params && route.params.film_id){
+    //   getFilmInScheduleDates();
+    //   getFilmDetail();
+    // }else{
+    //   setNavigation('影院');
+    //   getList(true);
+    // }
   },[]);
   async function getFilmInScheduleDates() {
     let result:any = await get_film_in_schedule_dates({
@@ -166,7 +193,7 @@ const Cinema = ({app,navigation,route}:any) => {
   }
 
   async function getDistrictList() {
-    let result = await get_city_district_list({
+    let result:any = await get_city_district_list({
       city_id:app.locationInfo.city_id,
     });
     result.rows.unshift({
@@ -309,6 +336,7 @@ const Cinema = ({app,navigation,route}:any) => {
     }
     <DropdownMenu 
     ref={refDropdownMenu}
+    key={app.locationInfo.city_id}
     list={city_district_list}
     onTypeChange={(type:string)=>{
       fetchOptions.type = type;
@@ -334,7 +362,7 @@ const Cinema = ({app,navigation,route}:any) => {
         onRefresh();
       }} />
     }
-    onScroll={(event)=>{
+    onMomentumScrollEnd={(event)=>{
       const offSetY = event.nativeEvent.contentOffset.y; // 获取滑动的距离
       const contentSizeHeight = event.nativeEvent.contentSize.height; // scrollView  contentSize 高度
       const oriageScrollHeight = event.nativeEvent.layoutMeasurement.height; // scrollView高度
@@ -347,8 +375,7 @@ const Cinema = ({app,navigation,route}:any) => {
       }else{
         
       }
-    }}
-    onMomentumScrollEnd={(event:any)=>{}}>
+    }}>
       {
         list.map((item:any,index)=>{
           return <CinemaListItem
@@ -372,6 +399,7 @@ const Cinema = ({app,navigation,route}:any) => {
       }
       <BottomLoading
       isLoading={isLoading}
+      emptyText="当前区域暂无排片的影院"
       isFinallyPage={isFinallyPage}
       hasContent={list.length?true:false}/>
     </ScrollView>

@@ -82,11 +82,10 @@ const Hot = ({
       }
       
       <BottomLoading
+      emptyText="当前区域暂无影片放映"
       isLoading={isLoading}
       isFinallyPage={isFinallyPage}
       hasContent={list.length?true:false}/>
-      
-
   </View>
 }
 

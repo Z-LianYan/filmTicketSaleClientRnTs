@@ -36,7 +36,7 @@ var ScreenWidth = Dimensions.get('window').width;
 import { get_city_list } from "../../api/citys";
 import CustomListRow from '../../component/CustomListRow';
 import ServerDetial from '../CinemaDetail/ServerDetial';
-import CitysPageContent from './content';
+import CitysPageContent from './Content';
 
 
 const CitysPage = ({app,navigation,route}:any) => {

@@ -52,9 +52,10 @@ import Hot from './Hot';
 import SoonShow from './SoonShow';
 var ScreenWidth = Dimensions.get('window').width;
 
-
+import { useFocusEffect } from '@react-navigation/native';
 
 const Home = ({app}:any) => {
+  const cacheCityId:{current:any} = useRef();
   const hotRef:{current:any} = useRef();
   const soonShowRef:{current:any} = useRef();
   const colorScheme = useColorScheme();
@@ -66,7 +67,7 @@ const Home = ({app}:any) => {
   let [fetchOptionsHot,setFetchOptionsHot] = useState({
     page: 1,
     limit: 4,
-    city_id: app.locationInfo.city_id,
+    // city_id: app.locationInfo.city_id,
   })
   let [hotList,setHotList] = useState([])
   let [isHotLoading,setHotLoading] = useState(false);
@@ -75,25 +76,36 @@ const Home = ({app}:any) => {
   let [fetchOptionsSoonShow,setFetchOptionsSoonShow] = useState({
     page: 1,
     limit: 6,
-    city_id: app.locationInfo.city_id,
+    // city_id: app.locationInfo.city_id,
   });
 
   let [SoonShowList,setSoonShowList] = useState([])
   let [isSoonShowLoading,setSoonShowLoading] = useState(false);
   let [isSoonShowFinallyPage,setSoonShowFinallyPage] = useState(false);
 
-
+  useFocusEffect(
+    React.useCallback(() => {
+      if(app.locationInfo.city_id != cacheCityId.current){
+        cacheCityId.current = app.locationInfo.city_id;
+        onRefresh();
+      }
+      return () => null;
+    }, [])
+  );
 
   useEffect(() => {
-    getHotList(true);
-    getSoonShowList(true);
+    // getHotList(true);
+    // getSoonShowList(true);
     return ()=>{
     }
   },[])
 
   async function getHotList(isLoading:boolean){
     isLoading && setHotLoading(true);
-    let result = await get_film_hot(fetchOptionsHot);
+    let result:any = await get_film_hot({
+      ...fetchOptionsHot,
+      city_id:app.locationInfo.city_id
+    });
     let _list = [];
     if(fetchOptionsHot.page==1){
       _list = result.rows;
@@ -112,7 +124,10 @@ const Home = ({app}:any) => {
   }
   async function getSoonShowList(isLoading:boolean){
     isLoading && setSoonShowLoading(true);
-    let result:any = await get_film_soon_show(fetchOptionsSoonShow);
+    let result:any = await get_film_soon_show({
+      ...fetchOptionsSoonShow,
+      city_id:app.locationInfo.city_id
+    });
     let _list = [];
     if(fetchOptionsSoonShow.page==1){
       _list = result.rows;
@@ -180,7 +195,7 @@ const Home = ({app}:any) => {
         activeTabIndex===1 && onRefresh();
       }} />
     }
-    onScroll={(event)=>{
+    onMomentumScrollEnd={(event)=>{
       // console.log('onScroll',event.nativeEvent)
       const offSetY = event.nativeEvent.contentOffset.y; // 获取滑动的距离
       const contentSizeHeight = event.nativeEvent.contentSize.height; // scrollView  contentSize 高度
@@ -190,15 +205,14 @@ const Home = ({app}:any) => {
         activeTabIndex===0 && onLoadMore();
         activeTabIndex===1 && onLoadMore();
       }
-      if(offSetY>=100){
-        // setNavigationBarBg('');
-        // setNavigationTitle("电影");
-      }else{
-        // setNavigationBarBg(Theme.primaryColor);
-        // setNavigationTitle("");
-      }
-    }}
-    onMomentumScrollEnd={(event:any)=>{}}>
+      // if(offSetY>=100){
+      //   // setNavigationBarBg('');
+      //   // setNavigationTitle("电影");
+      // }else{
+      //   // setNavigationBarBg(Theme.primaryColor);
+      //   // setNavigationTitle("");
+      // }
+    }}>
       <Swiper/>
 
       <CustomTabView onChange={(val)=>{
