@@ -12,7 +12,7 @@ export default {
   },
   dark: {
     text: '#fff',
-    background: '#000',
+    background: '#000',//微信的深色模式 底部背景色#111111 卡片背景色#181818
     tint: tintColorDark,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorDark,
