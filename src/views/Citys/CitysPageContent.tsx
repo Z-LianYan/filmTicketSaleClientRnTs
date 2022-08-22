@@ -72,7 +72,7 @@ type State={
   dataInitComplete:boolean
 }
 
-export default class ContentCom extends Component<Props,State> {
+export default class CitysPageContent extends Component<Props,State> {
   constructor(props:any) {
     super(props);
     this.state = {
@@ -135,7 +135,7 @@ export default class ContentCom extends Component<Props,State> {
       dataInitComplete:false
     })
     if(!app.cityList){
-      let result = await get_city_list({});
+      let result:any = await get_city_list({});
       let citys = result.rows;
       for (let i = 0; i < citys.length; i++) {
         if (citys[i].id === 110100 || citys[i].id === 120100) {

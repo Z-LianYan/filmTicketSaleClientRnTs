@@ -18,7 +18,9 @@ import {
   // Text,
   RefreshControl,
   Dimensions,
-  FlatList
+  FlatList,
+  PermissionsAndroid,
+  Alert
 } from 'react-native';
 
 import { 
@@ -53,6 +55,9 @@ import SoonShow from './SoonShow';
 var ScreenWidth = Dimensions.get('window').width;
 
 import { useFocusEffect } from '@react-navigation/native';
+
+import { init, Geolocation } from "react-native-amap-geolocation";
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Home = ({app}:any) => {
   const cacheCityId:{current:any} = useRef();
@@ -89,16 +94,33 @@ const Home = ({app}:any) => {
         cacheCityId.current = app.locationInfo.city_id;
         onRefresh();
       }
-      return () => null;
+      // return () => null;
     }, [])
   );
 
   useEffect(() => {
     // getHotList(true);
     // getSoonShowList(true);
+
+    geolocationd();
     return ()=>{
     }
-  },[])
+  },[]);
+
+  async function geolocationd(){//首先需要到 android：android/app/src/main/AndroidManifest.xml， ios：Xcode打开 Info.plist 配置定位授权
+    await init({
+      ios: "9bd6c82e77583020a73ef1af59d0c759",
+      android: "043b24fe18785f33c491705ffe5b6935",
+    });
+    
+    Geolocation.getCurrentPosition(({coords}) => {
+      console.log('定位--------哈哈哈哈😄',coords);
+      app.locationInfo.lng = coords.longitude;
+      app.locationInfo.lat = coords.latitude;
+    },(error)=>{
+      console.log('定位出错error',error);
+    });
+  }
 
   async function getHotList(isLoading:boolean){
     isLoading && setHotLoading(true);

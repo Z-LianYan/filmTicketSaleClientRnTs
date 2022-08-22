@@ -81,7 +81,7 @@ const FilmDetail = ({app,navigation,route}:any) => {
   useEffect(()=>{
     navigation.setOptions({
       title: '',
-      headerLeft:'',
+      // headerLeft:'',
       headerTransparent: true,
       headerBackground: () => (
         <HeaderBar 

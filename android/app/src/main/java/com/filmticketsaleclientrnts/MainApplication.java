@@ -14,6 +14,9 @@ import com.filmticketsaleclientrnts.newarchitecture.MainApplicationReactNativeHo
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+// import com.showlocationservicesdialogbox.LocationServicesDialogBoxPackage;//定位包
+
+
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =

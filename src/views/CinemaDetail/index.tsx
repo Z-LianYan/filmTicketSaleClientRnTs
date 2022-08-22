@@ -88,7 +88,7 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
   const setNavigatioin = useCallback((showLeftArrow=true)=>{
     navigation.setOptions({
       title: '',
-      headerLeft:'',
+      // headerLeft:'',
       headerTransparent: true
     })
   },[]);

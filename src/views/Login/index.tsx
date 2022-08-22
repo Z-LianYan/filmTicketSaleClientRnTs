@@ -22,7 +22,7 @@ import {
   Toast
 } from '../../component/teaset/index';
 import { phone_register, send_verify_code } from "../../api/user";
-import tools from "../../utils/tools";
+// import tools from "../../utils/tools";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomListRow from '../../component/CustomListRow';
 

@@ -33,25 +33,31 @@
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
 			</dict>
-      <key>cdn.imgresource.com.cn</key>
-      <dict>
-        <key>NSExceptionAllowsInsecureHTTPLoads</key>
-        <true/>
-      </dict>
-      <key>zly.imgresource.com.cn</key>
-      <dict>
-        <key>NSExceptionAllowsInsecureHTTPLoads</key>
-        <true/>
-      </dict>
-      <key>film.imgresource.com.cn</key>
-      <dict>
-        <key>NSExceptionAllowsInsecureHTTPLoads</key>
-        <true/>
-      </dict>
+			<key>cdn.imgresource.com.cn</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+			<key>zly.imgresource.com.cn</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+			<key>film.imgresource.com.cn</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>需要定位信息</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>需要定位信息</string>
+	<key>NSLocationUsageDescription</key>
+	<string>需要定位信息</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>需要定位信息</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Zocial.ttf</string>

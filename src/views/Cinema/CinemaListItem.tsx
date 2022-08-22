@@ -92,16 +92,14 @@ const styles = StyleSheet.create({
     // width: ,
   },
   right_box:{
-    width:60,
-    
+    width:80,
   },
   value:{
     color: Theme.primaryColor, 
     fontSize: 15,
-    textAlign: 'center',
     flexDirection:'row',
     alignItems:'center',
-    justifyContent:'center'
+    justifyContent:'flex-end'
   },
   symbol:{
     color: Theme.primaryColor, 
@@ -121,7 +119,7 @@ const styles = StyleSheet.create({
     // fontWeight: 400,
     marginTop: 5,
     fontSize: 11,
-    textAlign: 'center',
+    textAlign: 'right',
     justifyContent:'center'
   },
   separator:{

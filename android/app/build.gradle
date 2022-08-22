@@ -251,6 +251,10 @@ android {
 }
 
 dependencies {
+
+    // compile project(':react-native-android-location-services-dialog-box')//定位组件
+
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
     //noinspection GradleDynamicVersion

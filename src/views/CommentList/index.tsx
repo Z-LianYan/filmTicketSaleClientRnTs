@@ -123,7 +123,7 @@ const CommentList = ({app,navigation,route}:any) => {
   function setNavigation(commentlist:any){
     navigation.setOptions({
       title: '',
-      headerLeft:'',
+      // headerLeft:'',
       headerTransparent: false,
       headerBackground: () => (
         <HeaderBar 
