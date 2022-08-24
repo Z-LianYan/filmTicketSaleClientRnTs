@@ -73,10 +73,13 @@ const _NavigationBar = ({
     statusBarColor={Theme.primaryColor}
     statusBarInsets={Platform.OS === 'ios' ? false : true} 
     statusBarStyle={'default'}
-    title={title?(typeof title === 'number'||'string'?<Text style={{fontSize:16,color:'#fff'}}>{title}</Text>:title):''}
+    title={title?(typeof title === 'number'||'string'?<Text style={{fontSize:20,color:'#fff'}}>{title}</Text>:title):''}
+    titleStyle={{
+      // fontSize:30
+    }}
     style={{
       backgroundColor:backgroundColor?backgroundColor:colorScheme === 'dark' ? Theme.primaryColor : Theme.primaryColor,
-      position:position?position:'relative',
+      position:position?position:'relative'
     }}
     borderBottomColor={backgroundColor=='transparent'?'transparent':colorScheme=='dark'?Theme.navSeparatorDarkColor:Theme.primaryColor}
     leftView={leftView?(typeof leftView === 'number'||'string'?<Text>{leftView}</Text>:leftView):<View 

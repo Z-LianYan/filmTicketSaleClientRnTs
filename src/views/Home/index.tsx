@@ -110,7 +110,7 @@ const Home = ({app}:any) => {
   async function geolocationd(){//首先需要到 android：android/app/src/main/AndroidManifest.xml， ios：Xcode打开 Info.plist 配置定位授权
     await init({
       ios: "9bd6c82e77583020a73ef1af59d0c759",
-      android: "043b24fe18785f33c491705ffe5b6935",
+      android: "f2f61cd67f4b4a5aeaf3fc604a5f4348",
     });
     
     Geolocation.getCurrentPosition(({coords}) => {
