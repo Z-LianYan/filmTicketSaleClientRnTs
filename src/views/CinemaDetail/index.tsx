@@ -212,10 +212,26 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
         borderTopColor:colorScheme === 'dark' ?'#1a1b1c':'#f4f4f4',
         borderBottomColor:colorScheme === 'dark' ?'#1a1b1c':'#f4f4f4',
       }}>
+        <Ionicons 
+        name={'location-sharp'} 
+        style={styles.cinemaAddrLeftIcon}
+        size={25} 
+        color={colorScheme === 'dark' ? '#fff' : '#999'}
+        onPress={()=>{
+          navigation.navigate({
+            name:'MapView',
+            params:{
+              lat:cinemaDetail.lat,
+              lng:cinemaDetail.lng,
+              cinema_name:cinemaDetail.name
+            }
+          })
+        }}/>
         <View style={{
           ...styles.cinemaAddrTextWrapper,
           borderRightColor:colorScheme === 'dark' ? '#1a1b1c' : '#f4f4f4',
         }}>
+          
           <Text style={{
             ...styles.cinemaAddrText
           }} 
@@ -402,7 +418,7 @@ const styles = StyleSheet.create({
     textAlign:'center'
   },
   cinemaAddrLeftIcon:{
-    // paddingLeft:10
+    paddingLeft:10
   },
   cinemaAddrRightIcon:{
     paddingRight:10

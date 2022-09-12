@@ -8,7 +8,8 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "build-android": "cd android && ./gradlew bundleRelease"
+    "build-android": "cd android && ./gradlew assembleRelease",
+    "jsbundle": "react-native bundle --entry-file ./index.js --bundle-output ./ios/jsbundle/index.ios.jsbundle --platform ios --assets-dest ./ios/jsbundle --dev false"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.6",
@@ -29,7 +30,8 @@
     "prop-types": "^15.8.1",
     "react": "17.0.2",
     "react-native": "0.68.0",
-    "react-native-amap-geolocation": "^1.1.4",
+    "react-native-amap-geolocation": "^1.2.0",
+    "react-native-amap3d": "^3.1.3",
     "react-native-gesture-handler": "2.1.1",
     "react-native-image-zoom-viewer": "^3.0.1",
     "react-native-qrcode-svg": "^6.1.2",
@@ -37,6 +39,7 @@
     "react-native-screens": "^3.13.1",
     "react-native-svg": "^12.4.4",
     "react-native-vector-icons": "^9.1.0",
+    "react-native-webview": "^11.23.1",
     "react-timer-mixin": "^0.13.4",
     "rebound": "^0.1.0"
   },

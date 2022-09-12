@@ -36,6 +36,7 @@ import SelectSeatPage from '../views/SelectSeat/index';
 import BuyTicket from '../views/BuyTicket/index';
 import OrderDetailPage from '../views/OrderDetail/index';
 import CitysPage from '../views/Citys/index';
+import MapView from '../views/MapView/index';
 
 
 
@@ -185,7 +186,16 @@ const routes=[
             title:'选择城市',
             // headerTransparent:true
         } 
-    }
+    },
+    { 
+        component: MapView, 
+        name: "MapView", 
+        options: {
+            headerShown:true,
+            title:'地图'
+        } 
+    },
+    
 ]
 
 function renderStackItems(){
