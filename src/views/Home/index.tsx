@@ -126,22 +126,22 @@ const Home = ({app}:any) => {
       android: "4aebbdd0faddd3134a5f60a955c928ff",
     });
     
-    // Geolocation.getCurrentPosition(({coords}) => {
-    //   console.log('定位--------哈哈哈哈😄',coords);
-    //   app.locationInfo.lng = coords.longitude;
-    //   app.locationInfo.lat = coords.latitude;
+    Geolocation.getCurrentPosition(({coords}) => {
+      console.log('定位--------哈哈哈哈😄',coords);
+      app.locationInfo.lng = coords.longitude;
+      app.locationInfo.lat = coords.latitude;
 
-    //   HttpUtils.get(`https://restapi.amap.com/v3/geocode/regeo`, {
-    //     key:'fb5462a3d524f38df314ca09d40f0e7a',
-    //     location:`${coords.longitude},${coords.latitude}`
-    //   }, '努力加载中...').then((res:any) => {
-    //     console.log('逆地址编码----->>>',Platform.OS,res.regeocode.addressComponent)
-    //   }).catch((err:any)=>{
-    //     console.log('err--->>',Platform.OS,err.message)
-    //   });;
-    // },(error)=>{
-    //   console.log('定位出错error',error);
-    // });
+      HttpUtils.get(`https://restapi.amap.com/v3/geocode/regeo`, {
+        key:'fb5462a3d524f38df314ca09d40f0e7a',
+        location:`${coords.longitude},${coords.latitude}`
+      }, '努力加载中...').then((res:any) => {
+        console.log('逆地址编码----->>>',Platform.OS,res.regeocode.addressComponent)
+      }).catch((err:any)=>{
+        console.log('err--->>',Platform.OS,err.message)
+      });;
+    },(error)=>{
+      console.log('定位出错error',error);
+    });
 
 
     // // 监听定位变化，监听到城市位置信息之后，resolve 并停止定位
