@@ -191,7 +191,7 @@ const routes=[
         component: MapView, 
         name: "MapView", 
         options: {
-            headerShown:true,
+            headerShown:false,
             title:'地图'
         } 
     },

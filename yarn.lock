@@ -4808,11 +4808,6 @@ jsonify@~0.0.0:
     array-includes "^3.1.4"
     object.assign "^4.1.2"
 
-kdbush@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/kdbush/-/kdbush-3.0.0.tgz#f8484794d47004cc2d85ed3a79353dbe0abc2bf0"
-  integrity sha512-hRkd6/XW4HTsA9vjVpY9tuXJYLSlelnkTmVFu4M9/7MIYQtFcHpbugAU7UbOfjOiVSVYl2fqgBuJ32JUmRo5Ew==
-
 kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
@@ -6027,13 +6022,6 @@ react-native-amap-geolocation@^1.2.0:
   resolved "https://registry.yarnpkg.com/react-native-amap-geolocation/-/react-native-amap-geolocation-1.2.0.tgz#d5c24f93122e562a2f122e4db846a4ceeda4e2e0"
   integrity sha512-D0XDmB4zR9mi+JBjcVyktzQsT/542JeEfL4lpMPn4DG4ZMbU43J3Ht6zzB54hkIhArqNZSvnGUvexvnOA25d7w==
 
-react-native-amap3d@^3.1.3:
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/react-native-amap3d/-/react-native-amap3d-3.1.3.tgz#907e4509f2960d2a27ab05a7cf571cc5b33e4e51"
-  integrity sha512-fCwai4RRdS3uoI+Oo9Iq5gbsE05eyu7ZhgpBS7+TycKHQfohSaA98F6GI/4b2RFIOfa/aWf4rX9r1i/uP+OVWg==
-  dependencies:
-    supercluster "^7.1.4"
-
 react-native-codegen@*:
   version "0.0.14"
   resolved "https://registry.yarnpkg.com/react-native-codegen/-/react-native-codegen-0.0.14.tgz#1c8a9d39935e611a22765aefb06c2d81b2341672"
@@ -6985,13 +6973,6 @@ sudo-prompt@^9.0.0:
   version "9.2.1"
   resolved "https://registry.yarnpkg.com/sudo-prompt/-/sudo-prompt-9.2.1.tgz#77efb84309c9ca489527a4e749f287e6bdd52afd"
   integrity sha512-Mu7R0g4ig9TUuGSxJavny5Rv0egCEtpZRNMrZaYS1vxkiIxGiGUwoezU3LazIQ+KE04hTrTfNPgxU5gzi7F5Pw==
-
-supercluster@^7.1.4:
-  version "7.1.5"
-  resolved "https://registry.yarnpkg.com/supercluster/-/supercluster-7.1.5.tgz#65a6ce4a037a972767740614c19051b64b8be5a3"
-  integrity sha512-EulshI3pGUM66o6ZdH3ReiFcvHpM3vAigyK+vcxdjpJyEbIIrtbmBdY23mGgnI24uXiGFvrGq9Gkum/8U7vJWg==
-  dependencies:
-    kdbush "^3.0.0"
 
 supports-color@^5.3.0:
   version "5.5.0"

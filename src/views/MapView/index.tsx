@@ -63,32 +63,21 @@ const MapViewComponent = ({app,navigation,route}:any) => {
 
   return <View style={styles.container}>
 
-      <WebView
-        source={{uri: `https://uri.amap.com/marker?position=${route.params.lng},${route.params.lat}&name=${route.params.cinema_name}&callnative=1`}}
-      />
+    <WebView
+      source={{uri: `https://uri.amap.com/marker?position=${route.params.lng},${route.params.lat}&name=${route.params.cinema_name}&callnative=1`}}
+      style={{marginTop: Platform.OS === 'ios'?0:StatusBar.currentHeight}}
+    />
     
-
-    {/* <Button
-      style={styles.btnRecharge}
-      title={'保存'}
-      type="primary"
-      size="lg"
-      disabled={submiting}
-      onPress={() => {
-        onEditUserInfo();
+    {/* <MapView
+      mapType={MapType.Satellite}
+      initialCameraPosition={{
+        target: {
+          latitude: route.params.lat,
+          longitude: route.params.lng,
+        },
+        zoom: 8,
       }}
     /> */}
-
-  {/* <MapView
-    mapType={MapType.Satellite}
-    initialCameraPosition={{
-      target: {
-        latitude: route.params.lat,
-        longitude: route.params.lng,
-      },
-      zoom: 8,
-    }}
-  /> */}
   </View>;
 };
 
