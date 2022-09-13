@@ -59,15 +59,11 @@ var ScreenWidth = Dimensions.get('window').width;
 
 import { useFocusEffect } from '@react-navigation/native';
 
-import { 
-  init, 
-  Geolocation,
-  start,
-  stop,
-  setLocatingWithReGeocode,
-  setNeedAddress,
-  addLocationListener 
-} from "react-native-amap-geolocation";
+import { getCurrentLocation } from "../../utils/getCurrentLocation";
+import { get_by_city } from "../../api/citys";
+
+
+
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Home = ({app}:any) => {
@@ -101,11 +97,13 @@ const Home = ({app}:any) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      if(app.locationInfo.city_id != cacheCityId.current){
-        cacheCityId.current = app.locationInfo.city_id;
+      // console.log('useFocusEffect--->++++',app.locationInfo,cacheCityId.current)
+      if(!cacheCityId.current || (cacheCityId.current && app.locationInfo.city_id != cacheCityId.current.city_id)){
+        // console.log('useFocusEffect--->',app.locationInfo,cacheCityId.current)
+        cacheCityId.current = {};
+        cacheCityId.current.city_id = app.locationInfo.city_id;
         onRefresh();
       }
-      // return () => null;
     }, [])
   );
 
@@ -119,52 +117,24 @@ const Home = ({app}:any) => {
   },[]);
 
   async function geolocationd(){//首先需要到 android：android/app/src/main/AndroidManifest.xml， ios：Xcode打开 Info.plist 配置定位授权
-    // AMapLocationClient.updatePrivacyShow(application, true, true);
-    // AMapLocationClient.updatePrivacyAgree(application, true);
-    await init({
-      ios: "9bd6c82e77583020a73ef1af59d0c759",
-      android: "4aebbdd0faddd3134a5f60a955c928ff",
+    let info:any = await getCurrentLocation();
+    if(!info) return;
+    let cityInfo:any = await get_by_city({ 
+      city_id: info.adCode,
+      type:'parent'
     });
+    app.setLocationInfo({
+      lng: info.longitude,
+      lat: info.latitude,
+      realLocation: {
+        city_id: cityInfo.id,
+        city_name: cityInfo.name,
+        lng: info.longitude,
+        lat: info.latitude,
+      },
+    });
+
     
-    Geolocation.getCurrentPosition(({coords}) => {
-      console.log('定位--------哈哈哈哈😄',coords);
-      app.locationInfo.lng = coords.longitude;
-      app.locationInfo.lat = coords.latitude;
-
-      HttpUtils.get(`https://restapi.amap.com/v3/geocode/regeo`, {
-        key:'fb5462a3d524f38df314ca09d40f0e7a',
-        location:`${coords.longitude},${coords.latitude}`
-      }, '努力加载中...').then((res:any) => {
-        console.log('逆地址编码----->>>',Platform.OS,res.regeocode.addressComponent)
-      }).catch((err:any)=>{
-        console.log('err--->>',Platform.OS,err.message)
-      });;
-    },(error)=>{
-      console.log('定位出错error',error);
-    });
-
-
-    // // 监听定位变化，监听到城市位置信息之后，resolve 并停止定位
-    // const locationPromise = new Promise(resolve => {
-    //   setLocatingWithReGeocode(true)
-    //   setNeedAddress(true)
-    //   addLocationListener((location:any) => {
-    //     console.log('location====>>>',Platform.OS,location);
-    //     if (location && location.adCode) {
-    //       resolve(location)
-    //       stop()
-    //     }
-    //   })
-    // })
-
-    // // 超时，20 秒之后直接 resolve
-    // const timeoutPromise = new Promise(resolve => {
-    //   setTimeout(() => {
-    //     stop()
-    //   }, 20 * 1000)
-    // })
-
-    // start()
   }
 
   async function getHotList(isLoading:boolean){
@@ -247,7 +217,9 @@ const Home = ({app}:any) => {
       }}
       title={'电影'}
       position=''
-      leftView={<RenderCityName/>}/>
+      leftView={<RenderCityName onCityChange={()=>{
+        onRefresh();
+      }}/>}/>
     <ScrollView
     stickyHeaderIndices={[1]}
     refreshControl={

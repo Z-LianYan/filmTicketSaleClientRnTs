@@ -37,6 +37,7 @@ import BuyTicket from '../views/BuyTicket/index';
 import OrderDetailPage from '../views/OrderDetail/index';
 import CitysPage from '../views/Citys/index';
 import MapView from '../views/MapView/index';
+import InitPage from '../views/InitPage';
 
 
 
@@ -195,6 +196,14 @@ const routes=[
             title:'地图'
         } 
     },
+    { 
+        component: InitPage, 
+        name: "InitPage", 
+        options: {
+            headerShown:false,
+            title:''
+        } 
+    },
     
 ]
 
@@ -250,7 +259,7 @@ function StackNavigators(){
             // }
             headerBackTitle:' ',//返回键右侧的文字 置为 空，配置了此项 ，ios端显示，android不显示，不配置此项android端会默认显示screen name
         }}
-        initialRouteName="AppTabBar"
+        initialRouteName="InitPage"
         >
         {renderStackItems()}
     </Stack.Navigator>

@@ -192,7 +192,7 @@ export default class CitysPageContent extends Component<Props,State> {
     let { app,navigation } = this.props;
     let { realLocation } = app.locationInfo;
     if (!item.name) return;
-    //缓存用户选择的位置
+    //缓存用户选择的位置，下次打开app直接读取缓存的数据
     await AsyncStorage.setItem('locationInfo', JSON.stringify({
       city_id: item.id,
       city_name: item.name,

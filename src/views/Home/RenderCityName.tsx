@@ -19,13 +19,16 @@ import React, { useState } from 'react';
    Button,
    Carousel
  } from '../../component/teaset/index';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
  
 //  import { get_film_hot } from '../../api/film';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import app from '../../store/app';
  
- const RenderCityName = ({app}:any)=>{
+ const RenderCityName = ({app,onCityChange}:any)=>{
    let navigation:any = useNavigation();
    return <View style={styles.tagFilmName}>
     <View style={styles.tagFilmNameMask}></View>
@@ -45,18 +48,33 @@ import app from '../../store/app';
       color={'#fff'} />
     </TouchableOpacity>
     
-    <View style={styles.locationShowBox}>
-      <View style={styles.locationMask}></View>
-      <View style={styles.topArrow}></View>
-      <Text style={styles.leftTxt}>定位显示您在广州</Text>
-      <Button
-        type="primary"
-        size='sm'
-        onPress={(e:any) => {}}
-        title="切换到广州"
-      >
-      </Button>
-    </View>
+    {
+      app.locationInfo.realLocation && app.locationInfo.realLocation.city_id!=app.locationInfo.city_id &&<View style={styles.locationShowBox}>
+        <View style={styles.locationMask}></View>
+        <View style={styles.topArrow}></View>
+        <Text style={styles.leftTxt}>定位显示您在{app.locationInfo.realLocation.city_name}</Text>
+        <Button
+          type="primary"
+          size='sm'
+          onPress={async (e:any) => {
+            app.setLocationInfo({
+              city_name:app.locationInfo.realLocation.city_name,
+              city_id:app.locationInfo.realLocation.city_id,
+              lng: app.locationInfo.realLocation.lng,
+              lat: app.locationInfo.realLocation.lat
+            });
+            //缓存切换定位的位置，下次打开app直接读取缓存的数据
+            await AsyncStorage.setItem('locationInfo', JSON.stringify({
+              city_id: app.locationInfo.realLocation.city_id,
+              city_name: app.locationInfo.realLocation.city_name,
+            }));
+            onCityChange && onCityChange();
+          }}
+          title={"切换到"+app.locationInfo.realLocation.city_name}
+        >
+        </Button>
+      </View>
+    }
    </View>
  }
  export default inject('app')(observer(RenderCityName));
