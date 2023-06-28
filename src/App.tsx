@@ -26,7 +26,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import { Provider } from 'mobx-react';
+import { Provider,observer, inject } from 'mobx-react';
 import store from './store/index';
 import { 
   NavigationContainer,
@@ -35,7 +35,6 @@ import {
   useNavigationContainerRef 
 } from '@react-navigation/native';
 import StackNavigators from './navigators/StackNavigators';
-import { observer, inject } from 'mobx-react';
 import { TopView, Toast,Theme } from './component/teaset/index';//使用 ./component/teaset/index ui库需要安装依赖 prop-types,rebound,immutable,react-timer-mixin,create-react-class,fbjs  
 import TabBar from './component/TabBar';
 import { any } from 'prop-types';
@@ -53,13 +52,14 @@ import { get_user_info } from "./api/user";
 
 
 const App = (props:any) => {
-  
   const navigationRef = useNavigationContainerRef(); // You can also use a regular ref with `React.useRef()`
   useEffect(()=>{
     if(!store.app.userInfo){
       getUserInfo();
     }
-  },[])
+    // store.appVersions.checkAppUpdate()
+  },[]);
+  
 
   async function getUserInfo() {
     try{
@@ -92,6 +92,10 @@ const App = (props:any) => {
             }}>
               <StackNavigators/>
             </NavigationContainer>
+            {/* <Text style={{height:100}} onPress={()=>{
+              console.log('1235');
+              store.appVersions.checkAppUpdate()
+            }}>12345----{store.appVersions.versionCode}</Text> */}
             </TopView>
         </SafeAreaView>
     </Provider>
@@ -103,4 +107,3 @@ const App = (props:any) => {
  });
  
  export default App;
- 

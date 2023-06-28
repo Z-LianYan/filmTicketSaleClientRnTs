@@ -66,7 +66,7 @@ import { get_by_city } from "../../api/citys";
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const Home = ({app}:any) => {
+const Home = ({app,appVersions}:any) => {
   const cacheCityId:{current:any} = useRef();
   const hotRef:{current:any} = useRef();
   const soonShowRef:{current:any} = useRef();
@@ -275,10 +275,13 @@ const Home = ({app}:any) => {
       }
           
     </ScrollView>
-
+    {/* <Text style={{height:100}} onPress={()=>{
+      console.log('1235');
+      appVersions.checkAppUpdate()
+    }}>12345----{appVersions.versionCode}</Text> */}
   </View>);
 };
-export default inject("home","app")(observer(Home));
+export default inject("home","app",'appVersions')(observer(Home));
 
 
 const styles = StyleSheet.create({

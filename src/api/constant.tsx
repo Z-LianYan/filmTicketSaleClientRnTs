@@ -44,3 +44,4 @@ export const ADD_COMMENT_REPLY = "/addCommentReply"; //添加回复
 export const DEL_COMMENT_REPLY = "/delCommentReply"; //删除回复
 
 export const ADD_CANCEL_WANT_SEE = "/addAndCancelWantSee"; //添加取消想看
+export const APP_VERSIONS_CHECK_UPDATE = "/appVersions/checkAppUpdate"; //检查版本更新
