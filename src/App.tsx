@@ -40,6 +40,7 @@ import TabBar from './component/TabBar';
 import { any } from 'prop-types';
 
 import { get_user_info } from "./api/user";
+import { SystemUpdataOverlay } from './component/SystemUpdate/SystemUpdataOverlay';
 
 
 // Theme.set(Theme.themes.black);
@@ -67,6 +68,11 @@ const App = (props:any) => {
       if (result) {
         delete result.token
         store.app.setUserInfo(result);
+
+
+        setTimeout(() => {
+          new SystemUpdataOverlay().show(false);
+        }, 3000);
       }
     }catch(err:any){
       console.log('err',err.message);
