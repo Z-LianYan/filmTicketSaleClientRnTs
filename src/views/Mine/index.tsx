@@ -40,7 +40,7 @@
  } from '../../assets/image/index';
  
  
- const Mine = ({navigation,route,app}:any) => {
+ const Mine = ({navigation,route,AppStore}:any) => {
    // let navigation = useNavigation();
    const colorScheme = useColorScheme();
    useEffect(() => {
@@ -54,22 +54,22 @@
           <Image 
          resizeMode='cover' 
          style={styles.avatarImage} 
-         source={(app.userInfo && app.userInfo.avatar)?{
-           uri: app.userInfo && app.userInfo.avatar 
+         source={(AppStore.userInfo && AppStore.userInfo.avatar)?{
+           uri: AppStore.userInfo && AppStore.userInfo.avatar 
          }:DETAIL_AVATAR} />
        }
  
  
        <View style={styles.rightBox}>
-         <Text style={styles.userName}>{app.userInfo && app.userInfo.nickname}</Text>
-         <Text style={styles.userName}>{app.userInfo && app.userInfo.phone_number}</Text>
+         <Text style={styles.userName}>{AppStore.userInfo && AppStore.userInfo.nickname}</Text>
+         <Text style={styles.userName}>{AppStore.userInfo && AppStore.userInfo.phone_number}</Text>
        </View>
      </View>
  
      <CustomListRow 
      bottomSeparator="indent" 
      title={'余额'} 
-     detail={'¥ '+(app.userInfo?app.userInfo.balance:'')} />
+     detail={'¥ '+(AppStore.userInfo?AppStore.userInfo.balance:'')} />
      <CustomListRow 
      bottomSeparator="indent" 
      title={'订单'} 
@@ -129,5 +129,5 @@
    }
  });
  
- export default inject("app")(observer(Mine));
+ export default inject("AppStore")(observer(Mine));
  

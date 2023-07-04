@@ -26,9 +26,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //  import { get_film_hot } from '../../api/film';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import app from '../../store/app';
+import app from '../../store/AppStore';
  
- const RenderCityName = ({app,onCityChange}:any)=>{
+ const RenderCityName = ({AppStore,onCityChange}:any)=>{
    let navigation:any = useNavigation();
    return <View style={styles.tagFilmName}>
     <View style={styles.tagFilmNameMask}></View>
@@ -39,8 +39,8 @@ import app from '../../store/app';
     }}>
       <Text 
       style={styles.cityName} 
-      key={app.locationInfo.city_name}
-      numberOfLines={1}>{app.locationInfo.city_name}</Text>
+      key={AppStore.locationInfo.city_name}
+      numberOfLines={1}>{AppStore.locationInfo.city_name}</Text>
       <Ionicons 
       name={'chevron-down-outline'} 
       size={20} 
@@ -49,35 +49,35 @@ import app from '../../store/app';
     </TouchableOpacity>
     
     {
-      app.locationInfo.realLocation && app.locationInfo.realLocation.city_id!=app.locationInfo.city_id &&<View style={styles.locationShowBox}>
+      AppStore.locationInfo.realLocation && AppStore.locationInfo.realLocation.city_id!=AppStore.locationInfo.city_id &&<View style={styles.locationShowBox}>
         <View style={styles.locationMask}></View>
         <View style={styles.topArrow}></View>
-        <Text style={styles.leftTxt}>定位显示您在{app.locationInfo.realLocation.city_name}</Text>
+        <Text style={styles.leftTxt}>定位显示您在{AppStore.locationInfo.realLocation.city_name}</Text>
         <Button
           type="primary"
           size='sm'
           onPress={async (e:any) => {
-            app.setLocationInfo({
-              city_name:app.locationInfo.realLocation.city_name,
-              city_id:app.locationInfo.realLocation.city_id,
-              lng: app.locationInfo.realLocation.lng,
-              lat: app.locationInfo.realLocation.lat
+            AppStore.setLocationInfo({
+              city_name:AppStore.locationInfo.realLocation.city_name,
+              city_id:AppStore.locationInfo.realLocation.city_id,
+              lng: AppStore.locationInfo.realLocation.lng,
+              lat: AppStore.locationInfo.realLocation.lat
             });
             //缓存切换定位的位置，下次打开app直接读取缓存的数据
             await AsyncStorage.setItem('locationInfo', JSON.stringify({
-              city_id: app.locationInfo.realLocation.city_id,
-              city_name: app.locationInfo.realLocation.city_name,
+              city_id: AppStore.locationInfo.realLocation.city_id,
+              city_name: AppStore.locationInfo.realLocation.city_name,
             }));
             onCityChange && onCityChange();
           }}
-          title={"切换到"+app.locationInfo.realLocation.city_name}
+          title={"切换到"+AppStore.locationInfo.realLocation.city_name}
         >
         </Button>
       </View>
     }
    </View>
  }
- export default inject('app')(observer(RenderCityName));
+ export default inject('AppStore')(observer(RenderCityName));
 
 
  const styles = StyleSheet.create({

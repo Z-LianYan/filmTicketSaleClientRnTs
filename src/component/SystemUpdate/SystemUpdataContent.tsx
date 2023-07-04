@@ -22,7 +22,7 @@ import store from '../../store';
 import { scaleView as sv,scaleText as st } from '../../utils/scaleSize';
 import { HasNewVersionComp } from './HasNewVersionComp';
 import { VersionUpdatingComp } from './VersionUpdatingComp';
-
+import { checkAppUpdate } from '../../api/appVersions';
 type IProps= {
     hide:()=>void,
     isClickCheck:boolean,
@@ -41,13 +41,13 @@ export class SystemUpdataContent extends Component<IProps,IState> {
         }
     }
     async componentDidMount(): Promise<void> {
-        let lastVersion:any = await store.appVersions.checkAppUpdate()                      
-        console.log("lastVersion.build_number",lastVersion?.versionCode,store.appVersions.versionCode,this.props.isClickCheck);
+        let lastVersion:any = await store.AppVersions.checkAppUpdate()                      
+        console.log("lastVersion.build_number",lastVersion?.versionCode,store.AppVersions.versionCode,this.props.isClickCheck);
         if(!this.props.isClickCheck){
             if(!lastVersion){
                 return this.props.hide();
             }
-            if(lastVersion && lastVersion.versionCode <= store.appVersions.versionCode){
+            if(lastVersion && lastVersion.versionCode <= store.AppVersions.versionCode){
                     this.setState({
                         lastVersion:lastVersion,
                     })
@@ -56,7 +56,7 @@ export class SystemUpdataContent extends Component<IProps,IState> {
         }
         let updateComMap:any={}
         let type=0 // 没有新版本。
-        if(lastVersion && lastVersion.versionCode<= store.appVersions.versionCode){
+        if(lastVersion && lastVersion.versionCode <= store.AppVersions.versionCode){
             this.setState({
                 step:3,
                 lastVersion:lastVersion,
@@ -102,7 +102,7 @@ export class SystemUpdataContent extends Component<IProps,IState> {
              <Text style={{fontFamily:'PingFang SC',color:'#334466',fontSize:st(30),fontWeight:"700"}}>检查更新</Text>                
                 <View style={{height:sv(30)}}></View>
                 {step==3?(<>
-                    <Text>此v{store.appVersions.versionName}版本为最新版本</Text>
+                    <Text>此v{store.AppVersions.versionName}版本为最新版本</Text>
                     <View style={{flexDirection:'row',justifyContent:'flex-end',marginTop:sv(80)}}>
                         <TouchableOpacity style={{width:sv(160),height:sv(68),backgroundColor:'#F5F9FD',alignItems:'center',justifyContent:'center',borderRadius:sv(8)}}
                         onPress={()=>{

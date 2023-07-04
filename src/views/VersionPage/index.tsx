@@ -38,15 +38,27 @@ import { get_film_hot } from '../../api/film';
 import CustomListRow from '../../component/CustomListRow';
 import NavigationBar from '../../component/NavigationBar';
 import { login_out } from "../../api/user";
+import { 
+  APP_LOGO
+} from '../../assets/image';
+import { SystemUpdataOverlay } from '../../component/SystemUpdate/SystemUpdataOverlay';
+import { checkAppUpdate } from '../../api/appVersions';
 
-
-
-const SetPage = ({AppStore,navigation,AppVersions}:any) => {
+const VersionPage = ({app,navigation,AppVersions}:any) => {
     
   const colorScheme = useColorScheme();
 
+  const [versionCode, setVersionCode] = React.useState('');
+  const [versionName, setVersionName] = React.useState('');
+
   useEffect(()=>{
-  })
+    checkAppUpdate().then((res:any)=>{
+      console.log('res===>>',res);
+      setVersionCode(res.versionCode);
+      setVersionName(res.versionName);
+    });
+    
+  },[])
 
   async function onLoginOut() {
 
@@ -62,7 +74,7 @@ const SetPage = ({AppStore,navigation,AppVersions}:any) => {
         { text: "确定", onPress: async () => {
           await login_out();
           navigation.navigate("HomePage");
-          AppStore.setUserInfo(null);
+          app.setUserInfo(null);
           // navigation.replace('LoginPage')
         } }
       ]
@@ -78,54 +90,23 @@ const SetPage = ({AppStore,navigation,AppVersions}:any) => {
     <ScrollView
     stickyHeaderIndices={[]}
     onMomentumScrollEnd={(event:any)=>{}}>
-      <CustomListRow 
-      accessory="none"
-      bottomSeparator="indent" 
-      title={'账号ID'} 
-      detail={AppStore.userInfo && AppStore.userInfo.user_id} />
-      <CustomListRow 
-      accessory="none"
-      bottomSeparator="indent" 
-      title={'电话号码'} 
-      detail={AppStore.userInfo && AppStore.userInfo.phone_number} />
-
-      <CustomListRow 
-      bottomSeparator="indent" 
-      title={'修改会员信息'} 
-      accessory= "indicator"
-      detail={''} 
-      onPress={()=>{{
-        navigation.navigate('EditUserInfo');
-      }}}/>
-
-      <CustomListRow 
-      accessory="indicator"
-      bottomSeparator="indent" 
-      title={<Text>
-        <Ionicons 
-        name={'alert-circle'}
-        size={14} 
-        color={colorScheme=='dark'?'#fff':'#000'}/>
-        关于
-      </Text>} 
-      detail={AppVersions.versionName} 
-      onPress={()=>{{
-        navigation.navigate('VersionPage');
-      }}}/>
-
-
-                
-
-      <Button
-        style={{backgroundColor:'transparent',marginTop:100,marginLeft:20,marginRight:20}}
-        title={'退出登录'}
-        type="default"
-        onPress={() => {
-          onLoginOut()
-        }}
-      />
-
+      <View style={styles.headWrapper}>
+        <Image
+          style={{width:50,height:50}}
+          source={APP_LOGO}
+        />
+        <Text style={styles.headTxt}>版本号 {AppVersions.versionName}</Text>
+      </View>
       
+      <CustomListRow 
+      bottomSeparator="indent" 
+      title={'检测更新'} 
+      accessory= {versionCode==AppVersions.versionCode?'none':'indicator'}
+      detail={versionCode==AppVersions.versionCode?'已是最新版本':`有版本更新v${versionName}`} 
+      onPress={()=>{{
+        if(versionCode!=AppVersions.versionCode) new SystemUpdataOverlay().show(false);
+      }}}/>
+
     </ScrollView>
   </View>;
 };
@@ -133,7 +114,16 @@ const SetPage = ({AppStore,navigation,AppVersions}:any) => {
 const styles = StyleSheet.create({
   container:{
     flex:1
+  },
+  headWrapper:{
+    justifyContent: "center",
+    alignItems: "center",
+    // backgroundColor: 'blue',
+    paddingVertical: 20,
+  },
+  headTxt:{
+    marginTop: 10,
   }
 });
 
-export default inject("AppStore","AppVersions")(observer(SetPage));
+export default inject("AppStore","AppVersions")(observer(VersionPage));

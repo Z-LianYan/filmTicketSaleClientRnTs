@@ -66,7 +66,7 @@ const BuyTicket = ({app,navigation,route}:any) => {
   route={route}
   app={app}/>
 };
-export default inject("app")(observer(BuyTicket));
+export default inject("AppStore")(observer(BuyTicket));
 
 const styles = StyleSheet.create({
   container:{

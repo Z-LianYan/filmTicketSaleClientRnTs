@@ -13,7 +13,7 @@ import com.facebook.soloader.SoLoader;
 import com.filmticketsaleclientrnts.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-
+import cn.reactnative.modules.update.UpdateContext;
 // import com.showlocationservicesdialogbox.LocationServicesDialogBoxPackage;//定位包
 
 
@@ -21,6 +21,11 @@ public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
       new ReactNativeHost(this) {
+        @Override
+        protected String getJSBundleFile() {
+            return UpdateContext.getBundleUrl(MainApplication.this);
+        }
+
         @Override
         public boolean getUseDeveloperSupport() {
           return BuildConfig.DEBUG;

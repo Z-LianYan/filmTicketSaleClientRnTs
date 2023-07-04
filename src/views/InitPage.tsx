@@ -116,4 +116,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default inject("app")(observer(InitPage));
+export default inject("AppStore")(observer(InitPage));

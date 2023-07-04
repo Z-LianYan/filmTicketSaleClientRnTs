@@ -43,7 +43,7 @@ import { login_out } from "../../api/user";
 import { edit_user_info, get_user_info } from "../../api/user";
 var ScreenObj = Dimensions.get('window');
 
-const EditUserInfo = ({app,navigation}:any) => {
+const EditUserInfo = ({AppStore,navigation}:any) => {
     
   const colorScheme = useColorScheme();
   let [formData,setFormData] = useState({
@@ -60,8 +60,8 @@ const EditUserInfo = ({app,navigation}:any) => {
   useEffect(()=>{
     // getUserInfo()
     setFormData({
-      avatar:app.userInfo.avatar,
-      nickname:app.userInfo.nickname
+      avatar:AppStore.userInfo.avatar,
+      nickname:AppStore.userInfo.nickname
     })
   },[]);
   async function getUserInfo() {
@@ -74,7 +74,7 @@ const EditUserInfo = ({app,navigation}:any) => {
         avatar:result.avatar,
         nickname:result.nickname
       })
-      app.setUserInfo(result);
+      AppStore.setUserInfo(result);
     }catch(err:any){
       console.log(err.message)
     }
@@ -180,4 +180,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject("app")(observer(EditUserInfo));
+export default inject("AppStore")(observer(EditUserInfo));

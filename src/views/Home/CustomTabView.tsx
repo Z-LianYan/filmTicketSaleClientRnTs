@@ -58,7 +58,7 @@ import {
      </TabView.Sheet>
    </TabView>
  }
- export default inject('app')(observer(CustomTabView));
+ export default inject('AppStore')(observer(CustomTabView));
 
 
  const styles = StyleSheet.create({

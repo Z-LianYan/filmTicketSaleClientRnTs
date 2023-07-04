@@ -118,4 +118,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject("app")(observer(SectionPriceContainer));
+export default inject("AppStore")(observer(SectionPriceContainer));

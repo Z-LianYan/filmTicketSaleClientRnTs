@@ -160,4 +160,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject("app")(observer(Tabs));
+export default inject("AppStore")(observer(Tabs));

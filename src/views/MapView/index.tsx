@@ -88,4 +88,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default inject("app")(observer(MapViewComponent));
+export default inject("AppStore")(observer(MapViewComponent));

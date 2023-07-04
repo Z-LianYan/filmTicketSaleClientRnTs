@@ -54,7 +54,7 @@ import { any } from 'prop-types';
 
 
 var ScreenWidth = Dimensions.get('window').width;
-const CinemaDetailPage = ({app,navigation,route}:any) => {
+const CinemaDetailPage = ({AppStore,navigation,route}:any) => {
   const colorScheme = useColorScheme();
 
   const [cinemaDetail,setCinemaDetail] = useState<any>();
@@ -323,7 +323,7 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
                 item.is_section == 1 ? handlerSectionPrice(item.sectionPrice) : item.sale_price
               }
               onPress={() => {
-                if (app.userInfo) {
+                if (AppStore.userInfo) {
                   navigation.navigate({
                     name:'SelectSeatPage',
                     params:{
@@ -343,7 +343,7 @@ const CinemaDetailPage = ({app,navigation,route}:any) => {
       
 
       <ServerDetial 
-      app={app} 
+      app={AppStore} 
       ref={serverDetialRef}/>
       
     </ScrollView>);
@@ -459,4 +459,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default inject("app")(observer(CinemaDetailPage));
+export default inject("AppStore")(observer(CinemaDetailPage));

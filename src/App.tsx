@@ -41,6 +41,7 @@ import { any } from 'prop-types';
 
 import { get_user_info } from "./api/user";
 import { SystemUpdataOverlay } from './component/SystemUpdate/SystemUpdataOverlay';
+import { checkAppUpdate } from './api/appVersions';
 
 
 // Theme.set(Theme.themes.black);
@@ -53,12 +54,12 @@ import { SystemUpdataOverlay } from './component/SystemUpdate/SystemUpdataOverla
 
 
 const App = (props:any) => {
+  console.log('store========>>>',store.AppStore);
   const navigationRef = useNavigationContainerRef(); // You can also use a regular ref with `React.useRef()`
   useEffect(()=>{
-    if(!store.app.userInfo){
+    if(!store.AppStore.userInfo){
       getUserInfo();
     }
-    // store.appVersions.checkAppUpdate()
   },[]);
   
 
@@ -67,7 +68,7 @@ const App = (props:any) => {
       let result:any = await get_user_info();
       if (result) {
         delete result.token
-        store.app.setUserInfo(result);
+        store.AppStore.setUserInfo(result);
 
 
         setTimeout(() => {
@@ -76,7 +77,7 @@ const App = (props:any) => {
       }
     }catch(err:any){
       console.log('err',err.message);
-      store.app.setUserInfo(null);
+      store.AppStore.setUserInfo(null);
     }
   }
   
@@ -98,10 +99,6 @@ const App = (props:any) => {
             }}>
               <StackNavigators/>
             </NavigationContainer>
-            {/* <Text style={{height:100}} onPress={()=>{
-              console.log('1235');
-              store.appVersions.checkAppUpdate()
-            }}>12345----{store.appVersions.versionCode}</Text> */}
             </TopView>
         </SafeAreaView>
     </Provider>

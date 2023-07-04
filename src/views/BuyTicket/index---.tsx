@@ -644,4 +644,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default inject("app")(observer(BuyTicket));
+export default inject("AppStore")(observer(BuyTicket));

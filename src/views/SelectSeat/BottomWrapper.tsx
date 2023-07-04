@@ -538,4 +538,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject("app")(observer(forwardRef(BottomWrapper)));
+export default inject("AppStore")(observer(forwardRef(BottomWrapper)));

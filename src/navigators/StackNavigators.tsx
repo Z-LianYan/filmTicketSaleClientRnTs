@@ -37,8 +37,8 @@ import BuyTicket from '../views/BuyTicket/index';
 import OrderDetailPage from '../views/OrderDetail/index';
 import CitysPage from '../views/Citys/index';
 import MapView from '../views/MapView/index';
+import VersionPage from '../views/VersionPage/index';
 import InitPage from '../views/InitPage';
-
 
 
 const routes=[
@@ -65,6 +65,13 @@ const routes=[
             headerShown:true,
             title:'登录'
         } 
+    },
+    { 
+        component: VersionPage, 
+        name:"VersionPage",
+        options: {
+            title:'关于'
+        }
     },
     { 
         component: SetPage, 

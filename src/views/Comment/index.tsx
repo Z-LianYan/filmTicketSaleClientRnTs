@@ -70,7 +70,7 @@ import Star from '../../component/Star';
 var ScreenWidth = Dimensions.get('window').width;
 
 
-const CommentPage = ({app,navigation,route}:any) => {
+const CommentPage = ({AppStore,navigation,route}:any) => {
     
   const colorScheme = useColorScheme();
   const headerHeight = useHeaderHeight();
@@ -119,7 +119,7 @@ const CommentPage = ({app,navigation,route}:any) => {
       }
     } catch (err:any) {
       if (err.error == 401) {
-        app.setUserInfo(null); //如果token认证过期 清空当前缓存的登录信息
+        AppStore.setUserInfo(null); //如果token认证过期 清空当前缓存的登录信息
         navigation.navigate({
           name: "LoginPage"
         });
@@ -233,7 +233,7 @@ const CommentPage = ({app,navigation,route}:any) => {
         {score ? (
                   <Text style={styles.scoreTxt}>{score}分</Text>
                 ) : null}
-                <Text>{app.rateLevelTex[score]}</Text>
+                <Text>{AppStore.rateLevelTex[score]}</Text>
         </Text>
       </View>
 
@@ -309,4 +309,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default inject("app")(observer(CommentPage));
+export default inject("AppStore")(observer(CommentPage));
