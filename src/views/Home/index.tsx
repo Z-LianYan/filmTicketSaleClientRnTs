@@ -277,10 +277,10 @@ const Home = ({app,appVersions}:any) => {
       }
           
     </ScrollView>
-    <Text style={{height:100}} onPress={()=>{
+    {/* <Text style={{height:100}} onPress={()=>{
       console.log('1235');
       appVersions.checkAppUpdate()
-    }}>12345----{appVersions.versionCode}</Text>
+    }}>12345----{appVersions.versionCode}</Text> */}
   </View>);
 };
 export default inject("home","app",'appVersions')(observer(Home));

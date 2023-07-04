@@ -37,7 +37,7 @@ export class HasNewVersionComp extends Component<IProps,IState> {
     render(){
         console.log('this.props.lastVersion---->>',this.props.lastVersion);
         return <>
-            <Text style={{fontFamily:'PingFang SC',color:'#334466',marginTop:sv(0)}}>发现最新版本v{this.props.lastVersion.build_version}，约{this.calcPackageSize(this.props.lastVersion.size)}</Text>
+            <Text style={{fontFamily:'PingFang SC',color:'#334466',marginTop:sv(0)}}>发现最新版本v{this.props.lastVersion.versionName}，约{this.calcPackageSize(this.props.lastVersion.size)}</Text>
             <View style={{height:sv(10)}}></View>
             {
                 this.props.lastVersion.remark.split(/\n/g).map((txt:string,idx:number)=>{

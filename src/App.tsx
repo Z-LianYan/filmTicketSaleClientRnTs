@@ -58,7 +58,6 @@ const App = (props:any) => {
     if(!store.app.userInfo){
       getUserInfo();
     }
-    // store.appVersions.checkAppUpdate()
   },[]);
   
 
@@ -98,10 +97,6 @@ const App = (props:any) => {
             }}>
               <StackNavigators/>
             </NavigationContainer>
-            {/* <Text style={{height:100}} onPress={()=>{
-              console.log('1235');
-              store.appVersions.checkAppUpdate()
-            }}>12345----{store.appVersions.versionCode}</Text> */}
             </TopView>
         </SafeAreaView>
     </Provider>
