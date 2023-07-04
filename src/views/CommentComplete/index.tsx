@@ -70,7 +70,7 @@ import Star from '../../component/Star';
 var ScreenWidth = Dimensions.get('window').width;
 
 
-const CommentPage = ({app,navigation,route}:any) => {
+const CommentPage = ({AppStore,navigation,route}:any) => {
     
   const colorScheme = useColorScheme();
   const headerHeight = useHeaderHeight();
@@ -150,7 +150,7 @@ const CommentPage = ({app,navigation,route}:any) => {
             ) : null}
             {commentInfo && commentInfo.score ? (
               <Text style={styles.score}>
-                {commentInfo.score}分 {app.rateLevelTex[commentInfo.score]}
+                {commentInfo.score}分 {AppStore.rateLevelTex[commentInfo.score]}
               </Text>
             ) : null}
           </Viw>
@@ -247,4 +247,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default inject("app")(observer(CommentPage));
+export default inject("AppStore")(observer(CommentPage));

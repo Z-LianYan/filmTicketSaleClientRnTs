@@ -48,7 +48,7 @@ type propType = {
       }
   </Carousel>
  }
- export default inject('app')(observer(SwiperCom));
+ export default inject('AppStore')(observer(SwiperCom));
 
  const styles = StyleSheet.create({
   dot:{

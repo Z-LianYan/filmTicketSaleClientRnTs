@@ -372,4 +372,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default inject("app")(observer(SeatList));
+export default inject("AppStore")(observer(SeatList));

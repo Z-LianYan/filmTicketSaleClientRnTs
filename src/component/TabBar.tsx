@@ -55,7 +55,7 @@ import { get_film_hot } from '../api/film';
 //   index?: number
 // }
 const TabBar = ({
-   state, descriptors, navigation,app
+   state, descriptors, navigation,AppStore
 }:any) => {
   const colorScheme = useColorScheme();
   useEffect(()=>{
@@ -100,9 +100,9 @@ const TabBar = ({
 
       if (!isFocused && !event.defaultPrevented) {
 
-        console.log('userinfo ----===>',app.userInfo);
+        console.log('userinfo ----===>',AppStore.userInfo);
 
-        if(route.name=='MinePage' && !app.userInfo){
+        if(route.name=='MinePage' && !AppStore.userInfo){
           navigation.navigate({ name: 'LoginPage', params:{
             toUrl:'MinePage'
           }});
@@ -159,4 +159,4 @@ const styles = StyleSheet.create({
   // }
 });
 
-export default inject("app")(observer(TabBar));
+export default inject("AppStore")(observer(TabBar));

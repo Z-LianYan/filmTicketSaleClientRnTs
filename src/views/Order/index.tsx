@@ -231,4 +231,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject("app")(observer(OrderPage));
+export default inject("AppStore")(observer(OrderPage));

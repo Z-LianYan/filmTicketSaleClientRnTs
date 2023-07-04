@@ -452,4 +452,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject("app")(observer(OrderDetail));
+export default inject("AppStore")(observer(OrderDetail));

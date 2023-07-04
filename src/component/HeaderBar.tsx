@@ -144,4 +144,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject("app")(observer(HeaderBar));
+export default inject("AppStore")(observer(HeaderBar));

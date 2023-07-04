@@ -12,7 +12,7 @@ import { useState } from 'react';
 // let host = process.env.NODE_ENV=='development'?'http://film.imgresource.com.cn':'http://film.imgresource.com.cn'
 let host = process.env.NODE_ENV=='development'?'http://192.168.0.26:7002':'http://film.imgresource.com.cn'
 import { TopView, Toast,ModalIndicator } from '../component/teaset/index';
-import app from '../store/app';
+import app from '../store/AppStore';
 
 // let routerNavigation:any = null;
 
@@ -27,7 +27,7 @@ function hideLoading(){
 }
 axios.defaults.withCredentials = true;
 const service = axios.create({
-  baseURL: process.env.BASE_API, // api的base_url
+  baseURL: host, // api的base_url
   timeout: 5000 * 200, //1m request timeout
   headers: {
     platform: Platform.OS=='ios'?'rnIos':'rnAndroid',
@@ -60,11 +60,10 @@ service.interceptors.response.use(
   }
 );
 export function post(url:string, data?:any, text?:string) {
-
   return new Promise((resolve, reject) => {
     if (text) isLoading(text);
     service({
-      url: host+url,
+      url: url,
       method: "POST",
       data: data,
       headers: {},
@@ -87,12 +86,8 @@ export function post(url:string, data?:any, text?:string) {
 export function get(url:string, params?:any, text?:string) {
   return new Promise((resolve, reject) => {
     if (text) isLoading(text);
-    // Toast.success('Toast success');
-    // Toast.smile('Toast smile');
-    // Toast.stop('Toast stop');
-    
     service({
-      url: host+url,
+      url: url,
       method: "GET",
       params: params,
       headers: {},

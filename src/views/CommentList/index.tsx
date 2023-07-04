@@ -70,7 +70,7 @@ import ReplyCommentModal from '../../component/ReplyCommentModal';
 var ScreenWidth = Dimensions.get('window').width;
 
 
-const CommentList = ({app,navigation,route}:any) => {
+const CommentList = ({AppStore,navigation,route}:any) => {
     
   const colorScheme = useColorScheme();
   const headerHeight = useHeaderHeight();
@@ -96,8 +96,8 @@ const CommentList = ({app,navigation,route}:any) => {
       page: page,
       limit: 10,
       film_id: route && route.params && route.params.film_id,
-      city_id: app.locationInfo && app.locationInfo.city_id,
-      user_id: app.userInfo && app.userInfo.user_id,
+      city_id: AppStore.locationInfo && AppStore.locationInfo.city_id,
+      user_id: AppStore.userInfo && AppStore.userInfo.user_id,
     });
     let _commentlist = []
     if(page==1){
@@ -130,7 +130,7 @@ const CommentList = ({app,navigation,route}:any) => {
         title={route.params.film_name} 
         headerHeight={headerHeight}
         rightView={
-          app.userInfo && commentlist.some((item:any) => item.user_id == app.userInfo.user_id) && (<Button 
+          AppStore.userInfo && commentlist.some((item:any) => item.user_id == AppStore.userInfo.user_id) && (<Button 
           style={{borderRadius:20,backgroundColor:'#00b578'}} 
           titleStyle={{color:'#fff'}} 
           title="编辑我的评论" 
@@ -138,7 +138,7 @@ const CommentList = ({app,navigation,route}:any) => {
           onPress={()=>{
             let commentData:any = {};
             for (let item of commentlist) {
-              if (item.user_id == app.userInfo.user_id) {
+              if (item.user_id == AppStore.userInfo.user_id) {
                 commentData = item;
               }
             }
@@ -246,7 +246,7 @@ const CommentList = ({app,navigation,route}:any) => {
               }
             } catch (err:any) {
               if (err.error == 401) {
-                app.setUserInfo(null); //如果token认证过期 清空当前缓存的登录信息
+                AppStore.setUserInfo(null); //如果token认证过期 清空当前缓存的登录信息
                 navigation.navigate({
                   name: "LoginPage"
                 });
@@ -280,7 +280,7 @@ const CommentList = ({app,navigation,route}:any) => {
               });
             } catch (err:any) {
               if (err.error == 401) {
-                app.setUserInfo(null); //如果token认证过期 清空当前缓存的登录信息
+                AppStore.setUserInfo(null); //如果token认证过期 清空当前缓存的登录信息
                 navigation.navigate({
                   name: "LoginPage"
                 });
@@ -345,13 +345,13 @@ const CommentList = ({app,navigation,route}:any) => {
       {
         commentlist.map((item:any, index:number) => {
           let actionsOptionComment = ["举报"];
-          if (app.userInfo && app.userInfo.user_id == item.user_id) {
+          if (AppStore.userInfo && AppStore.userInfo.user_id == item.user_id) {
             actionsOptionComment.push("删除");
           }
           return (
             <CommentItem
               key={index}
-              userInfo={app.userInfo}
+              userInfo={AppStore.userInfo}
               nickname={item.nickname}
               scoreText={`给这部作品打了${item.score}分`}
               date={handleDate(item.date)}
@@ -369,7 +369,7 @@ const CommentList = ({app,navigation,route}:any) => {
               }}
               commentContent={item.comment_content}
               isShowMineCommentTag={
-                app.userInfo && app.userInfo.user_id == item.user_id
+                AppStore.userInfo && AppStore.userInfo.user_id == item.user_id
               }
               onReplyTextBtn={() => {;
 
@@ -406,7 +406,7 @@ const CommentList = ({app,navigation,route}:any) => {
                   ]);
                 } catch (err:any) {
                   if (err.error == 401) {
-                    app.setUserInfo(null); //如果token认证过期 清空当前缓存的登录信息
+                    AppStore.setUserInfo(null); //如果token认证过期 清空当前缓存的登录信息
                     navigation.navigate({
                       name: "LoginPage"
                     });
@@ -525,12 +525,12 @@ const CommentList = ({app,navigation,route}:any) => {
                 item.replyList &&
                 item.replyList.map((it:any, idx:number) => {
                   let actionsOptionReply = ["举报"];
-                  if (app.userInfo && app.userInfo.user_id == it.user_id) {
+                  if (AppStore.userInfo && AppStore.userInfo.user_id == it.user_id) {
                     actionsOptionReply.push("删除");
                   }
                   return (
                     <CommentItem
-                      userInfo={app.userInfo}
+                      userInfo={AppStore.userInfo}
                       itemPaddingTop={0}
                       itemPaddingRight={0}
                       itemPaddingBottom={0.1}
@@ -585,7 +585,7 @@ const CommentList = ({app,navigation,route}:any) => {
                           ])
                         } catch (err:any) {
                           if (err.error == 401) {
-                            app.setUserInfo(null); //如果token认证过期 清空当前缓存的登录信息
+                            AppStore.setUserInfo(null); //如果token认证过期 清空当前缓存的登录信息
                             navigation.navigate({
                               name: "LoginPage"
                             });
@@ -619,7 +619,7 @@ const CommentList = ({app,navigation,route}:any) => {
     </ScrollView>
 
     <ReplyCommentModal 
-    app={app} 
+    app={AppStore} 
     ref={replyCommentModalRef} 
     commentlist={commentlist}
     replySuccess={(commentlist:any)=>{
@@ -664,4 +664,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default inject("app")(observer(CommentList));
+export default inject("AppStore")(observer(CommentList));

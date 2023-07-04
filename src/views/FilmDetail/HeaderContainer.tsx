@@ -49,7 +49,7 @@ import Star from '../../component/Star';
 
 var ScreenObj = Dimensions.get('window');
 
-const HeaderContainer = ({detail,app,reSetDetail}:any) => {
+const HeaderContainer = ({detail,AppStore,reSetDetail}:any) => {
   let navigation:any = useNavigation();
   const colorScheme = useColorScheme();
   
@@ -175,7 +175,7 @@ const HeaderContainer = ({detail,app,reSetDetail}:any) => {
           <Txt style={{color:'#fff'}}>看过啦,</Txt>
           {
             !detail.user_comment_del ? <Viw style={{flexDirection:'row'}}>
-              <Txt style={{color:'#fff'}}>{app.rateLevelTex[detail.rate_score] + "！我评 "}</Txt>
+              <Txt style={{color:'#fff'}}>{AppStore.rateLevelTex[detail.rate_score] + "！我评 "}</Txt>
               <Viw style={{flexDirection:'row',alignItems:'center'}}>
                 <Txt style={{color:Theme.secondaryColor}}>{detail.rate_score} 分</Txt>
                 <Star style={{marginLeft:5}} value={
@@ -202,12 +202,6 @@ const HeaderContainer = ({detail,app,reSetDetail}:any) => {
                       size="sm"
                       title="去评分"
                       onPress={() => {
-                        // if (!app.userInfo) {
-                        //   navigation.navigate({
-                        //     name: "LoginPage",
-                        //   });
-                        //   return;
-                        // }
                         navigation.navigate({
                           name: "CommentPage",
                           params: {
@@ -225,7 +219,7 @@ const HeaderContainer = ({detail,app,reSetDetail}:any) => {
           activeOpacity={1}
           style={styles.notCommentBtn} 
           onPress={async ()=>{
-            if (!app.userInfo) {
+            if (!AppStore.userInfo) {
               navigation.navigate({
                 name: "LoginPage",
               });
@@ -233,7 +227,7 @@ const HeaderContainer = ({detail,app,reSetDetail}:any) => {
             }
             let result = await add_cancel_want_see({
               film_id: detail.id,
-              user_id: app.userInfo.user_id,
+              user_id: AppStore.userInfo.user_id,
             });
             // detail.want_see_num = result.count;
             // detail.user_already_click_want_see = !detail.user_already_click_want_see;
@@ -253,7 +247,7 @@ const HeaderContainer = ({detail,app,reSetDetail}:any) => {
           activeOpacity={1}
           style={styles.notCommentBtn}
           onPress={()=>{
-            if (!app.userInfo) {
+            if (!AppStore.userInfo) {
               navigation.navigate({
                 name: "LoginPage",
               });
@@ -429,4 +423,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default inject("app")(observer(HeaderContainer));
+export default inject("AppStore")(observer(HeaderContainer));

@@ -40,12 +40,12 @@ import CitysPageContent from './CitysPageContent';
 
 
 
-const CitysPage = ({app,navigation,route}:any) => {
+const CitysPage = ({AppStore,navigation,route}:any) => {
   const refDropdownMenu:{current:any} = useRef()
   const colorScheme = useColorScheme();
   const onSetOptions = useCallback(()=>{
     navigation.setOptions({
-      title: '当前城市-'+app.locationInfo.city_name,
+      title: '当前城市-'+AppStore.locationInfo.city_name,
     });
   },[]);
   useEffect(()=>{
@@ -55,7 +55,7 @@ const CitysPage = ({app,navigation,route}:any) => {
   return <CitysPageContent 
   colorScheme={colorScheme} 
   navigation={navigation} 
-  app={app}/>
+  app={AppStore}/>
 };
 
 const styles = StyleSheet.create({
@@ -67,4 +67,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default inject("app")(observer(CitysPage));
+export default inject("AppStore")(observer(CitysPage));

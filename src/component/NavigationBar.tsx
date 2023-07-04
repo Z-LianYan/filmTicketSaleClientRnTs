@@ -115,4 +115,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject("home")(observer(_NavigationBar));
+export default _NavigationBar;

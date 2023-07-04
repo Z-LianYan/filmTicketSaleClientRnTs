@@ -401,4 +401,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default inject("app")(observer(SelectSeat));
+export default inject("AppStore")(observer(SelectSeat));

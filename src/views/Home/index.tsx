@@ -6,8 +6,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import * as HttpUtils from '../../utils/request2';
-
 import {
   SafeAreaView,
   ScrollView,
@@ -45,7 +43,6 @@ import {
   Label
 } from '../../component/teaset/index';
 
-
 import { get_film_hot,get_film_soon_show } from '../../api/film';
 
 import NavigationBar from '../../component/NavigationBar';
@@ -66,7 +63,7 @@ import { get_by_city } from "../../api/citys";
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const Home = ({app,appVersions}:any) => {
+const Home = ({AppStore,AppVersions}:any) => {
   const cacheCityId:{current:any} = useRef();
   const hotRef:{current:any} = useRef();
   const soonShowRef:{current:any} = useRef();
@@ -79,7 +76,7 @@ const Home = ({app,appVersions}:any) => {
   let [fetchOptionsHot,setFetchOptionsHot] = useState({
     page: 1,
     limit: 4,
-    // city_id: app.locationInfo.city_id,
+    // city_id: AppStore.locationInfo.city_id,
   })
   let [hotList,setHotList] = useState([])
   let [isHotLoading,setHotLoading] = useState(false);
@@ -88,7 +85,7 @@ const Home = ({app,appVersions}:any) => {
   let [fetchOptionsSoonShow,setFetchOptionsSoonShow] = useState({
     page: 1,
     limit: 6,
-    // city_id: app.locationInfo.city_id,
+    // city_id: AppStore.locationInfo.city_id,
   });
 
   let [SoonShowList,setSoonShowList] = useState([])
@@ -97,11 +94,9 @@ const Home = ({app,appVersions}:any) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      // console.log('useFocusEffect--->++++',app.locationInfo,cacheCityId.current)
-      if(!cacheCityId.current || (cacheCityId.current && app.locationInfo.city_id != cacheCityId.current.city_id)){
-        // console.log('useFocusEffect--->',app.locationInfo,cacheCityId.current)
+      if(!cacheCityId.current || (cacheCityId.current && AppStore.locationInfo.city_id != cacheCityId.current.city_id)){
         cacheCityId.current = {};
-        cacheCityId.current.city_id = app.locationInfo.city_id;
+        cacheCityId.current.city_id = AppStore.locationInfo.city_id;
         onRefresh();
       }
     }, [])
@@ -123,7 +118,7 @@ const Home = ({app,appVersions}:any) => {
       city_id: info.adCode,
       type:'parent'
     });
-    app.setLocationInfo({
+    AppStore.setLocationInfo({
       lng: info.longitude,
       lat: info.latitude,
       realLocation: {
@@ -141,7 +136,7 @@ const Home = ({app,appVersions}:any) => {
     isLoading && setHotLoading(true);
     let result:any = await get_film_hot({
       ...fetchOptionsHot,
-      city_id:app.locationInfo.city_id
+      city_id:AppStore.locationInfo.city_id
     });
     let _list = [];
     if(fetchOptionsHot.page==1){
@@ -163,7 +158,7 @@ const Home = ({app,appVersions}:any) => {
     isLoading && setSoonShowLoading(true);
     let result:any = await get_film_soon_show({
       ...fetchOptionsSoonShow,
-      city_id:app.locationInfo.city_id
+      city_id:AppStore.locationInfo.city_id
     });
     let _list = [];
     if(fetchOptionsSoonShow.page==1){
@@ -277,13 +272,9 @@ const Home = ({app,appVersions}:any) => {
       }
           
     </ScrollView>
-    {/* <Text style={{height:100}} onPress={()=>{
-      console.log('1235');
-      appVersions.checkAppUpdate()
-    }}>12345----{appVersions.versionCode}</Text> */}
   </View>);
 };
-export default inject("home","app",'appVersions')(observer(Home));
+export default inject("AppStore",'AppVersions')(observer(Home));
 
 
 const styles = StyleSheet.create({

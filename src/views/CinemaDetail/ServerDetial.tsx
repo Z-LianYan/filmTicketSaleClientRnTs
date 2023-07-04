@@ -71,7 +71,7 @@ const ReplyCommentModal = ({
   }));
 
   return <Modal
-  animationType={"fade"}//'none', 'slide', 'fade'
+  animationType={"slide"}//'none', 'slide', 'fade'
   transparent={true}
   visible={isShow}
   onRequestClose={()=>{

@@ -104,7 +104,7 @@ const Login = (props:any) => {
       // let storage_token = await AsyncStorage.getItem('token');
       // await AsyncStorage.setItem('token', result.token);
       delete result.token
-      props.app.setUserInfo(result);
+      props.AppStore.setUserInfo(result);
 
       if(route.params && route.params.toUrl){
         props.navigation.navigate(route.params.toUrl);
@@ -200,4 +200,4 @@ const styles = StyleSheet.create({
     marginTop:20
   }
 });
-export default inject("app")(observer(Login));
+export default inject("AppStore")(observer(Login));

@@ -39,7 +39,7 @@ import dayjs from 'dayjs';
 const ScreenWidth = Dimensions.get('window').width;
 import { useFocusEffect } from '@react-navigation/native';
 
-const Cinema = ({app,navigation,route}:any) => {
+const Cinema = ({AppStore,navigation,route}:any) => {
   const cacheCityId:{current:any} = useRef();
   const refDropdownMenu:{current:any} = useRef()
   const colorScheme = useColorScheme();
@@ -51,14 +51,14 @@ const Cinema = ({app,navigation,route}:any) => {
   let [fetchOptions,setFetchOptions] = useState({
     page: 1,
     limit: 15,
-    city_id: app.locationInfo.city_id,
+    city_id: AppStore.locationInfo.city_id,
     district_id: "",
     date: "",
     film_id: "",
     lat: "",
     lng: "",
     type: "",
-    user_id: app.userInfo ? app.userInfo.user_id:''
+    user_id: AppStore.userInfo ? AppStore.userInfo.user_id:''
   })
   let [city_district_list, set_city_district_list] = useState([]);
   let [dateList, setDateList] = useState([]);
@@ -69,9 +69,9 @@ const Cinema = ({app,navigation,route}:any) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      if(app.locationInfo.city_id != cacheCityId.current){
-        cacheCityId.current = app.locationInfo.city_id;
-        console.log('1234567',app.locationInfo.city_id);
+      if(AppStore.locationInfo.city_id != cacheCityId.current){
+        cacheCityId.current = AppStore.locationInfo.city_id;
+        console.log('1234567',AppStore.locationInfo.city_id);
         setFetchOptions({
           ...fetchOptions,
           type:'',
@@ -107,7 +107,7 @@ const Cinema = ({app,navigation,route}:any) => {
   },[]);
   async function getFilmInScheduleDates() {
     let result:any = await get_film_in_schedule_dates({
-      city_id:app.locationInfo.city_id,
+      city_id:AppStore.locationInfo.city_id,
       film_id: route.params && route.params.film_id,
     });
     if (!result || !result.rows.length) return navigation.goBack(); //无排片日期时返回
@@ -170,10 +170,10 @@ const Cinema = ({app,navigation,route}:any) => {
     isLoading && setLoading(true);
     let result:any = await get_cinema_list({
       ...fetchOptions,
-      user_id:app.userInfo ? app.userInfo.user_id:'',
-      city_id: app.locationInfo.city_id,
-      lat: app.locationInfo.lat,
-      lng: app.locationInfo.lng
+      user_id:AppStore.userInfo ? AppStore.userInfo.user_id:'',
+      city_id: AppStore.locationInfo.city_id,
+      lat: AppStore.locationInfo.lat,
+      lng: AppStore.locationInfo.lng
     },'');
     let _list = [];
     if(fetchOptions.page==1){
@@ -194,7 +194,7 @@ const Cinema = ({app,navigation,route}:any) => {
 
   async function getDistrictList() {
     let result:any = await get_city_district_list({
-      city_id:app.locationInfo.city_id,
+      city_id:AppStore.locationInfo.city_id,
     });
     result.rows.unshift({
       first_letter: null,
@@ -336,7 +336,7 @@ const Cinema = ({app,navigation,route}:any) => {
     }
     <DropdownMenu 
     ref={refDropdownMenu}
-    key={app.locationInfo.city_id}
+    key={AppStore.locationInfo.city_id}
     list={city_district_list}
     onTypeChange={(type:string)=>{
       fetchOptions.type = type;
@@ -492,4 +492,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject("app")(observer(Cinema));
+export default inject("AppStore")(observer(Cinema));

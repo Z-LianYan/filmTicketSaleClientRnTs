@@ -38,7 +38,7 @@ import CustomListRow from '../../component/CustomListRow';
 import ServerDetial from '../CinemaDetail/ServerDetial';
 
 
-const CitysPage = ({app,navigation,route}:any) => {
+const CitysPage = ({AppStore,navigation,route}:any) => {
   const refDropdownMenu:{current:any} = useRef()
   const colorScheme = useColorScheme();
   let [list,setList] = useState<any>([])
@@ -98,13 +98,13 @@ const CitysPage = ({app,navigation,route}:any) => {
 
   useEffect(()=>{
     getCityList();
-    onSetOptions(app.locationInfo.city_name)
+    onSetOptions(AppStore.locationInfo.city_name)
   },[])
   
 
   const getCityList = useCallback(async ()=>{
-    if(!app.cityList){
-      let result = await get_city_list({});
+    if(!AppStore.cityList){
+      let result:any = await get_city_list({});
       let citys = result.rows;
       for (let i = 0; i < citys.length; i++) {
         if (citys[i].id === 110100 || citys[i].id === 120100) {
@@ -119,13 +119,13 @@ const CitysPage = ({app,navigation,route}:any) => {
           }
         }
       }
-      app.cityList = letter;
+      AppStore.cityList = letter;
       setLetter({
         ...letter
       });
     }else{
       setLetter({
-        ...app.cityList
+        ...AppStore.cityList
       });
     }
     
@@ -133,10 +133,10 @@ const CitysPage = ({app,navigation,route}:any) => {
   },[]);
 
   const searchChange = useCallback((val)=>{
-    console.log('val=======>>>>searchChange变了',val,app.cityList);
+    console.log('val=======>>>>searchChange变了',val,AppStore.cityList);
     let filterList = [];
-    for (let key in app.cityList) {
-      for (let item of app.cityList[key]) {
+    for (let key in AppStore.cityList) {
+      for (let item of AppStore.cityList[key]) {
         if (item.name.includes(val) || item.pinyin.includes(val)) {
           filterList.push(item);
         }
@@ -152,7 +152,7 @@ const CitysPage = ({app,navigation,route}:any) => {
 
   function setLocationInfo(item:any, type?:string) {
     // let { history, locationInfo } = this.props;
-    let { realLocation } = app.locationInfo;
+    let { realLocation } = AppStore.locationInfo;
     // if (!item.name) return;
     // Cookies.set(
     //   "locationInfo",
@@ -164,7 +164,7 @@ const CitysPage = ({app,navigation,route}:any) => {
     //     expires: 1,
     //   }
     // );
-    app.setLocationInfo(
+    AppStore.setLocationInfo(
       {
         city_id: item.id,
         city_name: item.name,
@@ -173,7 +173,7 @@ const CitysPage = ({app,navigation,route}:any) => {
         // isShowSwitchLocationModal: false, //关闭首页（film）banner 里的，切换城市的模态框
       },
       () => {
-        console.log('app',app.locationInfo);
+        console.log('AppStore',AppStore.locationInfo);
         navigation.goBack();
       }
     );
@@ -242,7 +242,7 @@ const CitysPage = ({app,navigation,route}:any) => {
           if(!text){
             setFilterList([]);
             setLetter({
-              ...app.cityList
+              ...AppStore.cityList
             });
           }
           setSearchValue(text);
@@ -263,7 +263,7 @@ const CitysPage = ({app,navigation,route}:any) => {
           if(!searchValue){
             setFilterList([]);
             setLetter({
-              ...app.cityList
+              ...AppStore.cityList
             });
           }else{
             searchChange(searchValue);
@@ -315,4 +315,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default inject("app")(observer(CitysPage));
+export default inject("AppStore")(observer(CitysPage));

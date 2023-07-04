@@ -62,7 +62,7 @@ var ScreenObj = Dimensions.get('window');
 
 
 
-const FilmDetail = ({app,navigation,route}:any) => {
+const FilmDetail = ({AppStore,navigation,route}:any) => {
   const headerHeight = useHeaderHeight();
   const colorScheme = useColorScheme();
   let [submiting,setSubmiting] = useState(false);
@@ -98,7 +98,7 @@ const FilmDetail = ({app,navigation,route}:any) => {
   },[headerBackgroundColor]);
 
   const getFilmDetail = useCallback(async ()=>{
-    let { locationInfo } = app;
+    let { locationInfo } = AppStore;
     let { params } = route;
     
     let result = await get_film_detail({
@@ -157,8 +157,8 @@ const FilmDetail = ({app,navigation,route}:any) => {
       }
 
       <View style={styles.abstractWrapper}>
-        <Text style={{height:openAbstract?'auto':40}}>{detail && detail.abstract}</Text>
-        <View style={styles.abstractBotBtn}>
+        <Text style={{height:'auto'}}>{detail && detail.abstract}</Text>
+        {/* <View style={styles.abstractBotBtn}>
           <Ionicons 
           name={openAbstract?'md-chevron-up':'md-chevron-down'}
           size={20} 
@@ -166,7 +166,7 @@ const FilmDetail = ({app,navigation,route}:any) => {
           onPress={()=>{
             setOpenAbstract(!openAbstract);
           }}/>
-        </View>
+        </View> */}
       </View>
 
       {
@@ -178,7 +178,7 @@ const FilmDetail = ({app,navigation,route}:any) => {
       }
 
       <CommentArea 
-      userInfo={app.userInfo} 
+      userInfo={AppStore.userInfo} 
       route={route} 
       film_detail={detail}
       ref={refCommentList}
@@ -245,4 +245,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject("app")(observer(FilmDetail));
+export default inject("AppStore")(observer(FilmDetail));

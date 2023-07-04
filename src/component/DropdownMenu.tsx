@@ -42,13 +42,13 @@ const DropdownMenu = ({
   titleStyle,
   onTypeChange,
   districtChange,
-  app
+  AppStore
   }:{
     list:any[],
     titleStyle?:any,
     onTypeChange?:any
     districtChange?:any,
-    app?:any
+    AppStore?:any
   },ref:any) => {
   const colorScheme = useColorScheme();
   const [title,setTitle] = useState('全城');
@@ -92,7 +92,7 @@ const DropdownMenu = ({
         </View>
 
         {
-          app.userInfo && <View style={styles.dropdownMenuItem}>
+          AppStore.userInfo && <View style={styles.dropdownMenuItem}>
             <Text style={styles.title} onPress={()=>{
               setShowMenu2(!showMenu2);
               // if(showMenu && !showMenu2){
@@ -139,7 +139,7 @@ const DropdownMenu = ({
       </View>:null
     }
     {
-      showMenu2 && app.userInfo ?<View style={{
+      showMenu2 && AppStore.userInfo ?<View style={{
         ...styles.contentBox2,
         borderBottomColor: colorScheme === 'dark' ? '#1a1b1c' : '#f4f4f4',
         
@@ -290,4 +290,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject("app")(observer(forwardRef(DropdownMenu)));
+export default inject("AppStore")(observer(forwardRef(DropdownMenu)));

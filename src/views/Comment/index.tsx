@@ -18,6 +18,7 @@ import {
   RefreshControl,
   View as Viw,
   Text as Txt,
+  TextInput,
 } from 'react-native';
 
 import { 
@@ -70,7 +71,7 @@ import Star from '../../component/Star';
 var ScreenWidth = Dimensions.get('window').width;
 
 
-const CommentPage = ({app,navigation,route}:any) => {
+const CommentPage = ({AppStore,navigation,route}:any) => {
     
   const colorScheme = useColorScheme();
   const headerHeight = useHeaderHeight();
@@ -119,7 +120,7 @@ const CommentPage = ({app,navigation,route}:any) => {
       }
     } catch (err:any) {
       if (err.error == 401) {
-        app.setUserInfo(null); //如果token认证过期 清空当前缓存的登录信息
+        AppStore.setUserInfo(null); //如果token认证过期 清空当前缓存的登录信息
         navigation.navigate({
           name: "LoginPage"
         });
@@ -233,7 +234,7 @@ const CommentPage = ({app,navigation,route}:any) => {
         {score ? (
                   <Text style={styles.scoreTxt}>{score}分</Text>
                 ) : null}
-                <Text>{app.rateLevelTex[score]}</Text>
+                <Text>{AppStore.rateLevelTex[score]}</Text>
         </Text>
       </View>
 
@@ -243,16 +244,19 @@ const CommentPage = ({app,navigation,route}:any) => {
         backgroundColor:colorScheme=='dark'?'#1a1b1c':'#f4f4f4',
         color:colorScheme=='dark'?'#fff':'#000',
         height:300,
-        borderWidth:0
+        borderWidth:0,
+        textAlignVertical: "top"
       }}
       editable={true}//是否可编辑
       keyboardAppearance={colorScheme}//'default', 'light', 'dark'
       size='lg'
       multiline={true}
+      numberOfLines={10}
+      maxLength={150}
       value={commentContent}
       onChangeText={(text:any) => {
         console.log('text',text);
-        if(text.length>150) return;
+        // if(text.length>150) return;
         setCommentContent(text);
         // setNavigation(title,score,commentContent)
       }}
@@ -309,4 +313,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default inject("app")(observer(CommentPage));
+export default inject("AppStore")(observer(CommentPage));

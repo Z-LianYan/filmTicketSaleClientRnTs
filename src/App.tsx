@@ -41,6 +41,7 @@ import { any } from 'prop-types';
 
 import { get_user_info } from "./api/user";
 import { SystemUpdataOverlay } from './component/SystemUpdate/SystemUpdataOverlay';
+import { checkAppUpdate } from './api/appVersions';
 
 
 // Theme.set(Theme.themes.black);
@@ -49,13 +50,10 @@ import { SystemUpdataOverlay } from './component/SystemUpdate/SystemUpdataOverla
 //   primaryColor:'#e54847'
 // });
 
-
-
-
 const App = (props:any) => {
   const navigationRef = useNavigationContainerRef(); // You can also use a regular ref with `React.useRef()`
   useEffect(()=>{
-    if(!store.app.userInfo){
+    if(!store.AppStore.userInfo){
       getUserInfo();
     }
   },[]);
@@ -66,7 +64,7 @@ const App = (props:any) => {
       let result:any = await get_user_info();
       if (result) {
         delete result.token
-        store.app.setUserInfo(result);
+        store.AppStore.setUserInfo(result);
 
 
         setTimeout(() => {
@@ -75,7 +73,7 @@ const App = (props:any) => {
       }
     }catch(err:any){
       console.log('err',err.message);
-      store.app.setUserInfo(null);
+      store.AppStore.setUserInfo(null);
     }
   }
   

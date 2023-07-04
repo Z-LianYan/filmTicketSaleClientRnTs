@@ -44,7 +44,7 @@ var ScreenWidth = Dimensions.get('window').width;
 import HeaderBar from "../../component/HeaderBar";
 
 
-const CinemaSearch = ({app,navigation,route}:any) => {
+const CinemaSearch = ({AppStore,navigation,route}:any) => {
   const refDropdownMenu:{current:any} = useRef()
   const colorScheme = useColorScheme();
   // let navigation = useNavigation();
@@ -140,9 +140,9 @@ const CinemaSearch = ({app,navigation,route}:any) => {
       isLoading && setLoading(true);
       let result:any = await get_cinema_list({
         ...fetchOptions,
-        city_id: app.locationInfo.city_id,
-        lat: app.locationInfo.lat,
-        lng: app.locationInfo.lng,
+        city_id: AppStore.locationInfo.city_id,
+        lat: AppStore.locationInfo.lat,
+        lng: AppStore.locationInfo.lng,
         keywords: searchValue,
       },'');
       let _list = [];
@@ -251,7 +251,7 @@ const CinemaSearch = ({app,navigation,route}:any) => {
                 name: 'CinemaDetailPage',
                 params: {
                   cinema_id: item.cinema_id,
-                  film_id: app.params && app.params.film_id,
+                  film_id: AppStore.params && AppStore.params.film_id,
                 },
               });
             }}
@@ -274,4 +274,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject("app")(observer(CinemaSearch));
+export default inject("AppStore")(observer(CinemaSearch));

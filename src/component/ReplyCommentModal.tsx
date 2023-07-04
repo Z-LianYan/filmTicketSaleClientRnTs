@@ -181,7 +181,8 @@ type TypeProps = {
             placeholder={`回复 ${selectReplyItem?selectReplyItem.reply_person_nickname:''}：`} 
             style={{
               backgroundColor:colorScheme=='dark'?'#fff':'#fff',
-              ...styles.input
+              ...styles.input,
+              textAlignVertical: "top"
             }}
             editable={true}//是否可编辑
             keyboardAppearance={colorScheme}//'default', 'light', 'dark'
