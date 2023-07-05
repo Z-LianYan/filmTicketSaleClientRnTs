@@ -176,7 +176,11 @@ export default class ContentCom extends Component<Props,State> {
     // let { expire_time } = this.state;
     this.getOrderDetail()
     navigation.addListener('beforeRemove', (e:any) => {
-      let { expire_time,orderDetail,isNotCancelOrder,overlayPullView } = this.state;
+      let { 
+        expire_time,
+        orderDetail,
+        isNotCancelOrder,
+        overlayPullView } = this.state;
       let { params } = this.props.route;
       if(expire_time<=0) return;
       if(!params.isCancelOrder){//如果是从订单列表点进来是没有 isCancelOrder 传这个参数的，不需要关闭订单。
@@ -232,10 +236,11 @@ export default class ContentCom extends Component<Props,State> {
         order_id: params && params.order_id,
       });
       console.log('result===>',result);
+      const expireTime =  dayjs(result.pay_expire_time).unix() - dayjs().unix();
       this.setState({
         isSkeleton:false,
         orderDetail:result,
-        expire_time:result.expireTime
+        expire_time:expireTime
       })
 
       this.onSetInterval();
@@ -304,6 +309,7 @@ export default class ContentCom extends Component<Props,State> {
     let s = expire_time % 60;
     return m + ":" + (s > 9 ? s : "0" + s);
   }
+
 
   onGoToPay() {
     let { orderDetail } = this.state;
