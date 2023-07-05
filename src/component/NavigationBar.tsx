@@ -70,7 +70,7 @@ const _NavigationBar = ({
 
   return (<View style={{...style}}>
     <NavigationBar 
-    statusBarColor={Theme.primaryColor}
+    statusBarColor={'transparent'}
     statusBarInsets={Platform.OS === 'ios' ? false : true} 
     statusBarStyle={'default'}
     title={title?(typeof title === 'number'||'string'?<Text style={{fontSize:20,color:'#fff'}}>{title}</Text>:title):''}

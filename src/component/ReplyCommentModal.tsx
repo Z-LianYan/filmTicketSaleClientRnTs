@@ -152,6 +152,7 @@ type TypeProps = {
   onRequestClose={()=>{
     close()
   }}
+  statusBarTranslucent={true}
   >
     <View style={styles.container}>
       

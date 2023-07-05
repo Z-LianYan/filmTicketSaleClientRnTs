@@ -270,10 +270,8 @@ const SelectSeat = ({app,navigation,route}:any) => {
               top:(item.row-1) * (seatHeight+10),
               left:(item.column) * (seatWidth+10)
             }}
-            onPressOut={()=>{
-              console.log('真的flag====》');
-
-              setTimeout(()=>{},800)
+            onPress={()=>{
+              console.log('-------->>onPress');
               //disabled 0可选 1不可选 2无座
               if (
                 item.disabled !== 0 ||

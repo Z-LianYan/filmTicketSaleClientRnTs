@@ -177,6 +177,7 @@ const FilmDetail = ({AppStore,navigation,route}:any) => {
         detail && <Still  detail={detail}/>
       }
 
+      
       <CommentArea 
       userInfo={AppStore.userInfo} 
       route={route} 

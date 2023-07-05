@@ -168,7 +168,17 @@ const OrderDetail = ({app,navigation,route}:any) => {
             name={'location-outline'}
             style={{marginLeft:20}}
             size={20} 
-            color={'#fff'}/>
+            color={'#fff'}
+            onPress={()=>{
+              navigation.navigate({
+                name:'MapView',
+                params:{
+                  lat: orderDetail.lat,
+                  lng: orderDetail.lng,
+                  cinema_name: orderDetail.cinema_name
+                }
+              })
+            }}/>
             <Ionicons 
             name={'md-call'}
             style={{marginLeft:20}}

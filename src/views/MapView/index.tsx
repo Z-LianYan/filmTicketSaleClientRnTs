@@ -62,10 +62,15 @@ const MapViewComponent = ({app,navigation,route}:any) => {
   
 
   return <View style={styles.container}>
-
+    <NavigationBar 
+      style={{
+        zIndex:1
+      }}
+      title={route.params.cinema_name}
+      position=''/>
     <WebView
       source={{uri: `https://uri.amap.com/marker?position=${route.params.lng},${route.params.lat}&name=${route.params.cinema_name}&callnative=1`}}
-      style={{marginTop: Platform.OS === 'ios'?0:StatusBar.currentHeight}}
+      style={{marginTop: Platform.OS === 'ios'?0:0}}
     />
     
     {/* <MapView

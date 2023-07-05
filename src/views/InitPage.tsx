@@ -78,6 +78,12 @@ const InitPage = ({app,navigation,route}:any) => {
   },[])
   
   return <View style={styles.container}>
+    <StatusBar 
+    hidden={false} 
+    translucent={true}//指定状态栏是否透明
+    backgroundColor={"transparent"} //状态栏的背景色  
+    barStyle={'dark-content'}
+    />
     <View style={styles.headContainer}>
       <Text></Text>
       <Text 

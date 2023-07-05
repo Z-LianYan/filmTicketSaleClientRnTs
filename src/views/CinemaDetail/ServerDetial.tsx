@@ -44,7 +44,7 @@ var ScreenHeight = Dimensions.get('window').height;
 type TypeProps = {
    
 }
-const ReplyCommentModal = ({
+const ServerDetialModal = ({
   commentlist=[],
   replySuccess,
   app
@@ -57,8 +57,13 @@ const ReplyCommentModal = ({
   })
 
   const open = useCallback((_server)=>{
-    setServer(_server)
-    setShow(true);
+    // setServer(_server)
+    // setShow(true);
+    // overlay_pullview(_server)
+
+    let ol = Overlay.show(overlay_pullview(_server||[],()=>{
+      Overlay.hide(ol);
+    }));
   },[]);
   const close = useCallback(()=>{
     setShow(false)
@@ -70,75 +75,98 @@ const ReplyCommentModal = ({
     close
   }));
 
-  return <Modal
-  animationType={"slide"}//'none', 'slide', 'fade'
-  transparent={true}
-  visible={isShow}
-  onRequestClose={()=>{
-    close()
-  }}
-  >
-    <SafeAreaView style={styles.container}>
-      {/* <StatusBar 
-      hidden={true} 
-      backgroundColor={Theme.primaryColor} //状态栏的背景色  
-      barStyle={'light-content'}
-      /> */}
-        <View 
-        style={{
-          flex:1,
-          backgroundColor:'#000',
-          opacity:0.5,
-          marginBottom:-30,
-          paddingBottom:30
-        }}>
-          <TouchableOpacity 
-          activeOpacity={1}
-          onPress={()=>{
-            close();
-          }}
-          style={{flex:1}}>
-          </TouchableOpacity>
-        </View>
-      
-        
-          <View style={{
-            backgroundColor:colorScheme=='dark'?'#1a1b1c':'#fff',
-            ...styles.contentWrapper
+  // return <Modal
+  // animationType={"slide"}//'none', 'slide', 'fade'
+  // transparent={true}
+  // visible={isShow}
+  // onRequestClose={()=>{
+  //   close()
+  // }}
+  // >
+
+  const overlay_pullview = useCallback((server,callBack)=>{
+    return <Overlay.PullView 
+    side='bottom'
+    modal={false}
+    containerStyle={{
+      borderTopLeftRadius:10,
+      borderTopRightRadius:10,
+      backgroundColor: colorScheme=='dark'?'#1a1b1c':'#fff',
+    }}>
+      <SafeAreaView style={styles.container}>
+        {/* <StatusBar 
+        hidden={true} 
+        translucent={false}
+        backgroundColor={Theme.primaryColor} //状态栏的背景色  
+        barStyle={'light-content'}
+        /> */}
+        <StatusBar 
+        hidden={false} 
+        translucent={true}
+        backgroundColor={'transparent'} //状态栏的背景色  
+        barStyle={'dark-content'}
+        />
+          {/* <View 
+          style={{
+            flex:1,
+            backgroundColor:'#000',
+            opacity:0.5,
+            marginBottom:-30,
+            paddingBottom:30
           }}>
-            <Ionicons 
-            name={'ios-close-circle-outline'} 
-            style={styles.closeIcon}
-            size={40} 
-            color={colorScheme === 'dark' ? '#ccc' : '#fff'}
+            <TouchableOpacity 
+            activeOpacity={1}
             onPress={()=>{
-              close()
-            }}/>
-            <ScrollView style={styles.scrollViewContainer}>
-              {
-                server.map((item:any,index:number)=>{
-                  return <Viw style={styles.serverItemWrapper} key={index+'server-'}>
-                    <Viw style={styles.serverLabelWrapper}>
-                      <Txt style={styles.serverLabel}>
-                        {item.label}
+              // close();
+              callBack && callBack()
+            }}
+            style={{flex:1}}>
+            </TouchableOpacity>
+          </View> */}
+        
+          
+            <View style={{
+              backgroundColor:colorScheme=='dark'?'#1a1b1c':'#fff',
+              ...styles.contentWrapper
+            }}>
+              <Ionicons 
+              name={'ios-close-circle-outline'} 
+              style={styles.closeIcon}
+              size={40} 
+              color={colorScheme === 'dark' ? '#ccc' : '#fff'}
+              onPress={()=>{
+                // close()
+                callBack && callBack()
+              }}/>
+              <ScrollView style={styles.scrollViewContainer}>
+                {
+                  server.map((item:any,index:number)=>{
+                    return <Viw style={styles.serverItemWrapper} key={index+'server-'}>
+                      <Viw style={styles.serverLabelWrapper}>
+                        <Txt style={styles.serverLabel}>
+                          {item.label}
+                        </Txt>
+                      </Viw>
+                      
+                      <Txt style={styles.serverContent}>
+                        {item.content}
                       </Txt>
-                    </Viw>
-                    
-                    <Txt style={styles.serverContent}>
-                      {item.content}
-                    </Txt>
-                </Viw>
-                })
-              }
-            </ScrollView>
-          </View>
-    </SafeAreaView>
-   </Modal>;
+                  </Viw>
+                  })
+                }
+              </ScrollView>
+            </View>
+      </SafeAreaView>
+    </Overlay.PullView>
+  },[])
+
+
+  return null;
  };
  
  const styles = StyleSheet.create({
   container:{
-    height:'100%',
+    // height:'100%',
     backgroundColor:'transparent',
     position:'relative',
   },
@@ -186,5 +214,5 @@ const ReplyCommentModal = ({
   }
  });
  
- export default forwardRef(ReplyCommentModal);
+ export default forwardRef(ServerDetialModal);
  

@@ -82,11 +82,12 @@ const App = (props:any) => {
       <Provider {...store}>
         <SafeAreaView style={{flex:1,backgroundColor:colorScheme === 'dark' ?'#000':Theme.primaryColor}}>
           <TopView style={{flex:1}}>
-            <StatusBar 
+            {/* <StatusBar 
             hidden={false} 
-            backgroundColor={Theme.primaryColor} //状态栏的背景色  
+            translucent={true}//指定状态栏是否透明
+            backgroundColor={"transparent"} //状态栏的背景色  
             barStyle={'light-content'}
-            />
+            /> */}
             <NavigationContainer //给react navigation 设置夜间模式和白天模式
             theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
             ref={navigationRef} 

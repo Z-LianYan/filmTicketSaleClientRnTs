@@ -176,11 +176,15 @@ const CinemaDetailPage = ({AppStore,navigation,route}:any) => {
       }
     }}>
 
-      {
+      {/* {
         cinemaDetail && cinemaDetail.name?<HeaderBar 
         title={cinemaDetail && cinemaDetail.name} 
         headerHeight={headerHeight}/>:<View style={{height:headerHeight}}></View>
-      }
+      } */}
+
+      <HeaderBar 
+        title={cinemaDetail && cinemaDetail.name} 
+        headerHeight={headerHeight}/>
 
 
       <TouchableOpacity 
