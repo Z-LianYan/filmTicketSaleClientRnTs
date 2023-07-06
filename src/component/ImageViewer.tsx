@@ -72,7 +72,7 @@ const ImageViewerComponent = ({
   })
 
   const renderStart = useCallback(()=>{
-    
+
   },[])
 
   const open = useCallback(({imgs,index})=>{
@@ -107,7 +107,7 @@ const ImageViewerComponent = ({
   animationType={"slide"}
   transparent={true}
   visible={visibleModal}
-  statusBarTranslucent={true}//确定您的模态是否应位于系统状态栏下。
+  // statusBarTranslucent={true}//确定您的模态是否应位于系统状态栏下。
   onRequestClose={()=>{
     close()
   }}

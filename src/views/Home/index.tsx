@@ -63,6 +63,8 @@ import { get_by_city } from "../../api/citys";
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import { SystemUpdataOverlay } from '../../component/SystemUpdate/SystemUpdataOverlay';
+
 const Home = ({AppStore,AppVersions}:any) => {
   const cacheCityId:{current:any} = useRef();
   const hotRef:{current:any} = useRef();
@@ -107,6 +109,10 @@ const Home = ({AppStore,AppVersions}:any) => {
     // getSoonShowList(true);
 
     geolocationd();
+
+    setTimeout(() => {
+      new SystemUpdataOverlay().show(false);
+    }, 2000);
     return ()=>{
     }
   },[]);

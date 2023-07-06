@@ -66,6 +66,7 @@ const CinemaListItem = ({
       <TouchableHighlight 
       underlayColor={''}
       onPress={()=>{
+        if(item.status==0) return;
         navigation.navigate({
           name:"OrderDetailPage",
           params:{

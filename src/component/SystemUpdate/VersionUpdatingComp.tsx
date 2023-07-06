@@ -212,7 +212,7 @@ export class VersionUpdatingComp extends Component<IProps,IState> {
                     {this.state.progress==100?<Button 
                     style={{width:sv(246),height:sv(80),backgroundColor:'red'}} 
                     titleStyle={{color:'#fff'}} 
-                    title="重新下载2" 
+                    title="重新下载" 
                     size="md"
                     onPress={()=>{
                         this.downloadApp();

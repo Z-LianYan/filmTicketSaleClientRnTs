@@ -33,7 +33,7 @@ export class SystemUpdataOverlay extends BaseOverlay{
           style={{
               alignItems: 'center', justifyContent: 'center',
           }}>
-            <View style={{backgroundColor: '#fff', width:sv(600),minHeight:sv(336), borderRadius:sv(24),paddingHorizontal:sv(40),paddingVertical:sv(40)}}>
+            <View style={{backgroundColor: '#fff', width:sv(500), borderRadius:sv(24),paddingHorizontal:sv(40),paddingVertical:sv(40)}}>
               <SystemUpdataContent  
               isClickCheck={isClickCheck}
               hide={()=>{

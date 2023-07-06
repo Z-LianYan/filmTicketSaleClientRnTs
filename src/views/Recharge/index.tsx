@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useRef } from 'react';
 import { useNavigation } from '@react-navigation/core';
 import { observer, inject } from 'mobx-react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -67,7 +67,7 @@ const Recharge = ({app,navigation}:any) => {
   let [fontPriceIndex,setFontPriceIndex] = useState(0);
   let [submiting,setSubmiting] = useState(false);
 
-  
+  const valRef:{current:any} = useRef();
 
 
   useEffect(()=>{
@@ -114,14 +114,12 @@ const Recharge = ({app,navigation}:any) => {
     }
   }
 
-  function handleFontPrice() {
-    let index = rechargePrice.indexOf(".");
-    if (index != -1) {
-      let pre_str = rechargePrice.slice(0, index);
-      setFontPriceIndex(pre_str.length)
-      return;
-    }
-    setFontPriceIndex(rechargePrice.length);
+  function handleFontPrice(value:string) {
+    // const arr = value.split(',');
+    console.log('arr--->>',value);
+    return;
+    // const len = arr[0].length;
+    setFontPriceIndex(len);
   }
 
   return <View style={styles.container}>
@@ -169,18 +167,34 @@ const Recharge = ({app,navigation}:any) => {
         onChange={(e:any)=>{
           let val = e.nativeEvent.text;
           let index = val.indexOf(".");
-          if (index != -1) {
-            let last_str = val.slice(index + 1);
-            console.log('last_str---',last_str);
-            if (last_str.length >= 3) return;
-          }
-          let index2 = val.indexOf("..");
-          if(index2 != -1) {
-            setRechargePrice(val.replace('..','.'));
+          let value = '';
+          if(val.startsWith('.')) return;
+          if (index != -1 && val.slice(index + 1).length>=3) return;
+          const arr = val.split('.')
+          console.log('arr--->>',arr,arr.length);
+          if(arr.length>2){
+
+            // console.log('arr--->>11',arr,val.slice(0,val.length-1));
+            value = val.slice(0,val.length-1);
+            console.log('-----value>>',value)
+            
+            
+            setRechargePrice(value);
             return;
           }
+
+          const idx = val.indexOf('.');
+          if(idx != -1) {
+            let len = value.length - idx;
+            setFontPriceIndex(value.length-idx);
+          }else{
+            setFontPriceIndex(val.length);
+          }
+          console.log('val.length---->>',val,val.length)
           setRechargePrice(val);
-          handleFontPrice();
+
+          // handleFontPrice(valRef.current);
+          
         }}/>
 
         <Ionicons 

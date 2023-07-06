@@ -5,7 +5,8 @@ import React, { useState,useEffect } from 'react';
    StyleSheet,
    Image,
    View,
-   Text
+   Text,
+   TouchableOpacity
  } from 'react-native';
 
  import { 
@@ -38,12 +39,20 @@ type propType = {
     activeDot={<View style={styles.activeDot}></View>}
     />}>
       {
-        banner_list.map((item:{poster_img:any,id:number})=>{
-          return <Image 
-          style={{width: "100%", height: 238}} 
-          resizeMode='cover' 
+        banner_list.map((item:{poster_img:any,id:number,film_id:number})=>{
+          return <TouchableOpacity
           key={item.id}
-          source={{uri: item.poster_img }} />
+          activeOpacity={0.9}
+          onPress={()=>{
+            console.log('123456');
+            navigation.navigate('FilmDetail',{film_id:item.film_id});
+          }}>
+            <Image 
+            style={{width: "100%", height: 238}} 
+            resizeMode='cover' 
+            source={{uri: item.poster_img }} 
+            />
+          </TouchableOpacity>
         })
       }
   </Carousel>

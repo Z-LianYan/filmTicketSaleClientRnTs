@@ -65,11 +65,7 @@ const App = (props:any) => {
       if (result) {
         delete result.token
         store.AppStore.setUserInfo(result);
-
-
-        setTimeout(() => {
-          new SystemUpdataOverlay().show(false);
-        }, 3000);
+        
       }
     }catch(err:any){
       console.log('err',err.message);

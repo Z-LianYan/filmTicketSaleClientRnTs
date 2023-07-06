@@ -11,8 +11,10 @@ const defaultPixel = pixelRatio;
 //     defaultWidth:1920,
 //     defaultHeight:1200,
 // },
-const w2 = 1920 / defaultPixel;
-const h2 = 1200 / defaultPixel;
+console.log('width--->>>>>>',width)
+console.log('height--->>>>>>',height)
+const w2 = height / defaultPixel;
+const h2 = width / defaultPixel;
 const _scaleHeight = height / 1200;
 
 const scale = Math.min(height / h2, width / w2);   //获取缩放比例
