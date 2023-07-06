@@ -1,6 +1,8 @@
 import React, { useState,useEffect,useRef } from 'react';
 import { useNavigation } from '@react-navigation/core';
-import { observer, inject } from 'mobx-react'
+import { observer, inject } from 'mobx-react';
+import { observable, action, makeAutoObservable,runInAction } from 'mobx';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   SafeAreaView,
@@ -47,7 +49,7 @@ import service from '../../utils/request';
 
 var ScreenObj = Dimensions.get('window');
 
-const Recharge = ({app,navigation}:any) => {
+const Recharge = ({AppStore,navigation}:any) => {
     
   const colorScheme = useColorScheme();
   let [rechargePrice,setRechargePrice] = useState('');
@@ -95,7 +97,9 @@ const Recharge = ({app,navigation}:any) => {
 
   async function getUserInfo() {
     let result = await get_user_info();
-    if (result) app.setUserInfo(result);
+
+    if (result) AppStore.setUserInfo(result);
+   
   }
 
   async function onGotoRecharge() {
@@ -112,14 +116,6 @@ const Recharge = ({app,navigation}:any) => {
     } catch (err) {
       setSubmiting(false);
     }
-  }
-
-  function handleFontPrice(value:string) {
-    // const arr = value.split(',');
-    console.log('arr--->>',value);
-    return;
-    // const len = arr[0].length;
-    setFontPriceIndex(len);
   }
 
   return <View style={styles.container}>
@@ -166,35 +162,20 @@ const Recharge = ({app,navigation}:any) => {
         autoFocus
         onChange={(e:any)=>{
           let val = e.nativeEvent.text;
+          console.log('isNaN(val)--->>',isNaN(val));
           let index = val.indexOf(".");
-          let value = '';
-          if(val.startsWith('.')) return;
-          if (index != -1 && val.slice(index + 1).length>=3) return;
-          const arr = val.split('.')
-          console.log('arr--->>',arr,arr.length);
-          if(arr.length>2){
-
-            // console.log('arr--->>11',arr,val.slice(0,val.length-1));
-            value = val.slice(0,val.length-1);
-            console.log('-----value>>',value)
-            
-            
-            setRechargePrice(value);
-            return;
+          if (index != -1 && val.slice(index + 1).length>=3) return;//如 1.1111 变 1.11
+          if(!isNaN(val)) {
+            setRechargePrice(val)
+          }else{
+            setRechargePrice(val.slice(0,val.length-1))
           }
-
-          const idx = val.indexOf('.');
-          if(idx != -1) {
-            let len = value.length - idx;
-            setFontPriceIndex(value.length-idx);
+          if(index != -1) {
+            let s_len = val.slice(0,index);
+            setFontPriceIndex(s_len.length);
           }else{
             setFontPriceIndex(val.length);
           }
-          console.log('val.length---->>',val,val.length)
-          setRechargePrice(val);
-
-          // handleFontPrice(valRef.current);
-          
         }}/>
 
         <Ionicons 

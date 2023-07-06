@@ -1,16 +1,17 @@
 
 import { observable, action, makeAutoObservable } from 'mobx';
 
-export default class AppStore {
-  // constructor() {
-  //   // 建议使用这种方式，自动识别类型，不需要再加前缀
-  //   makeAutoObservable(this)
-  // }
+class AppStore {
+  constructor() {
+    // 建议使用这种方式，自动识别类型，不需要再加前缀
+    makeAutoObservable(this)
+  }
 
-  static tabBarBadge = "Badge";
+  tabBarBadge = "Badge";
 
-  static userInfo = null;
-  static locationInfo= {
+  userInfo = null;
+
+  locationInfo= {
     city_id: 440100, //默认城市编码
     lng: "",
     lat: "",
@@ -20,7 +21,7 @@ export default class AppStore {
     // isShowSwitchLocationModal: false, //首页（film页）banner ，定位成功显示切换模态框
   };
 
-  static rateLevelTex = {
+  rateLevelTex = {
     0: "可以点击星星评分",
     1: "超烂啊,太差了",
     2: "超烂啊,太差了",
@@ -33,12 +34,12 @@ export default class AppStore {
     9: "很不错,推荐看看",
     10: "棒极了,极力推荐",
   };
-
-  static setUserInfo(info:any){
+  
+  setUserInfo(info:any){
     this.userInfo = info
   }
 
-  static setLocationInfo(info:any,callBack?:()=>void){
+  setLocationInfo(info:any,callBack?:()=>void){
     this.locationInfo = {
       ...this.locationInfo,
       ...info
@@ -46,6 +47,9 @@ export default class AppStore {
     callBack && callBack();
   }
 
-  static cityList = null
+  cityList = null
   
 }
+const app = new AppStore()
+
+export default app;

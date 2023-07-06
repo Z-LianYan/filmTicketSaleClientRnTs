@@ -18,7 +18,8 @@ import {
 } from 'react-native';
 
 import WebView from 'react-native-webview';
-
+import { useHeaderHeight } from '@react-navigation/elements';
+import { STATUS_BAR_HEIGHT } from '../../config/index';
 
 import { 
   NavigationContainer,
@@ -49,8 +50,8 @@ var ScreenObj = Dimensions.get('window');
 
 const MapViewComponent = ({app,navigation,route}:any) => {
   let [submiting,setSubmiting] = useState(false);
+  const headerHeight = useHeaderHeight();
   useEffect(()=>{
-    
     // AMapSdk.init(
     //   Platform.select({
     //     ios: "9bd6c82e77583020a73ef1af59d0c759",
@@ -62,12 +63,19 @@ const MapViewComponent = ({app,navigation,route}:any) => {
   
 
   return <View style={styles.container}>
-    <NavigationBar 
+    {/* <NavigationBar 
       style={{
         zIndex:1
       }}
       title={route.params.cinema_name}
-      position=''/>
+      position=''/> */}
+      <StatusBar 
+      hidden={false} 
+      translucent={true}//指定状态栏是否透明
+      // backgroundColor={"transparent"} //状态栏的背景色  
+      barStyle={'dark-content'}
+            /> 
+    <View style={{height: STATUS_BAR_HEIGHT}}></View>
     <WebView
       source={{uri: `https://uri.amap.com/marker?position=${route.params.lng},${route.params.lat}&name=${route.params.cinema_name}&callnative=1`}}
       style={{marginTop: Platform.OS === 'ios'?0:0}}
