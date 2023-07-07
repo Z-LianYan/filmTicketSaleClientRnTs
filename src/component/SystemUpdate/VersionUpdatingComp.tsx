@@ -135,67 +135,15 @@ export class VersionUpdatingComp extends Component<IProps,IState> {
            <View style={{
             backgroundColor: '#F5F9FD',
             height:sv(24),
-            width:sv(520),
+            width:sv(400),
             borderRadius:sv(6),
             marginBottom:sv(12),
             overflow:"hidden",
            }}>
-                <View style={{width:this.state.progress+'%',height:'100%',backgroundColor:"#E63141"}}>
-                
-                </View>
+                <View style={{width:this.state.progress+'%',height:'100%',backgroundColor:"#E63141"}}></View>
            </View>
            <Text style={{fontSize:st(23),color:"#334466",fontWeight:"600",fontFamily:"PingFang SC"}}>{this.calcPackageSize(this.state.receivedsize)}/{this.calcPackageSize(this.state.totalsize)}，下载速度:{this.calcPackageSize(this.state.diffsize)}/s</Text>
-          
             <View style={{flexDirection:'row',justifyContent:'flex-end',marginTop:sv(80)}}>
-            {/* <Button 
-            style={styles.button} 
-            titleStyle={{color:'#fff'}} 
-            title="回复" 
-            size="md"
-            onPress={()=>{
-              onReply()
-            }}> */}
-                {/* {this.state.isShowRetryBtn?<ShadowButton
-                    title='重新下载'
-                    plain={true}
-                    containerStyle={{
-                        width:sv(246),height:sv(80)
-                    }}  
-                    shadowContainerStyle={{
-                    }}
-                    titleStyle={{
-                        fontSize:st(22),
-                    }}
-                    onPress={()=>{
-                        this.downloadApp();
-                        this.lastDownloadTime=Date.now();
-                        this.setState({
-                            isShowRetryBtn:false,
-                        })
-                    }}
-                />:null}
-
-                    {this.state.progress==100?<ShadowButton
-                    title='重新下载'
-                    plain={true}
-                    containerStyle={{
-                        width:sv(246),height:sv(80)
-                    }}  
-                    shadowContainerStyle={{
-                    }}
-                    titleStyle={{
-                        fontSize:st(22),
-                    }}
-                    onPress={()=>{
-                        this.downloadApp();
-                        this.lastDownloadTime=Date.now();
-                        this.setState({
-                            isShowRetryBtn:false,
-                        })
-                    }}
-                />:null} */}
-
-
                 {this.state.isShowRetryBtn?<Button 
                     style={{width:sv(246),height:sv(80),backgroundColor:'red'}} 
                     titleStyle={{color:'#fff'}} 
