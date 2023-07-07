@@ -28,7 +28,7 @@ export default class AppVersions {
   static checkAppUpdate(params:any={}) {
     return new Promise((resolve, reject) => {
       HttpUtils.post(Api.APP_VERSIONS_CHECK_UPDATE, {
-        platform: 'android',
+        platform: this.platform,
         packageName: 'com.filmticketsaleclientrnts',
         ...params
       }).then((res:any) => {

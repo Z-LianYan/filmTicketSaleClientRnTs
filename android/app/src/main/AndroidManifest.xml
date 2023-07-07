@@ -35,6 +35,8 @@
     <!--允许读设备等信息，用于问题排查-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> 
 
+    <uses-permission android:name="android.permission.CAMERA" />
+
     
 
     <!--android:usesCleartextTraffic="true" 为true时 http协议能请求-->

@@ -41,7 +41,14 @@ import {
   Theme,
   ListRow
 } from '../component/teaset/index';
-
+/**
+ * accessory 如设置则显示在列表行右侧。
+  - none: 无
+  - auto: 自动, 当设置了 onPress 属性时为'indicator', 否则为'none'
+  - empty: 空, 不显示指示图标, 但占用'check'或'indicator'大小的位置
+  - check: 小勾图标, 一般用于表示该行已被选中
+  - indicator: 大于号图标, 一般用于表示点击此行打开新页面
+*/
 const CustomListRow = ({ 
   title,
   detail,
@@ -50,7 +57,7 @@ const CustomListRow = ({
   onPress,
   activeOpacity=1,
   titleStyle={} ,
-  backgroundColor
+  backgroundColor,
 }:any) => {
     
   const colorScheme = useColorScheme();

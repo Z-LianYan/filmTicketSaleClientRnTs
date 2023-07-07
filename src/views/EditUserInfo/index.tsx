@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect, useCallback } from 'react';
 import { useNavigation } from '@react-navigation/core';
 import { observer, inject } from 'mobx-react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -14,7 +14,8 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   Alert,
-  Dimensions
+  Dimensions,
+  PermissionsAndroid
 } from 'react-native';
 
 import { 
@@ -41,6 +42,11 @@ import CustomListRow from '../../component/CustomListRow';
 import NavigationBar from '../../component/NavigationBar';
 import { login_out } from "../../api/user";
 import { edit_user_info, get_user_info } from "../../api/user";
+import { upload_file } from "../../api/common";
+
+import UploadFile from '../../component/UploadFile';
+
+
 var ScreenObj = Dimensions.get('window');
 
 const EditUserInfo = ({AppStore,navigation}:any) => {
@@ -55,6 +61,7 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
     upload_token: "",
   });
   let [submiting,setSubmiting] = useState(false);
+  let [loadingFinish,setLoadingFinish] = useState(false);
 
 
   useEffect(()=>{
@@ -64,6 +71,7 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
       nickname:AppStore.userInfo.nickname
     })
   },[]);
+
   async function getUserInfo() {
     try{
       let result:any = await get_user_info({
@@ -75,6 +83,8 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
         nickname:result.nickname
       })
       AppStore.setUserInfo(result);
+
+      setLoadingFinish(true)
     }catch(err:any){
       console.log(err.message)
     }
@@ -91,7 +101,7 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
   return <View style={styles.container}>
     <CustomListRow 
     accessory="none"
-    bottomSeparator="none" 
+    bottomSeparator="indent" 
     title={'用户名'} 
     detail={<View>
       <View style={styles.inputWrapper}>
@@ -138,6 +148,12 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
       </View>
       
     </View>} />
+
+    <CustomListRow 
+    accessory="none"
+    bottomSeparator="indent" 
+    title={'头像'} 
+    detail={<UploadFile borderRadius={50} fileList={[{uri:AppStore.userInfo.avatar}]}/>} />
 
     <Button
       style={styles.btnRecharge}

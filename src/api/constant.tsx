@@ -1,4 +1,6 @@
 export const GET_UPLOAD_QINIU_CONFIG = "/getUploadQiniuConfig"; //获取上传七牛配置
+export const UPLOAD_FILE = "/uploadFile"; //上传文件
+
 export const GET_FILM_HOT = "/film/hot";
 
 export const GET_FILM_SOONSHOW = "/film/soonShow";
