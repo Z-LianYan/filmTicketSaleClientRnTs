@@ -20,7 +20,9 @@ export function get_upload_qiuniu_config(params:any) {
 
 export function upload_file(params:any) {
   return new Promise((resolve, reject) => {
-    HttpUtils.post(Api.UPLOAD_FILE, params, '上传中').then((res:any )=> {
+    HttpUtils.post(Api.UPLOAD_FILE, params, '上传中',{
+      "Content-Type": "multipart/form-data"
+    }).then((res:any )=> {
       switch (res.error) {
         case 0:
           resolve(res.data);

@@ -59,14 +59,14 @@ service.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-export function post(url:string, data?:any, text?:string) {
+export function post(url:string, data?:any, text?:string,headers={}) {
   return new Promise((resolve, reject) => {
     if (text) isLoading(text);
     service({
       url: url,
       method: "POST",
       data: data,
-      headers: {},
+      headers,
     })
       .then((res) => {
         resolve(res.data);
@@ -83,14 +83,14 @@ export function post(url:string, data?:any, text?:string) {
   });
 }
 
-export function get(url:string, params?:any, text?:string) {
+export function get(url:string, params?:any, text?:string, headers={}) {
   return new Promise((resolve, reject) => {
     if (text) isLoading(text);
     service({
       url: url,
       method: "GET",
       params: params,
-      headers: {},
+      headers,
     })
       .then((res) => {
         resolve(res.data);

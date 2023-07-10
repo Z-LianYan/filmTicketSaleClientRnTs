@@ -63,7 +63,7 @@ import CustomListRow from './CustomListRow';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 type TypeProps = {
-  // onChange?:(val:number)=> void
+  onUpload?:(val:any[])=> void
   width?: number
   height?: number,
   borderRadius?: number,
@@ -73,7 +73,8 @@ const UploadFile = ({
   width=100,
   height=100,
   borderRadius=5,
-  fileList = []
+  fileList = [],
+  onUpload
 }:TypeProps) => {
   const colorScheme = useColorScheme();
   // const [overlay_view,set_overlay_view] = useState(null)
@@ -110,8 +111,11 @@ console.log('fileList---->>>',fileList);
     callBack && callBack()
 
     console.log('result----->>launchCamera',result);
+
     if(result && result.assets) set_file_list(result.assets)
     
+
+    onUpload && onUpload(result.assets);
     
   },[]);
 
@@ -121,7 +125,10 @@ console.log('fileList---->>>',fileList);
     });
     callBack && callBack()
     console.log('result----->>',result);
+
     if(result && result.assets) set_file_list(result.assets);
+
+    onUpload && onUpload(result.assets);
   },[]);
 
   const overlay_pullview = useCallback((callBack)=>{

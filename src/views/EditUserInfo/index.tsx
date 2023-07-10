@@ -43,9 +43,10 @@ import NavigationBar from '../../component/NavigationBar';
 import { login_out } from "../../api/user";
 import { edit_user_info, get_user_info } from "../../api/user";
 import { upload_file } from "../../api/common";
-
+import HttpUtils from '../../utils/request';
 import UploadFile from '../../component/UploadFile';
 
+import axios from "axios";
 
 var ScreenObj = Dimensions.get('window');
 
@@ -153,7 +154,31 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
     accessory="none"
     bottomSeparator="indent" 
     title={'头像'} 
-    detail={<UploadFile borderRadius={50} fileList={[{uri:AppStore.userInfo.avatar}]}/>} />
+    detail={<UploadFile borderRadius={50} 
+    fileList={[{uri:AppStore.userInfo.avatar}]}
+    onUpload={async (file)=>{
+      console.log('file---->>onUpload',file)
+      let obj_file = { uri: '', type: 'multipart/form-data', name: 'image.jpg' }
+      const formData = new FormData()
+      for(const item of file){
+        obj_file.uri = item.uri
+        formData.append('file', obj_file);
+      }
+      // HttpUtils({
+      //   url: "http://192.168.0.26:7002/uploadFile",
+      //   method: "POST",
+      //   data: formData,
+      //   headers:{
+      //     "Content-Type": "multipart/form-data",
+      //     // 'Content-Type': 'application/x-www-form-urlencoded'
+      //   },
+      // })
+      
+      const result = await upload_file(formData);
+      console.log('result------>>',result);
+
+    }}
+    />} />
 
     <Button
       style={styles.btnRecharge}
