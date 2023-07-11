@@ -25,7 +25,8 @@ import {
   TouchableHighlight,
   View as Viw,
   Text as Txt,
-  PermissionsAndroid
+  PermissionsAndroid,
+  Alert
 } from 'react-native';
 
 import { 
@@ -62,8 +63,11 @@ import CustomListRow from './CustomListRow';
 
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
+import { upload_file } from "../api/common";
+
 type TypeProps = {
-  onUpload?:(val:any[])=> void
+  onBeforeUpload?:(val:any[])=> any
+  onAfterUpload?:(val:any[])=> void
   width?: number
   height?: number,
   borderRadius?: number,
@@ -74,7 +78,8 @@ const UploadFile = ({
   height=100,
   borderRadius=5,
   fileList = [],
-  onUpload
+  onBeforeUpload,
+  onAfterUpload,
 }:TypeProps) => {
   const colorScheme = useColorScheme();
   // const [overlay_view,set_overlay_view] = useState(null)
@@ -85,50 +90,144 @@ console.log('fileList---->>>',fileList);
   useEffect(()=>{
   },[file_list])
 
-  const handLaunchCamera = useCallback(async (callBack)=>{
-    let granted = null
-    if(Platform.OS === "android"){
-      granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        {
-          title: "应用程序摄像头权限",
-          message:"应用程序需要访问您的相机",
-          buttonNeutral: "稍后询问我",
-          buttonNegative: "关闭",
-          buttonPositive: "授权"
+  const uploadImage = useCallback(async (_file)=>{
+    const file = onBeforeUpload ? await onBeforeUpload(_file): _file;
+    let obj_file = { uri: '', type: 'multipart/form-data', name: 'image.jpg' }
+      const formData = new FormData()
+      for(const item of file){
+        obj_file.uri = item.uri
+        formData.append('file', obj_file);
+      }
+      const result:any = await upload_file(formData);
+      if(result && result.file_list.length) {
+        const fileList = []
+        for(const item of result.file_list){
+          fileList.push({
+            uri: item.url
+          });
         }
+        onAfterUpload && onAfterUpload(fileList);
+      }
+  },[])
+
+  const handLaunchCamera = useCallback(async (callBack)=>{
+    
+
+    try{
+
+      let granted = null
+      if(Platform.OS === "android"){
+        granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: "应用程序摄像头权限",
+            message:"应用程序需要访问您的相机",
+            buttonNeutral: "稍后询问我",
+            buttonNegative: "关闭",
+            buttonPositive: "授权"
+          }
+        );
+      }
+      Alert.alert(
+        "信息",
+        granted?JSON.stringify(granted)+'---'+PermissionsAndroid.RESULTS.GRANTED:'无消息',
+        [
+          {
+            text: "",
+            onPress: () => {
+
+            },
+            style: "cancel"
+          },
+          { text: "确定", onPress: async () => {
+            
+          }}
+        ]
       );
+      if(granted && granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        // console.log("Camera permission denied");
+        Alert.alert(
+          "摄像头权限被禁止！！！",
+          "",
+          [
+            {
+              text: "",
+              onPress: () => {
+
+              },
+              style: "cancel"
+            },
+            { text: "确定", onPress: async () => {
+              
+            }}
+          ]
+        );
+        return;
+      };
+
+      const result:any = await launchCamera({
+        mediaType: 'mixed'
+      });
+      console.log('result----->>launchCamera',result);
+      // {"assets": [{
+      //   "fileName": "rn_image_picker_lib_temp_29579321-a2c6-41d5-ad5c-cee45dcb270b.png", 
+      //   "fileSize": 51378, 
+      //   "height": 1200, 
+      //   "type": "image/png", 
+      //   "uri": "file:///data/user/0/com.filmticketsaleclientrnts/cache/rn_image_picker_lib_temp_29579321-a2c6-41d5-ad5c-cee45dcb270b.png", 
+      //   "width": 1920}]}
+      if(result && result.assets) {
+        set_file_list(result.assets);
+        await uploadImage(result.assets);
+      }
+    }catch(err:any){
+      Alert.alert(
+        "错误提示",
+        err.message,
+        [
+          {
+            text: "",
+            onPress: () => {
+
+            },
+            style: "cancel"
+          },
+          { text: "确定", onPress: async () => {
+            
+          }}
+        ]
+      );
+    } finally {
+      callBack && callBack();
     }
-    if(granted && granted !== PermissionsAndroid.RESULTS.GRANTED) {
-      console.log("Camera permission denied");
-      return;
-    };
     
-    const result:any = await launchCamera({
-      mediaType: 'mixed'
-    });
-
-    callBack && callBack()
-
-    console.log('result----->>launchCamera',result);
-
-    if(result && result.assets) set_file_list(result.assets)
-    
-
-    onUpload && onUpload(result.assets);
     
   },[]);
 
   const handLaunchImageLibrary = useCallback(async (callBack)=>{
-    const result:any = await launchImageLibrary({
-      mediaType: 'mixed'
-    });
-    callBack && callBack()
-    console.log('result----->>',result);
+    try{
 
-    if(result && result.assets) set_file_list(result.assets);
-
-    onUpload && onUpload(result.assets);
+      const result:any = await launchImageLibrary({
+        mediaType: 'mixed',
+        quality: 1,
+        selectionLimit: 1
+      });
+      console.log('result----->>',result);
+      // {"assets": [{
+      //   "fileName": "rn_image_picker_lib_temp_29579321-a2c6-41d5-ad5c-cee45dcb270b.png", 
+      //   "fileSize": 51378, 
+      //   "height": 1200, 
+      //   "type": "image/png", 
+      //   "uri": "file:///data/user/0/com.filmticketsaleclientrnts/cache/rn_image_picker_lib_temp_29579321-a2c6-41d5-ad5c-cee45dcb270b.png", 
+      //   "width": 1920}]}
+      if(result && result.assets) {
+        set_file_list(result.assets);
+        await uploadImage(result.assets)
+      }
+    }finally{
+      callBack && callBack()
+    }
+    
   },[]);
 
   const overlay_pullview = useCallback((callBack)=>{
@@ -158,8 +257,7 @@ console.log('fileList---->>>',fileList);
     </Overlay.PopView>
   },[])
 
-  return <View style={{}}>
-    <TouchableOpacity activeOpacity={0.8} style={{
+  return <TouchableOpacity activeOpacity={0.8} style={{
       borderColor: colorScheme=='dark'?Theme.primaryColor:Theme.primaryColor,
       borderWidth: sv(1),
       width: sv(width),
@@ -168,38 +266,32 @@ console.log('fileList---->>>',fileList);
       alignItems: 'center',
       borderRadius: borderRadius,
       position:'relative'
-      }}
-      onPress={()=>{
-        console.log('------')
-        let ol = Overlay.show(overlay_pullview(()=>{
-          Overlay.hide(ol);
-        }));
+    }}
+    onPress={()=>{
+      let ol = Overlay.show(overlay_pullview(()=>{
+        Overlay.hide(ol);
+      }));
 
-      }}>
-        {
-          file_list.map((item:any,index)=>{
-            if(!item.uri) return;
-            return <Image
-            style={{width: sv(width-2), height: sv(height -2)}}
-            resizeMode="cover"
-            borderRadius={borderRadius}
-            source={{uri:item.uri}}
-            // onLoadEnd={() => this.checkLeftRight()}
-            key={"avatar"+index}
-          />
-          })
-        }
-        
-        {
-          !file_list.length && <Ionicons 
-          name={'add'} 
-          size={sv(30)} 
-          color={colorScheme=='dark'?Theme.primaryColor:Theme.primaryColor} />
-        }
-
-    </TouchableOpacity>
-    
-</View>;
+    }}>
+      {
+        file_list.map((item:any,index)=>{
+          if(!item.uri) return;
+          return <Image
+          style={{width: sv(width-2), height: sv(height -2)}}
+          resizeMode="cover"
+          borderRadius={borderRadius}
+          source={{uri:item.uri}}
+          // onLoadEnd={() => this.checkLeftRight()}
+          key={"avatar"+index}
+        />})
+      }
+      {
+        !file_list.length && <Ionicons 
+        name={'add'} 
+        size={sv(30)} 
+        color={colorScheme=='dark'?Theme.primaryColor:Theme.primaryColor} />
+      }
+  </TouchableOpacity>
 };
 
 const styles = StyleSheet.create({

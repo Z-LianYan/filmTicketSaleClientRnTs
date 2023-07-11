@@ -113,6 +113,8 @@ const Recharge = ({AppStore,navigation}:any) => {
       setFontPriceIndex(0);
       setSubmiting(false);
       getUserInfo();
+
+      navigation.goBack()
     } catch (err) {
       setSubmiting(false);
     }

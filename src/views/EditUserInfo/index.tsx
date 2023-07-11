@@ -43,7 +43,6 @@ import NavigationBar from '../../component/NavigationBar';
 import { login_out } from "../../api/user";
 import { edit_user_info, get_user_info } from "../../api/user";
 import { upload_file } from "../../api/common";
-import HttpUtils from '../../utils/request';
 import UploadFile from '../../component/UploadFile';
 
 import axios from "axios";
@@ -66,26 +65,32 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
 
 
   useEffect(()=>{
-    // getUserInfo()
-    setFormData({
-      avatar:AppStore.userInfo.avatar,
-      nickname:AppStore.userInfo.nickname
-    })
+      let isMounted = true;// 防止报 Can't perform a React state update on an unmounted component.
+      if(isMounted){
+        setFormData({
+          avatar:AppStore.userInfo.avatar,
+          nickname:AppStore.userInfo.nickname
+        });
+      }
+      getUserInfo(isMounted);
+    return ()=>{
+      isMounted = false
+    }
   },[]);
 
-  async function getUserInfo() {
+  async function getUserInfo(isMounted?:boolean) {
     try{
       let result:any = await get_user_info({
         navigation
       });
       if (!result) return;
+      if(!isMounted) return;
       setFormData({
         avatar:result.avatar,
         nickname:result.nickname
       })
       AppStore.setUserInfo(result);
-
-      setLoadingFinish(true)
+      // setLoadingFinish(true)
     }catch(err:any){
       console.log(err.message)
     }
@@ -96,7 +101,8 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
     setSubmiting(true);
     await edit_user_info(formData);
     setSubmiting(false);
-    getUserInfo();
+    await getUserInfo();
+    navigation.goBack()
   }
 
   return <View style={styles.container}>
@@ -155,28 +161,18 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
     bottomSeparator="indent" 
     title={'头像'} 
     detail={<UploadFile borderRadius={50} 
-    fileList={[{uri:AppStore.userInfo.avatar}]}
-    onUpload={async (file)=>{
-      console.log('file---->>onUpload',file)
-      let obj_file = { uri: '', type: 'multipart/form-data', name: 'image.jpg' }
-      const formData = new FormData()
-      for(const item of file){
-        obj_file.uri = item.uri
-        formData.append('file', obj_file);
-      }
-      // HttpUtils({
-      //   url: "http://192.168.0.26:7002/uploadFile",
-      //   method: "POST",
-      //   data: formData,
-      //   headers:{
-      //     "Content-Type": "multipart/form-data",
-      //     // 'Content-Type': 'application/x-www-form-urlencoded'
-      //   },
-      // })
-      
-      const result = await upload_file(formData);
-      console.log('result------>>',result);
-
+    key={formData.avatar}
+    fileList={[{uri:formData.avatar}]}
+    onBeforeUpload={async (file)=>{
+      console.log('onBeforeUpload------->>>',file);
+      return new Promise((resolve, reject)=>{
+        resolve(file)
+      })
+    }}
+    onAfterUpload={(file)=>{
+      console.log('afterUpload----->>>',file);
+      formData.avatar = file[0].uri;
+      setFormData(formData);
     }}
     />} />
 
