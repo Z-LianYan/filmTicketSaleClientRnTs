@@ -23,6 +23,7 @@ export function upload_file(params:any) {
     HttpUtils.post(Api.UPLOAD_FILE, params, '上传中...',{
       "Content-Type": "multipart/form-data"
     }).then((res:any )=> {
+      console.log('res----->>',res)
       switch (res.error) {
         case 0:
           resolve(res.data);

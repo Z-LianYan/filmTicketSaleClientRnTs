@@ -164,7 +164,7 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
     key={formData.avatar}
     fileList={[{uri:formData.avatar}]}
     onBeforeUpload={async (file)=>{
-      console.log('onBeforeUpload------->>>',file);
+      console.log('onBeforeUpload------->>>12',file);
       return new Promise((resolve, reject)=>{
         resolve(file)
       })

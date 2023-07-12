@@ -92,22 +92,27 @@ console.log('fileList---->>>',fileList);
 
   const uploadImage = useCallback(async (_file)=>{
     const file = onBeforeUpload ? await onBeforeUpload(_file): _file;
+    console.log('上传----》〉》file',file);
+
     let obj_file = { uri: '', type: 'multipart/form-data', name: 'image.jpg' }
-      const formData = new FormData()
-      for(const item of file){
-        obj_file.uri = item.uri
-        formData.append('file', obj_file);
+    const formData = new FormData()
+    for(const item of file){
+      obj_file.uri = item.uri
+      formData.append('file', obj_file);
+    }
+    console.log('上传----》〉》FormData',formData);
+    const result:any = await upload_file(formData);
+
+    console.log('上传----》〉》',result)
+    if(result && result.file_list.length) {
+      const fileList = []
+      for(const item of result.file_list){
+        fileList.push({
+          uri: item.url
+        });
       }
-      const result:any = await upload_file(formData);
-      if(result && result.file_list.length) {
-        const fileList = []
-        for(const item of result.file_list){
-          fileList.push({
-            uri: item.url
-          });
-        }
-        onAfterUpload && onAfterUpload(fileList);
-      }
+      onAfterUpload && onAfterUpload(fileList);
+    }
   },[])
 
   const handLaunchCamera = useCallback(async (callBack)=>{
@@ -128,22 +133,6 @@ console.log('fileList---->>>',fileList);
           }
         );
       }
-      Alert.alert(
-        "信息",
-        granted?JSON.stringify(granted)+'---'+PermissionsAndroid.RESULTS.GRANTED:'无消息',
-        [
-          {
-            text: "",
-            onPress: () => {
-
-            },
-            style: "cancel"
-          },
-          { text: "确定", onPress: async () => {
-            
-          }}
-        ]
-      );
       if(granted && granted !== PermissionsAndroid.RESULTS.GRANTED) {
         // console.log("Camera permission denied");
         Alert.alert(
@@ -178,7 +167,11 @@ console.log('fileList---->>>',fileList);
       //   "width": 1920}]}
       if(result && result.assets) {
         set_file_list(result.assets);
+        console.log('------23456')
+
         await uploadImage(result.assets);
+
+        console.log('23456')
       }
     }catch(err:any){
       Alert.alert(
