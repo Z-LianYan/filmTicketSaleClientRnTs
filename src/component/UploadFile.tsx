@@ -90,29 +90,32 @@ console.log('fileList---->>>',fileList);
   useEffect(()=>{
   },[file_list])
 
-  const uploadImage = useCallback(async (_file)=>{
-    const file = onBeforeUpload ? await onBeforeUpload(_file): _file;
-    console.log('上传----》〉》file',file);
+  const uploadImage = useCallback(async (_file,callBack)=>{
+    try{
 
-    let obj_file = { uri: '', type: 'multipart/form-data', name: 'image.jpg' }
-    const formData = new FormData()
-    for(const item of file){
-      obj_file.uri = item.uri
-      formData.append('file', obj_file);
-    }
-    console.log('上传----》〉》FormData',formData);
-    const result:any = await upload_file(formData);
-
-    console.log('上传----》〉》',result)
-    if(result && result.file_list.length) {
-      const fileList = []
-      for(const item of result.file_list){
-        fileList.push({
-          uri: item.url
-        });
+      const file = onBeforeUpload ? await onBeforeUpload(_file): _file;
+      
+      const formData = new FormData()
+      for(const item of file){
+        formData.append('file', { uri: item.uri, type: 'multipart/form-data', name: item.fileName });
       }
-      onAfterUpload && onAfterUpload(fileList);
+      console.log('上传----》〉》FormData',formData);
+      const result:any = await upload_file(formData);
+
+      console.log('上传----》〉》',result)
+      if(result && result.file_list.length) {
+        const fileList = []
+        for(const item of result.file_list){
+          fileList.push({
+            uri: item.url
+          });
+        }
+        onAfterUpload && onAfterUpload(fileList);
+      }
+    }catch(err){
+      callBack && callBack();
     }
+    
   },[])
 
   const handLaunchCamera = useCallback(async (callBack)=>{
@@ -169,7 +172,7 @@ console.log('fileList---->>>',fileList);
         set_file_list(result.assets);
         console.log('------23456')
 
-        await uploadImage(result.assets);
+        await uploadImage(result.assets,callBack);
 
         console.log('23456')
       }
@@ -215,7 +218,7 @@ console.log('fileList---->>>',fileList);
       //   "width": 1920}]}
       if(result && result.assets) {
         set_file_list(result.assets);
-        await uploadImage(result.assets)
+        await uploadImage(result.assets,callBack)
       }
     }finally{
       callBack && callBack()

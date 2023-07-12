@@ -65,35 +65,36 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
 
 
   useEffect(()=>{
-      let isMounted = true;// 防止报 Can't perform a React state update on an unmounted component.
-      if(isMounted){
+      // let isMounted = true;// 防止报 Can't perform a React state update on an unmounted component.
+      // if(isMounted){
         setFormData({
-          avatar:AppStore.userInfo.avatar,
+          avatar:AppStore.userInfo && AppStore.userInfo.avatar,
           nickname:AppStore.userInfo.nickname
         });
-      }
-      getUserInfo(isMounted);
+      // }
+      getUserInfo();
     return ()=>{
-      isMounted = false
+      // isMounted = false
     }
   },[]);
 
-  async function getUserInfo(isMounted?:boolean) {
-    try{
+  async function getUserInfo() {
+    return new Promise(async (resolve,reject)=>{
       let result:any = await get_user_info({
         navigation
       });
       if (!result) return;
-      if(!isMounted) return;
+      // if(!isMounted) return;
       setFormData({
         avatar:result.avatar,
         nickname:result.nickname
       })
       AppStore.setUserInfo(result);
       // setLoadingFinish(true)
-    }catch(err:any){
-      console.log(err.message)
-    }
+
+      resolve('ok');
+    });
+      
   }
 
   async function onEditUserInfo() {
