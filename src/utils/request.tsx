@@ -28,7 +28,7 @@ function hideLoading(){
 axios.defaults.withCredentials = true;
 const service = axios.create({
   baseURL: host, // api的base_url
-  timeout: 5000 * 200, //1m request timeout
+  timeout: 10000, //1m request timeout
   headers: {
     platform: Platform.OS=='ios'?'rnIos':'rnAndroid',
     "Content-Type": "application/json;charset=UTF-8",

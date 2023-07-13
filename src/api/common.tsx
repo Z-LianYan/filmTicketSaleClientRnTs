@@ -14,6 +14,8 @@ export function get_upload_qiuniu_config(params:any) {
           reject(res);
           break;
       }
+    }).catch(err=>{
+      reject(err);
     });
   });
 }
@@ -33,6 +35,8 @@ export function upload_file(params:any) {
           reject(res);
           break;
       }
+    }).catch(err=>{
+      reject(err);
     });
   });
 }

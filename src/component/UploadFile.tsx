@@ -64,6 +64,10 @@ import CustomListRow from './CustomListRow';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 import { upload_file } from "../api/common";
+import HttpUtils from "../utils/request";
+import * as Api from '../api/constant';
+import { result } from 'lodash';
+
 
 type TypeProps = {
   onBeforeUpload?:(val:any[])=> any
@@ -100,7 +104,17 @@ console.log('fileList---->>>',fileList);
         formData.append('file', { uri: item.uri, type: 'multipart/form-data', name: item.fileName });
       }
       console.log('上传----》〉》FormData',formData);
-      const result:any = await upload_file(formData);
+      // const result:any = await upload_file(formData);
+
+      const _result:any = await HttpUtils({
+        url: Api.UPLOAD_FILE,
+        method: "POST",
+        data: formData,
+        headers:{
+          "Content-Type": "multipart/form-data"
+        },
+      });
+      const result = _result.data.data
 
       console.log('上传----》〉》',result)
       if(result && result.file_list.length) {
@@ -113,6 +127,8 @@ console.log('fileList---->>>',fileList);
         onAfterUpload && onAfterUpload(fileList);
       }
     }catch(err){
+      console.log('上传catch------》〉',err)
+    }finally{
       callBack && callBack();
     }
     
