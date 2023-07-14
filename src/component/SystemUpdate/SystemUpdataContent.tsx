@@ -22,7 +22,7 @@ import store from '../../store';
 import { scaleView as sv,scaleText as st } from '../../utils/scaleSize';
 import { HasNewVersionComp } from './HasNewVersionComp';
 import { VersionUpdatingComp } from './VersionUpdatingComp';
-import { checkAppUpdate } from '../../api/appVersions';
+// import { checkAppUpdate } from '../../api/appVersions';
 type IProps= {
     hide:()=>void,
     isClickCheck:boolean,

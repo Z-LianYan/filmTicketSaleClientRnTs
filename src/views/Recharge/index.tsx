@@ -53,7 +53,7 @@ const Recharge = ({AppStore,navigation}:any) => {
     
   const colorScheme = useColorScheme();
   let [rechargePrice,setRechargePrice] = useState('');
-  let [fontPrice,setFontPrice] = useState({
+  let [fontPrice,setFontPrice] = useState<any>({
     1: "",
     2: "",
     3: "百",

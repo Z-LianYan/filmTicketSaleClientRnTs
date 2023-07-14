@@ -47,7 +47,13 @@ class AppStore {
     callBack && callBack();
   }
 
-  cityList = null
+  cityList = null;
+
+  qiniuUploadConfig = {
+    expireTime:'',
+    static_host:'',
+    upload_token:''
+  }; //七牛上传配置
   
 }
 const app = new AppStore()

@@ -41,7 +41,7 @@ import { any } from 'prop-types';
 
 import { get_user_info } from "./api/user";
 import { SystemUpdataOverlay } from './component/SystemUpdate/SystemUpdataOverlay';
-import { checkAppUpdate } from './api/appVersions';
+// import { checkAppUpdate } from './api/appVersions';
 
 
 // Theme.set(Theme.themes.black);

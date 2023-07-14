@@ -45,7 +45,9 @@ import { edit_user_info, get_user_info } from "../../api/user";
 import { upload_file } from "../../api/common";
 import UploadFile from '../../component/UploadFile';
 
-import axios from "axios";
+import dayjs from 'dayjs';
+
+import * as qiniu from 'qiniu-js';
 
 var ScreenObj = Dimensions.get('window');
 
@@ -54,7 +56,8 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
   const colorScheme = useColorScheme();
   let [formData,setFormData] = useState({
     nickname: "",
-    avatar: ''
+    avatar: '',
+    random: "20230714112136111"
   });
   let [qiniuConfig,setQiniuConfig] = useState({
     static_host: "",
@@ -69,7 +72,8 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
       // if(isMounted){
         setFormData({
           avatar:AppStore.userInfo && AppStore.userInfo.avatar,
-          nickname:AppStore.userInfo.nickname
+          nickname:AppStore.userInfo.nickname,
+          random: dayjs().format('YYYYMMDDHHmmssSSS')
         });
       // }
       getUserInfo();
@@ -87,7 +91,8 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
       // if(!isMounted) return;
       setFormData({
         avatar:result.avatar,
-        nickname:result.nickname
+        nickname:result.nickname,
+        random: dayjs().format('YYYYMMDDHHmmssSSS')
       })
       AppStore.setUserInfo(result);
       // setLoadingFinish(true)
@@ -161,20 +166,55 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
     accessory="none"
     bottomSeparator="indent" 
     title={'头像'} 
-    detail={<UploadFile borderRadius={50} 
-    key={formData.avatar}
-    fileList={[{uri:formData.avatar}]}
-    onBeforeUpload={async (file)=>{
-      console.log('onBeforeUpload------->>>12',file);
-      return new Promise((resolve, reject)=>{
-        resolve(file)
-      })
-    }}
-    onAfterUpload={(file)=>{
-      console.log('afterUpload----->>>',file);
-      formData.avatar = file[0].uri;
-      setFormData(formData);
-    }}
+    detail={<UploadFile 
+      borderRadius={50} 
+      key={formData?.random}
+      fileList={[{uri:formData?.avatar}]}
+      onBeforeUpload={async (file)=>{
+        console.log('onBeforeUpload------->>>12',file);
+        return new Promise((resolve, reject)=>{
+
+          // function fileToBase64(file:any, callback:any){
+          //   console.log('------>>>1',file)
+          //   const fileReader = new FileReader();
+          //   console.log('------>>>2')
+          //   fileReader.readAsDataURL(file.uri);
+          //   console.log('------>>>3')
+          //   fileReader.onload = function () {
+          //     console.log('------>>>4')
+          //     callback(this.result);
+          //   };
+          // };
+          // fileToBase64(file[0],(dt:any)=>{
+          //   console.log('dt------>>>',dt)
+          // });
+          // console.log()
+          // qiniu.compressImage(file[0].uri, {
+          //   quality: 0.92,
+          //   noCompressIfLarger: true
+          // }).then(data=>{
+          //   console.log('压缩----》〉data',data)
+          //   // resolve([data])
+          // }); 
+
+          // file = data.dist;
+          resolve(file)
+        })
+      }}
+      onAfterUpload={(file)=>{
+        console.log('afterUpload----->>>',file);
+        formData.avatar = file[0].uri;
+        setFormData(formData);
+      }}
+      onUploadFail={(err)=>{
+        console.log('onUploadFail------>>>',err)
+        // getUserInfo()
+        setFormData({
+          avatar: AppStore?.userInfo?.avatar,
+          nickname: AppStore?.userInfo?.nickname,
+          random: dayjs().format('YYYYMMDDHHmmssSSS')
+        })
+      }}
     />} />
 
     <Button

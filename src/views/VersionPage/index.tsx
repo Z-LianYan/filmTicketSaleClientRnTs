@@ -42,7 +42,7 @@ import {
   APP_LOGO
 } from '../../assets/image';
 import { SystemUpdataOverlay } from '../../component/SystemUpdate/SystemUpdataOverlay';
-import { checkAppUpdate } from '../../api/appVersions';
+// import { checkAppUpdate } from '../../api/appVersions';
 
 const VersionPage = ({app,navigation,AppVersions}:any) => {
     
@@ -52,7 +52,7 @@ const VersionPage = ({app,navigation,AppVersions}:any) => {
   const [versionName, setVersionName] = React.useState('');
 
   useEffect(()=>{
-    checkAppUpdate().then((res:any)=>{
+    AppVersions.checkAppUpdate().then((res:any)=>{
       console.log('res===>>',res);
       setVersionCode(res.versionCode);
       setVersionName(res.versionName);

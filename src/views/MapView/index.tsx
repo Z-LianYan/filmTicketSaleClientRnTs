@@ -19,7 +19,7 @@ import {
 
 import WebView from 'react-native-webview';
 import { useHeaderHeight } from '@react-navigation/elements';
-import { STATUS_BAR_HEIGHT } from '../../config/index';
+import config from '../../config/index';
 
 import { 
   NavigationContainer,
@@ -75,7 +75,7 @@ const MapViewComponent = ({app,navigation,route}:any) => {
       // backgroundColor={"transparent"} //状态栏的背景色  
       barStyle={'dark-content'}
             /> 
-    <View style={{height: STATUS_BAR_HEIGHT}}></View>
+    <View style={{height: config.STATUS_BAR_HEIGHT}}></View>
     <WebView
       source={{uri: `https://uri.amap.com/marker?position=${route.params.lng},${route.params.lat}&name=${route.params.cinema_name}&callnative=1`}}
       style={{marginTop: Platform.OS === 'ios'?0:0}}

@@ -45,6 +45,8 @@ import {
   Theme,
   Overlay,
   Checkbox,
+  ModalIndicator,
+  Toast,
 } from './teaset/index';
 import PropTypes, { number } from 'prop-types';
 import { 
@@ -63,15 +65,18 @@ import CustomListRow from './CustomListRow';
 
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
-import { upload_file } from "../api/common";
+import { get_upload_qiuniu_config, upload_file } from "../api/common";
 import HttpUtils from "../utils/request";
 import * as Api from '../api/constant';
 import { result } from 'lodash';
-
+import myConfig from '../config';
+import dayjs from 'dayjs';
+import * as qiniu from 'qiniu-js';
 
 type TypeProps = {
-  onBeforeUpload?:(val:any[])=> any
-  onAfterUpload?:(val:any[])=> void
+  onBeforeUpload?:(val:any[])=> any,
+  onAfterUpload?:(val:any[])=> void,
+  onUploadFail?:(val:any)=> void
   width?: number
   height?: number,
   borderRadius?: number,
@@ -84,61 +89,157 @@ const UploadFile = ({
   fileList = [],
   onBeforeUpload,
   onAfterUpload,
+  onUploadFail,
 }:TypeProps) => {
   const colorScheme = useColorScheme();
   // const [overlay_view,set_overlay_view] = useState(null)
   const [file_list,set_file_list] = useState(fileList)
-
-console.log('fileList---->>>',fileList);
+  const [percent,setPercent] = useState(0);
+  const [isUplaodIng,setIsUplaodIng] = useState(false);
 
   useEffect(()=>{
   },[file_list])
+  
+  // const uploadImage = useCallback(async (_file,callBack)=>{
+  //   try{
+  //     const token = await get_upload_qiuniu_config();
+  //     console.log('---->>>token',token);
 
-  const uploadImage = useCallback(async (_file,callBack)=>{
-    try{
 
-      const file = onBeforeUpload ? await onBeforeUpload(_file): _file;
+  //     const file = onBeforeUpload ? await onBeforeUpload(_file): _file;
       
-      const formData = new FormData()
-      for(const item of file){
-        formData.append('file', { uri: item.uri, type: 'multipart/form-data', name: item.fileName });
-      }
-      console.log('上传----》〉》FormData',formData);
-      // const result:any = await upload_file(formData);
+  //     const formData = new FormData()
+      
+  //     for(const item of file){
+  //       formData.append('file', {
+  //         uri: item.uri, 
+  //         type: item.type,
+  //         name: item.fileName,
+  //       });
+  //     }
+  //     console.log('上传----FormData',formData);
+  //     const result:any = await upload_file(formData);
 
-      const _result:any = await HttpUtils({
-        url: Api.UPLOAD_FILE,
-        method: "POST",
-        data: formData,
-        headers:{
-          "Content-Type": "multipart/form-data"
+  //     console.log('上传----》〉》',result)
+  //     if(result && result.file_list.length) {
+  //       const fileList = []
+  //       for(const item of result.file_list){
+  //         fileList.push({
+  //           uri: item.url
+  //         });
+  //       }
+  //       onAfterUpload && onAfterUpload(fileList);
+  //     }
+  //   }catch(err){
+  //     console.log('上传catch------》〉',err)
+  //     onUploadFail && onUploadFail(err);
+  //     Alert.alert(
+  //       "错误提示",
+  //       '上传失败！！！',
+  //       [
+  //         {
+  //           text: "",
+  //           onPress: () => {
+
+  //           },
+  //           style: "cancel"
+  //         },
+  //         { text: "关闭", onPress: async () => {}}
+  //       ]
+  //     );
+  //   }finally{
+  //     callBack && callBack();
+  //   }
+    
+  // },[])
+
+  function getExtName(str:string) {
+    var index = str.lastIndexOf(".");
+    return str.slice(index);
+  }
+
+  const uploadImage = useCallback(async (_file)=>{
+    _file = onBeforeUpload ? await onBeforeUpload(_file): _file;
+    const file = _file[0];
+    // console.log('压缩----》〉前',file)
+    // const data:any = await qiniu.compressImage(file, {
+    //   quality: 0.92,
+    //   noCompressIfLarger: true
+    // }).then(datas=>{
+    //   console.log('压缩----》〉datas',datas)
+    // }); 
+
+    // console.log('压缩----》〉',data)
+    // file = data.dist;
+    try{
+      const tokenConfig:any = await get_upload_qiuniu_config();
+      setPercent(0);
+      setIsUplaodIng(true);
+      const key = `public/userAvatar/${dayjs().format('YYYYMMDDHHmmssSSS')+String(Math.floor(Math.random() * 10000))+getExtName(file.fileName)}`;; // 上传后文件资源名以设置的 key 为主，如果 key 为 null 或者 undefined，则文件资源名会以 hash 值作为资源名。
+      let config = {
+        useCdnDomain: true, //表示是否使用 cdn 加速域名，为布尔值，true 表示使用，默认为 false。
+        region: qiniu.region.z2, // 根据具体提示修改上传地区,当为 null 或 undefined 时，自动分析上传域名区域
+      };
+      
+      let putExtra = {
+        // fname: file.fileName, //文件原文件名
+        // params: {}, //用来放置自定义变量
+        // mimeType: ["image/png", "image/jpeg", "image/gif"], //用来限制上传文件类型，为 null 时表示不对文件类型限制；限制类型放到数组里： ["image/png", "image/jpeg", "image/gif"]
+      };
+      console.log("key", key);
+      let observable = qiniu.upload(
+        file,
+        key,
+        tokenConfig.upload_token,
+        putExtra,
+        config
+      );
+      observable.subscribe({
+        next: (res) => {
+          // 主要用来展示进度
+          let total:any = res.total;
+          setPercent(total.percent.toFixed(0))
+        },
+        error: (err:any) => {
+          // 失败报错信息
+          Toast.fail(err.message);
+          onUploadFail && onUploadFail(err);
+          setPercent(0);
+          setIsUplaodIng(false);
+        },
+        complete: (res) => {
+          const list = [{uri: tokenConfig.static_host+res.key}]
+          set_file_list(list);
+          onAfterUpload && onAfterUpload(list);
+          setTimeout(() => {
+            setIsUplaodIng(false);
+          }, 800);
         },
       });
-      const result = _result.data.data
 
-      console.log('上传----》〉》',result)
-      if(result && result.file_list.length) {
-        const fileList = []
-        for(const item of result.file_list){
-          fileList.push({
-            uri: item.url
-          });
-        }
-        onAfterUpload && onAfterUpload(fileList);
-      }
     }catch(err){
-      console.log('上传catch------》〉',err)
+      Alert.alert(
+        "错误提示",
+        '上传失败！！！',
+        [
+          {
+            text: "",
+            onPress: () => {
+
+            },
+            style: "cancel"
+          },
+          { text: "关闭", onPress: async () => {}}
+        ]
+      );
     }finally{
-      callBack && callBack();
     }
-    
-  },[])
+      
+  },[]);
 
   const handLaunchCamera = useCallback(async (callBack)=>{
-    
-
     try{
-
+      callBack && callBack();
       let granted = null
       if(Platform.OS === "android"){
         granted = await PermissionsAndroid.request(
@@ -153,9 +254,8 @@ console.log('fileList---->>>',fileList);
         );
       }
       if(granted && granted !== PermissionsAndroid.RESULTS.GRANTED) {
-        // console.log("Camera permission denied");
         Alert.alert(
-          "摄像头权限被禁止！！！",
+          "摄像头权限被禁止,请到手机系统设置开启！！！",
           "",
           [
             {
@@ -174,23 +274,14 @@ console.log('fileList---->>>',fileList);
       };
 
       const result:any = await launchCamera({
-        mediaType: 'mixed'
+        mediaType: 'photo',
+        quality: 1,
+        includeBase64: false,
+        includeExtra: false,
       });
       console.log('result----->>launchCamera',result);
-      // {"assets": [{
-      //   "fileName": "rn_image_picker_lib_temp_29579321-a2c6-41d5-ad5c-cee45dcb270b.png", 
-      //   "fileSize": 51378, 
-      //   "height": 1200, 
-      //   "type": "image/png", 
-      //   "uri": "file:///data/user/0/com.filmticketsaleclientrnts/cache/rn_image_picker_lib_temp_29579321-a2c6-41d5-ad5c-cee45dcb270b.png", 
-      //   "width": 1920}]}
       if(result && result.assets) {
-        set_file_list(result.assets);
-        console.log('------23456')
-
-        await uploadImage(result.assets,callBack);
-
-        console.log('23456')
+        await uploadImage(result.assets);
       }
     }catch(err:any){
       Alert.alert(
@@ -210,34 +301,25 @@ console.log('fileList---->>>',fileList);
         ]
       );
     } finally {
-      callBack && callBack();
+      // callBack && callBack();
     }
-    
     
   },[]);
 
   const handLaunchImageLibrary = useCallback(async (callBack)=>{
     try{
-
+      callBack && callBack()
       const result:any = await launchImageLibrary({
         mediaType: 'mixed',
         quality: 1,
         selectionLimit: 1
       });
-      console.log('result----->>',result);
-      // {"assets": [{
-      //   "fileName": "rn_image_picker_lib_temp_29579321-a2c6-41d5-ad5c-cee45dcb270b.png", 
-      //   "fileSize": 51378, 
-      //   "height": 1200, 
-      //   "type": "image/png", 
-      //   "uri": "file:///data/user/0/com.filmticketsaleclientrnts/cache/rn_image_picker_lib_temp_29579321-a2c6-41d5-ad5c-cee45dcb270b.png", 
-      //   "width": 1920}]}
+      
       if(result && result.assets) {
-        set_file_list(result.assets);
-        await uploadImage(result.assets,callBack)
+        await uploadImage(result.assets)
       }
     }finally{
-      callBack && callBack()
+      // callBack && callBack()
     }
     
   },[]);
@@ -255,7 +337,7 @@ console.log('fileList---->>>',fileList);
       <CustomListRow
       accessory="indicator"
       bottomSeparator="indent" 
-      title={'打开照相机'}
+      title={'拍照'}
       onPress={()=>{
         handLaunchCamera(callBack)
       }}/>
@@ -285,6 +367,7 @@ console.log('fileList---->>>',fileList);
       }));
 
     }}>
+
       {
         file_list.map((item:any,index)=>{
           if(!item.uri) return;
@@ -302,6 +385,24 @@ console.log('fileList---->>>',fileList);
         name={'add'} 
         size={sv(30)} 
         color={colorScheme=='dark'?Theme.primaryColor:Theme.primaryColor} />
+      }
+
+      {
+        isUplaodIng && <View 
+        style={{
+          position:'absolute',
+          left:0,
+          right:0,
+          top:0,
+          bottom:0,
+          backgroundColor: '#ccc',
+          borderRadius: borderRadius,
+          opacity: 0.8,
+          justifyContent:'center',
+          alignItems: 'center'
+        }}>
+          <Text style={{fontSize: 10}}>已上传:{percent}%</Text>
+        </View>
       }
   </TouchableOpacity>
 };

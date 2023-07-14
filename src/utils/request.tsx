@@ -9,8 +9,7 @@ import {
 } from 'react-native';
 import { useState } from 'react';
 
-// let host = process.env.NODE_ENV=='development'?'http://film.imgresource.com.cn':'http://film.imgresource.com.cn'
-let host = process.env.NODE_ENV=='development'?'http://192.168.0.26:7002':'http://film.imgresource.com.cn'
+import config from '../config/index';
 import { TopView, Toast,ModalIndicator } from '../component/teaset/index';
 import app from '../store/AppStore';
 
@@ -27,7 +26,7 @@ function hideLoading(){
 }
 axios.defaults.withCredentials = true;
 const service = axios.create({
-  baseURL: host, // api的base_url
+  baseURL: config.HOST, // api的base_url
   timeout: 10000, //1m request timeout
   headers: {
     platform: Platform.OS=='ios'?'rnIos':'rnAndroid',
