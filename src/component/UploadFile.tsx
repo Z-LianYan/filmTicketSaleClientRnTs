@@ -312,9 +312,10 @@ const UploadFile = ({
       const result:any = await launchImageLibrary({
         mediaType: 'mixed',
         quality: 1,
-        selectionLimit: 1
+        selectionLimit: 2,
+        includeBase64: true
       });
-      
+      console.log('includeBase64========>>>>',result);
       if(result && result.assets) {
         await uploadImage(result.assets)
       }

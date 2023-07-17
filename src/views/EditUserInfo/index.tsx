@@ -51,6 +51,8 @@ import * as qiniu from 'qiniu-js';
 
 var ScreenObj = Dimensions.get('window');
 
+// import { Buffer } from "buffer";
+
 const EditUserInfo = ({AppStore,navigation}:any) => {
     
   const colorScheme = useColorScheme();
@@ -172,24 +174,18 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
       fileList={[{uri:formData?.avatar}]}
       onBeforeUpload={async (file)=>{
         console.log('onBeforeUpload------->>>12',file);
-        return new Promise((resolve, reject)=>{
+        return new Promise(async (resolve, reject)=>{
 
-          // function fileToBase64(file:any, callback:any){
-          //   console.log('------>>>1',file)
-          //   const fileReader = new FileReader();
-          //   console.log('------>>>2')
-          //   fileReader.readAsDataURL(file.uri);
-          //   console.log('------>>>3')
-          //   fileReader.onload = function () {
-          //     console.log('------>>>4')
-          //     callback(this.result);
-          //   };
-          // };
-          // fileToBase64(file[0],(dt:any)=>{
-          //   console.log('dt------>>>',dt)
-          // });
-          // console.log()
-          // qiniu.compressImage(file[0].uri, {
+          
+          // const buffer:any = Buffer.from(file[0].base64, "base64");
+          // const blob:any = new Blob([buffer], { type: file[0].type, lastModified: dayjs().unix() });
+
+          // const res = await fetch(`${file[0].uri}`);
+          // const blobData:any = await res.blob()
+          // console.log('blobData----->>>',blobData._data);
+
+          
+          // qiniu.compressImage(, {
           //   quality: 0.92,
           //   noCompressIfLarger: true
           // }).then(data=>{
