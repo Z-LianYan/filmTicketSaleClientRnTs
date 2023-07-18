@@ -11,7 +11,8 @@ import prod from './prod';
 const {  StatusBarManager } = NativeModules;
 
 let config = {
-  HOST: '',
+  // HOST: '',
+  ...dev,
   STATUS_BAR_HEIGHT : Platform.OS === "android"?  StatusBar.currentHeight : StatusBarManager.HEIGHT,
 }
 

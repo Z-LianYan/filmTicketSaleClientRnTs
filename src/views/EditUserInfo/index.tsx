@@ -49,9 +49,10 @@ import dayjs from 'dayjs';
 
 import * as qiniu from 'qiniu-js';
 
+import { conformsTo } from 'lodash';
+
 var ScreenObj = Dimensions.get('window');
 
-// import { Buffer } from "buffer";
 
 const EditUserInfo = ({AppStore,navigation}:any) => {
     
@@ -173,27 +174,16 @@ const EditUserInfo = ({AppStore,navigation}:any) => {
       key={formData?.random}
       fileList={[{uri:formData?.avatar}]}
       onBeforeUpload={async (file)=>{
-        console.log('onBeforeUpload------->>>12',file);
         return new Promise(async (resolve, reject)=>{
-
-          
-          // const buffer:any = Buffer.from(file[0].base64, "base64");
-          // const blob:any = new Blob([buffer], { type: file[0].type, lastModified: dayjs().unix() });
-
           // const res = await fetch(`${file[0].uri}`);
           // const blobData:any = await res.blob()
-          // console.log('blobData----->>>',blobData._data);
-
-          
-          // qiniu.compressImage(, {
+          // qiniu.compressImage(blobData._data, {
           //   quality: 0.92,
           //   noCompressIfLarger: true
           // }).then(data=>{
           //   console.log('压缩----》〉data',data)
           //   // resolve([data])
           // }); 
-
-          // file = data.dist;
           resolve(file)
         })
       }}

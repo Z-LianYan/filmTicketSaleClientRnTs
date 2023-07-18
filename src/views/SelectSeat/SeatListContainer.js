@@ -11,6 +11,8 @@ import {
   Animated,
   Easing,
   PanResponder,
+  Touchable,
+  TouchableOpacity,
 } from 'react-native';
 import {ViewPropTypes} from 'deprecated-react-native-prop-types';
 
@@ -95,11 +97,9 @@ export default class SeatListContainer extends Component {
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponder: (e, gestureState) => true,
       onStartShouldSetPanResponderCapture: (e, gestureState) => false,
-      onMoveShouldSetPanResponder: (e, gestureState) => true,
+      // onMoveShouldSetPanResponder: (e, gestureState) => true,
       onMoveShouldSetPanResponderCapture: (e, gestureState) => false,
-      onPanResponderGrant: (
-        e,
-        gestureState, //开始手势操作
+      onPanResponderGrant: (e,gestureState, //开始手势操作
       ) => this.onPanResponderGrant(e, gestureState),
       onPanResponderMove: (e, gestureState) =>
         this.onPanResponderMove(e, gestureState),
