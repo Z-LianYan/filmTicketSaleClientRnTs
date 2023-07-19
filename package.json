@@ -45,7 +45,8 @@
     "react-native-vector-icons": "^9.1.0",
     "react-native-webview": "^11.23.1",
     "react-timer-mixin": "^0.13.4",
-    "rebound": "^0.1.0"
+    "rebound": "^0.1.0",
+    "socket.io-client": "^4.7.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

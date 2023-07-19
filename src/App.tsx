@@ -41,6 +41,12 @@ import { any } from 'prop-types';
 
 import { get_user_info } from "./api/user";
 import { SystemUpdataOverlay } from './component/SystemUpdate/SystemUpdataOverlay';
+
+// import socketIo from "socket.io-client";
+const socketIo = require("socket.io-client");
+import config from './config';
+import dayjs from 'dayjs';
+
 // import { checkAppUpdate } from './api/appVersions';
 
 
@@ -49,6 +55,42 @@ import { SystemUpdataOverlay } from './component/SystemUpdate/SystemUpdataOverla
 //   toastColor: '#e54847',
 //   primaryColor:'#e54847'
 // });
+const host = `http://192.168.0.26:7002/test`;
+console.log('host------>>socket',host);
+const socket = socketIo(host,{
+  transports: ['websocket'],
+});
+
+socket.on('connect', () => {
+  const id = socket.id;
+
+  console.log('#connect,', id, socket);
+
+  // 监听自身 id 以实现 p2p 通讯
+  socket.on(id, (msg) => {
+    console.log('#receive,', msg);
+  });
+});
+
+// 接收在线用户信息
+socket.on('online', (msg) => {
+  console.log('#online,', msg);
+});
+
+// 系统事件
+socket.on('disconnect', (msg) => {
+  console.log('#disconnect', msg);
+});
+
+socket.on('disconnecting', () => {
+  console.log('#disconnecting');
+});
+
+socket.on('error', () => {
+  console.log('#error');
+});
+
+
 
 const App = (props:any) => {
   const navigationRef = useNavigationContainerRef(); // You can also use a regular ref with `React.useRef()`
@@ -56,6 +98,12 @@ const App = (props:any) => {
     if(!store.AppStore.userInfo){
       getUserInfo();
     }
+
+
+
+
+    
+
   },[]);
   
 
@@ -91,6 +139,14 @@ const App = (props:any) => {
               console.log('onReady-----')
             }}>
               <StackNavigators/>
+              <Text style={{height:100}} onPress={()=>{
+                
+
+                // socket.emit('server','我是client事件');
+                socket.emit('server','我是client事件');
+
+                console.log('1234560---')
+              }}>12345</Text>
             </NavigationContainer>
             </TopView>
         </SafeAreaView>
