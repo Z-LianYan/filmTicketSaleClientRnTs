@@ -55,9 +55,7 @@ import dayjs from 'dayjs';
 //   toastColor: '#e54847',
 //   primaryColor:'#e54847'
 // });
-const host = `http://192.168.0.26:7002/test`;
-console.log('host------>>socket',host);
-const socket = socketIo(host,{
+const socket = socketIo(`${config.HOST}/test`,{
   transports: ['websocket'],
 });
 
@@ -143,9 +141,9 @@ const App = (props:any) => {
                 
 
                 // socket.emit('server','我是client事件');
-                socket.emit('server','我是client事件');
+                socket.emit('server','我是client事件-rn');
 
-                console.log('1234560---')
+                // console.log('1234560---')
               }}>12345</Text>
             </NavigationContainer>
             </TopView>
