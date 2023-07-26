@@ -55,38 +55,41 @@ import dayjs from 'dayjs';
 //   toastColor: '#e54847',
 //   primaryColor:'#e54847'
 // });
-const socket = socketIo(`${config.HOST}/test`,{
-  transports: ['websocket'],
-});
 
-socket.on('connect', () => {
-  const id = socket.id;
 
-  console.log('#connect,', id, socket);
 
-  // 监听自身 id 以实现 p2p 通讯
-  socket.on(id, (msg) => {
-    console.log('#receive,', msg);
-  });
-});
+// const socket = socketIo(`${config.HOST}/test`,{
+//   transports: ['websocket'],
+// });
 
-// 接收在线用户信息
-socket.on('online', (msg) => {
-  console.log('#online,', msg);
-});
+// socket.on('connect', () => {
+//   const id = socket.id;
 
-// 系统事件
-socket.on('disconnect', (msg) => {
-  console.log('#disconnect', msg);
-});
+//   console.log('#connect,', id, socket);
 
-socket.on('disconnecting', () => {
-  console.log('#disconnecting');
-});
+//   // 监听自身 id 以实现 p2p 通讯
+//   socket.on(id, (msg) => {
+//     console.log('#receive,', msg);
+//   });
+// });
 
-socket.on('error', () => {
-  console.log('#error');
-});
+// // 接收在线用户信息
+// socket.on('online', (msg) => {
+//   console.log('#online,', msg);
+// });
+
+// // 系统事件
+// socket.on('disconnect', (msg) => {
+//   console.log('#disconnect', msg);
+// });
+
+// socket.on('disconnecting', () => {
+//   console.log('#disconnecting');
+// });
+
+// socket.on('error', () => {
+//   console.log('#error');
+// });
 
 
 
@@ -137,14 +140,6 @@ const App = (props:any) => {
               console.log('onReady-----')
             }}>
               <StackNavigators/>
-              <Text style={{height:100}} onPress={()=>{
-                
-
-                // socket.emit('server','我是client事件');
-                socket.emit('server','我是client事件-rn');
-
-                // console.log('1234560---')
-              }}>12345</Text>
             </NavigationContainer>
             </TopView>
         </SafeAreaView>
