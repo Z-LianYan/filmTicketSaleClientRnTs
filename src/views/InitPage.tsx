@@ -47,7 +47,7 @@ import { edit_user_info, get_user_info } from "../api/user";
 var ScreenObj = Dimensions.get('window');
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const InitPage = ({app,navigation,route}:any) => {
+const InitPage = ({AppStore,navigation,route}:any) => {
   let [time,setTime] = useState(10);
   useEffect(()=>{
 
@@ -71,7 +71,7 @@ const InitPage = ({app,navigation,route}:any) => {
     let res:string|null = await AsyncStorage.getItem('locationInfo');
     if(!res) return;
     let _res:{city_id:number,city_name:string} = JSON.parse(res)
-    app.setLocationInfo({
+    AppStore.setLocationInfo({
       city_id: _res.city_id, //默认城市编码
       city_name: _res.city_name, //默认城市广州
     })

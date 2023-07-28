@@ -55,7 +55,7 @@ const CitysPage = ({AppStore,navigation,route}:any) => {
   return <CitysPageContent 
   colorScheme={colorScheme} 
   navigation={navigation} 
-  app={AppStore}/>
+  AppStore={AppStore}/>
 };
 
 const styles = StyleSheet.create({

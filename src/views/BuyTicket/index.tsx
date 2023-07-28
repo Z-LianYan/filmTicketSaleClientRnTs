@@ -58,13 +58,13 @@ var ScreenObj = Dimensions.get('window');
 import ContentCom from "./ContentCom";
 
 
-const BuyTicket = ({app,navigation,route}:any) => {
+const BuyTicket = ({AppStore,navigation,route}:any) => {
   const colorScheme = useColorScheme();
   return <ContentCom 
   useColorScheme={colorScheme} 
   navigation={navigation}
   route={route}
-  app={app}/>
+  AppStore={AppStore}/>
 };
 export default inject("AppStore")(observer(BuyTicket));
 

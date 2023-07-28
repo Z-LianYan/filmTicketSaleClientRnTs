@@ -140,7 +140,7 @@ type Props={
   useColorScheme:string|undefined|null,
   navigation:any,
   route:any,
-  app:any
+  AppStore:any
 }
 type State={
   isSkeleton:boolean,
@@ -225,7 +225,7 @@ export default class ContentCom extends Component<Props,State> {
   }
 
   async getOrderDetail() {
-    let { route,navigation,app } = this.props;
+    let { route,navigation,AppStore } = this.props;
     let { params } = route;
     try {
       let result:any = await get_buy_ticket_detail({
@@ -246,7 +246,7 @@ export default class ContentCom extends Component<Props,State> {
         }, 1500);
       }
       if (err.error == 401) {
-        app.setUserInfo(null); //如果token认证过期 清空当前缓存的登录信息
+        AppStore.setUserInfo(null); //如果token认证过期 清空当前缓存的登录信息
         navigation.navigate({
           name: "LoginPage"
         });
@@ -303,6 +303,7 @@ export default class ContentCom extends Component<Props,State> {
     let s = expire_time % 60;
     return m + ":" + (s > 9 ? s : "0" + s);
   }
+  
 
   onGoToPay() {
     let { orderDetail } = this.state;
@@ -363,9 +364,9 @@ export default class ContentCom extends Component<Props,State> {
   }
 
   async getUserInfo() {
-    let { app } = this.props;
+    let { AppStore } = this.props;
     let result = await get_user_info()
-    if (result) app.setUserInfo(result);
+    if (result) AppStore.setUserInfo(result);
   }
 
   arrLabel(){

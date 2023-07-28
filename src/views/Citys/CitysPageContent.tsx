@@ -60,7 +60,7 @@ import { get_city_list } from "../../api/citys";
 type Props={
   navigation:any,
   colorScheme:any,
-  app:any
+  AppStore:any
 }
 type State={
   letter:any,
@@ -125,16 +125,16 @@ export default class CitysPageContent extends Component<Props,State> {
     this.getCityList();
   }
   async componentWillUnmount(){//只有反回的时候才能执行销毁（跳转不会销毁组件的）
-    console.log('组件销毁前----》〉》〉');
+    console.log('组件销毁前----》〉》〉12340000---00',this.props);
   }
 
   async getCityList(){
-    let { app } = this.props;
+    let { AppStore } = this.props;
     let { letter } = this.state;
     this.setState({
       dataInitComplete:false
     })
-    if(!app.cityList){
+    if(!AppStore.cityList){
       let result:any = await get_city_list({});
       let citys = result.rows;
       for (let i = 0; i < citys.length; i++) {
@@ -150,13 +150,15 @@ export default class CitysPageContent extends Component<Props,State> {
           }
         }
       }
-      app.cityList = letter;
+
+      AppStore.cityList = letter;
       this.setState({
         letter
       })
+
     }else{
       this.setState({
-        letter:app.cityList
+        letter:AppStore.cityList
       })
     }
 
@@ -168,14 +170,14 @@ export default class CitysPageContent extends Component<Props,State> {
   };
 
   searchChange(val:string){
-    let { app } = this.props;
+    let { AppStore } = this.props;
     let { letter } = this.state;
-    let letterObj = {}; 
+    let letterObj:any = {}; 
     this.setState({
       dataInitComplete:false
     })
-    for (let key in app.cityList) {
-      for (let item of app.cityList[key]) {
+    for (let key in AppStore.cityList) {
+      for (let item of AppStore.cityList[key]) {
         if (item.name.includes(val) || item.pinyin.includes(val)) {
           if(letterObj[key]) letterObj[key] = [...letterObj[key],item];
           if(!letterObj[key]) letterObj[key] = [item];
@@ -189,15 +191,15 @@ export default class CitysPageContent extends Component<Props,State> {
   }
 
   async setLocationInfo(item:any, type?:string) {
-    let { app,navigation } = this.props;
-    let { realLocation } = app.locationInfo;
+    let { AppStore,navigation } = this.props;
+    let { realLocation } = AppStore.locationInfo;
     if (!item.name) return;
     //缓存用户选择的位置，下次打开app直接读取缓存的数据
     await AsyncStorage.setItem('locationInfo', JSON.stringify({
       city_id: item.id,
       city_name: item.name,
     }));
-    app.setLocationInfo(
+    AppStore.setLocationInfo(
       {
         city_id: item.id,
         city_name: item.name,
@@ -257,7 +259,7 @@ export default class CitysPageContent extends Component<Props,State> {
   }
 
   render() {
-    let { colorScheme,app } = this.props;
+    let { colorScheme,AppStore } = this.props;
     let { searchValue,stickyHeaderIndices,dataInitComplete } = this.state;
     return <View style={{
       ...styles.container,
@@ -288,7 +290,7 @@ export default class CitysPageContent extends Component<Props,State> {
         onChangeText={(text:any) => {
           if(!text){
             this.setState({
-              letter:app.cityList
+              letter:AppStore.cityList
             })
           }
           this.setState({
@@ -309,7 +311,7 @@ export default class CitysPageContent extends Component<Props,State> {
         onPress={()=>{
           if(!searchValue){
             this.setState({
-              letter:app.cityList
+              letter:AppStore.cityList
             })
           }else{
             this.searchChange(searchValue);
