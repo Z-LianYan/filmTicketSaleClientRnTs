@@ -15,8 +15,6 @@ export function get_upload_qiuniu_config(params?:any) {
         upload_token:''
       }
     }
-
-    console.log('------------>>哈哈哈哈')
     HttpUtils.get(Api.GET_UPLOAD_QINIU_CONFIG, params, '').then((res:any )=> {
       switch (res.error) {
         case 0:
