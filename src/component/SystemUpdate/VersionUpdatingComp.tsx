@@ -161,7 +161,7 @@ export class VersionUpdatingComp extends Component<IProps,IState> {
                         })
                     }}/>:null}
 
-                    {this.state.progress==100?<Button 
+                    {/* {this.state.progress==100?<Button 
                     style={{width:sv(246),height:sv(80),backgroundColor:'red'}} 
                     titleStyle={{color:'#fff'}} 
                     title="重新下载" 
@@ -172,7 +172,35 @@ export class VersionUpdatingComp extends Component<IProps,IState> {
                         this.setState({
                             isShowRetryBtn:false,
                         })
-                    }}/>:null}
+                    }}/>:null} */}
+
+                    {this.state.progress==100?<View style={{flexDirection: 'row'}}>
+                        <Button 
+                        style={{width:sv(200),height:sv(70),backgroundColor:'#ccc',borderWidth: 0,}} 
+                        titleStyle={{color:'#334466'}} 
+                        title="取消" 
+                        size="md"
+                        onPress={()=>{
+                            // this.downloadApp();
+                            // this.lastDownloadTime=Date.now();
+                            // this.setState({
+                            //     isShowRetryBtn:false,
+                            // })
+                            this.props.hide()
+                        }}/>
+                        <Button 
+                        style={{width:sv(200),height:sv(70),backgroundColor:'red',borderWidth: 0, marginLeft: 10}} 
+                        titleStyle={{color:'#fff'}} 
+                        title="重新下载" 
+                        size="md"
+                        onPress={()=>{
+                            this.downloadApp();
+                            this.lastDownloadTime=Date.now();
+                            this.setState({
+                                isShowRetryBtn:false,
+                            })
+                        }}/>
+                    </View>:null}
                 
             </View>
         </>
