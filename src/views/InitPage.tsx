@@ -104,7 +104,7 @@ const InitPage = ({AppStore,navigation,route}:any) => {
       售票宝app是用来学习和欣赏的没有任何商用，此售票宝app不会向您收取任何费用接口，购买的所有订单均不是真实的订单都是模拟出来的订单数据，如有侵权联系删除。
     </Text>
     <Text style={{textAlign:'center'}}>
-      qq：2930638161 react-native android打包后反问不了远程地址
+      qq：2930638161 
     </Text>
   </View>;
 };
